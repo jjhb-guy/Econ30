@@ -1,0 +1,185 @@
+{
+  "meta": {
+    "title": "St. Louis Progress Dashboard",
+    "lastUpdated": "2026-05-01",
+    "notes": "Auto-generated from all PDF files in Raw via dashboard/scripts/build_data.py",
+    "sourceCount": 11,
+    "projectCount": 6
+  },
+  "sources": [
+    {
+      "id": "src-eleven-companies-investing-approximately-91-million-creating-up-to-704-jobs-in-the-st-louis-region-department-of-economic-development",
+      "title": "Eleven companies investing approximately $91 million, creating up to 704 jobs in the St. Louis region   Department of Economic Development",
+      "publisher": "Missouri Department of Economic Development",
+      "path": "../Raw/Eleven companies investing approximately $91 million, creating up to 704 jobs in the St. Louis region _ Department of Economic Development.pdf",
+      "publishedDate": null,
+      "extractionConfidence": "medium"
+    },
+    {
+      "id": "src-english-91-workshop",
+      "title": "English 91 workshop",
+      "publisher": "Unknown publisher",
+      "path": "../Raw/English 91 workshop.pdf",
+      "publishedDate": null,
+      "extractionConfidence": "low"
+    },
+    {
+      "id": "src-fy-2026-fy-2030-five-year-financial-forecast-report",
+      "title": "FY-2026---FY-2030-Five-Year-Financial-Forecast-Report",
+      "publisher": "Unknown publisher",
+      "path": "../Raw/FY-2026---FY-2030-Five-Year-Financial-Forecast-Report.pdf",
+      "publishedDate": null,
+      "extractionConfidence": "medium"
+    },
+    {
+      "id": "src-history-raises-painful-issues-regarding-the-city-s-economic-struggles-stlpr",
+      "title": "History raises painful issues regarding the city's economic struggles   STLPR",
+      "publisher": "St. Louis Public Radio",
+      "path": "../Raw/History raises painful issues regarding the city's economic struggles _ STLPR.pdf",
+      "publishedDate": null,
+      "extractionConfidence": "low"
+    },
+    {
+      "id": "src-how-wealth-inequality-shapes-life-in-the-st-louis-region-stlpr",
+      "title": "How wealth inequality shapes life in the St. Louis region   STLPR",
+      "publisher": "St. Louis Public Radio",
+      "path": "../Raw/How wealth inequality shapes life in the St. Louis region _ STLPR.pdf",
+      "publishedDate": null,
+      "extractionConfidence": "medium"
+    },
+    {
+      "id": "src-market-design-psets-written-google-docs",
+      "title": "Market design psets written - Google Docs",
+      "publisher": "Unknown publisher",
+      "path": "../Raw/Market design psets written - Google Docs.pdf",
+      "publishedDate": null,
+      "extractionConfidence": "low"
+    },
+    {
+      "id": "src-st-louis-case-study-the-democracy-collaborative",
+      "title": "St. Louis Case Study \u2014 The Democracy Collaborative",
+      "publisher": "Unknown publisher",
+      "path": "../Raw/St. Louis Case Study \u2014 The Democracy Collaborative.pdf",
+      "publishedDate": null,
+      "extractionConfidence": "low"
+    },
+    {
+      "id": "src-st-louis-then-and-now-st-louis-american",
+      "title": "St. Louis then and now - St. Louis American",
+      "publisher": "St. Louis American",
+      "path": "../Raw/St. Louis then and now - St. Louis American.pdf",
+      "publishedDate": null,
+      "extractionConfidence": "medium"
+    },
+    {
+      "id": "src-the-bitter-tale-of-the-budweiser-family-stlpr",
+      "title": "The 'Bitter' Tale Of The Budweiser Family   STLPR",
+      "publisher": "St. Louis Public Radio",
+      "path": "../Raw/The 'Bitter' Tale Of The Budweiser Family _ STLPR.pdf",
+      "publishedDate": null,
+      "extractionConfidence": "low"
+    },
+    {
+      "id": "src-the-story-of-segregation-in-st-louis-st-louis-magazine",
+      "title": "The story of segregation in St. Louis   St. Louis Magazine",
+      "publisher": "St. Louis Magazine",
+      "path": "../Raw/The story of segregation in St. Louis _ St. Louis Magazine.pdf",
+      "publishedDate": null,
+      "extractionConfidence": "medium"
+    },
+    {
+      "id": "src-w30451",
+      "title": "w30451",
+      "publisher": "Unknown publisher",
+      "path": "../Raw/w30451.pdf",
+      "publishedDate": null,
+      "extractionConfidence": "medium"
+    }
+  ],
+  "projects": [
+    {
+      "id": "project-eleven-companies-investing-approximately-91-million-creating-up-to-704-jobs-in-the-st-louis-region-department-of-economic-development",
+      "name": "Eleven companies investing approximately $91 million, creating up to 704 jobs in the St. Louis region",
+      "sector": "Economic Development",
+      "year": 2023,
+      "investmentUsd": 91000000,
+      "jobs": 704,
+      "location": {
+        "name": "St. Louis region",
+        "lat": 38.627,
+        "lng": -90.1994
+      },
+      "sourceId": "src-eleven-companies-investing-approximately-91-million-creating-up-to-704-jobs-in-the-st-louis-region-department-of-economic-development"
+    },
+    {
+      "id": "project-fy-2026-fy-2030-five-year-financial-forecast-report",
+      "name": "FY-2026---FY-2030-Five-Year-Financial-Forecast-Report",
+      "sector": "Regional Progress",
+      "year": 2026,
+      "investmentUsd": 1500000000,
+      "jobs": 0,
+      "location": {
+        "name": "St. Louis region",
+        "lat": 38.627,
+        "lng": -90.1994
+      },
+      "sourceId": "src-fy-2026-fy-2030-five-year-financial-forecast-report"
+    },
+    {
+      "id": "project-how-wealth-inequality-shapes-life-in-the-st-louis-region-stlpr",
+      "name": "How wealth inequality shapes life in the St. Louis region",
+      "sector": "Inequality",
+      "year": 2022,
+      "investmentUsd": 1300000,
+      "jobs": 0,
+      "location": {
+        "name": "St. Louis region",
+        "lat": 38.627,
+        "lng": -90.1994
+      },
+      "sourceId": "src-how-wealth-inequality-shapes-life-in-the-st-louis-region-stlpr"
+    },
+    {
+      "id": "project-st-louis-then-and-now-st-louis-american",
+      "name": "St. Louis then and now - St. Louis American",
+      "sector": "Regional Progress",
+      "year": 2023,
+      "investmentUsd": 28000000,
+      "jobs": 0,
+      "location": {
+        "name": "St. Louis region",
+        "lat": 38.627,
+        "lng": -90.1994
+      },
+      "sourceId": "src-st-louis-then-and-now-st-louis-american"
+    },
+    {
+      "id": "project-the-story-of-segregation-in-st-louis-st-louis-magazine",
+      "name": "The story of segregation in St. Louis",
+      "sector": "Housing and Segregation",
+      "year": 2014,
+      "investmentUsd": 90000000,
+      "jobs": 0,
+      "location": {
+        "name": "St. Louis region",
+        "lat": 38.627,
+        "lng": -90.1994
+      },
+      "sourceId": "src-the-story-of-segregation-in-st-louis-st-louis-magazine"
+    },
+    {
+      "id": "project-w30451",
+      "name": "w30451",
+      "sector": "Regional Progress",
+      "year": 2022,
+      "investmentUsd": 1050000000,
+      "jobs": 0,
+      "location": {
+        "name": "St. Louis region",
+        "lat": 38.627,
+        "lng": -90.1994
+      },
+      "sourceId": "src-w30451"
+    }
+  ]
+}

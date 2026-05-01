@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STL Progress Dashboard</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>St. Louis Progress Dashboard</h1>
+      <p>Explorable map-inspired view of investment and job growth.</p>
+    </div>
+    <div class="topbar-actions">
+      <span id="lastUpdated" class="pill"></span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="panel controls">
+      <h2>Filters</h2>
+
+      <label for="searchInput">Search</label>
+      <input id="searchInput" type="text" placeholder="Company or project">
+
+      <label for="sectorFilter">Sector</label>
+      <select id="sectorFilter">
+        <option value="all">All sectors</option>
+      </select>
+
+      <label for="yearFilter">Year</label>
+      <select id="yearFilter">
+        <option value="all">All years</option>
+      </select>
+
+      <label for="minInvestment">Minimum investment (USD)</label>
+      <input id="minInvestment" type="range" min="0" max="100000000" step="1000000" value="0">
+      <div id="minInvestmentLabel" class="hint">$0</div>
+    </aside>
+
+    <section class="panel main-panel">
+      <div class="kpis">
+        <article class="kpi">
+          <h3>Total investment</h3>
+          <p id="kpiInvestment">$0</p>
+        </article>
+        <article class="kpi">
+          <h3>Total jobs</h3>
+          <p id="kpiJobs">0</p>
+        </article>
+        <article class="kpi">
+          <h3>Projects</h3>
+          <p id="kpiProjects">0</p>
+        </article>
+      </div>
+
+      <div class="map-results">
+        <section class="map-card">
+          <h2>Map View</h2>
+          <div id="map" class="fake-map" aria-label="Map placeholder">
+            <p>Map-ready data loaded. Replace this panel with Leaflet/Mapbox when ready.</p>
+            <ul id="mapLegend"></ul>
+          </div>
+        </section>
+
+        <section class="results-card">
+          <h2>Projects</h2>
+          <ul id="projectList" class="project-list"></ul>
+        </section>
+      </div>
+    </section>
+
+    <aside class="panel sources">
+      <h2>Source Traceability</h2>
+      <ul id="sourceList" class="source-list"></ul>
+    </aside>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
