@@ -143,39 +143,95 @@
   .approach-card p { font-size: 0.88rem; color: var(--muted); }
 
   /* ─── MAP ─── */
-  .map-wrap {
+  .map-section { max-width: 1200px; }
+  .map-container {
     position: relative;
     width: 100%;
-    aspect-ratio: 1.6 / 1;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 14px;
     overflow: hidden;
-    margin-bottom: 1.5rem;
   }
-  .map-wrap svg { width: 100%; height: 100%; }
-  .pin {
-    cursor: pointer;
-    transition: transform 0.15s;
-  }
-  .pin:hover { transform: scale(1.35); }
-  .pin circle { transition: fill 0.15s; }
+  #usMap { display: block; width: 100%; }
+  #usMap .state { fill: #1e2235; stroke: var(--border); stroke-width: 0.5; }
 
-  .center-list {
-    display: grid; gap: 0.75rem;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  @keyframes pulse {
+    0%, 100% { r: 6; opacity: 0.85; }
+    50% { r: 9; opacity: 0.5; }
   }
-  .center-card {
+  .map-pin { cursor: pointer; }
+  .map-pin .ring {
+    fill: none; stroke-width: 2; opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .map-pin:hover .ring { opacity: 0.6; }
+  .map-pin .dot { transition: r 0.15s; }
+  .map-pin:hover .dot { r: 8; }
+  .map-pin.active .pulse-ring { animation: pulse 2s ease-in-out infinite; }
+
+  .map-hint {
+    text-align: center;
+    padding: 0.75rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  /* ─── DETAIL PANEL ─── */
+  .detail-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    z-index: 200;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+  }
+  .detail-overlay.open { display: flex; align-items: center; justify-content: center; }
+
+  .detail-panel {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1rem 1.1rem;
+    border-radius: 16px;
+    width: 90%; max-width: 540px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 2rem;
+    position: relative;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+    animation: panelIn 0.25s ease-out;
   }
-  .center-card h3 { font-size: 0.95rem; margin-bottom: 0.15rem; }
-  .center-card .loc { font-size: 0.78rem; color: var(--accent); margin-bottom: 0.35rem; }
-  .center-card p { font-size: 0.85rem; color: var(--muted); }
-  .center-card .links { margin-top: 0.5rem; font-size: 0.8rem; }
-  .center-card .links a + a { margin-left: 0.75rem; }
+  @keyframes panelIn {
+    from { opacity: 0; transform: translateY(24px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .detail-panel .close-btn {
+    position: absolute; top: 1rem; right: 1rem;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--muted); font-size: 1.2rem;
+    width: 32px; height: 32px; border-radius: 8px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: color 0.15s;
+  }
+  .detail-panel .close-btn:hover { color: var(--text); }
+  .detail-panel .dp-badge {
+    display: inline-block; font-size: 0.68rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 0.15rem 0.5rem; border-radius: 4px;
+    margin-bottom: 0.6rem;
+  }
+  .detail-panel h3 { font-size: 1.3rem; margin-bottom: 0.2rem; }
+  .detail-panel .dp-loc { color: var(--accent); font-size: 0.88rem; margin-bottom: 0.8rem; }
+  .detail-panel .dp-founded { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.8rem; }
+  .detail-panel .dp-desc { color: var(--muted); font-size: 0.92rem; margin-bottom: 1rem; line-height: 1.7; }
+  .detail-panel .dp-focus-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text); margin-bottom: 0.4rem; }
+  .detail-panel .dp-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.2rem; }
+  .detail-panel .dp-tag {
+    font-size: 0.75rem; padding: 0.2rem 0.55rem;
+    border-radius: 5px;
+    background: rgba(108,155,255,0.1); color: var(--accent);
+  }
+  .detail-panel .dp-links a {
+    display: inline-block; margin-right: 1rem;
+    font-size: 0.88rem;
+  }
 
   /* ─── FURTHER READING ─── */
   .reading-list { list-style: none; padding: 0; }
@@ -205,24 +261,6 @@
     color: var(--muted);
     border-top: 1px solid var(--border);
   }
-
-  /* ─── TOOLTIP ─── */
-  .tooltip {
-    display: none;
-    position: absolute;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0.6rem 0.8rem;
-    font-size: 0.82rem;
-    max-width: 260px;
-    pointer-events: none;
-    z-index: 50;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  }
-  .tooltip.visible { display: block; }
-  .tooltip strong { display: block; margin-bottom: 0.15rem; color: var(--text); }
-  .tooltip span { color: var(--muted); }
 </style>
 </head>
 <body>
@@ -428,119 +466,31 @@
 </section>
 
 <!-- ═══════ MAP ═══════ -->
-<section id="map">
+<section id="map" class="map-section">
   <div class="section-label">Present Day</div>
-  <h2>Major Poverty Research Centers</h2>
-  <p class="intro">The current landscape of institutions driving poverty research across the United States.</p>
+  <h2>Poverty Research Centers Across the U.S.</h2>
+  <p class="intro">Click any pin to see full details about the institution, its focus areas, key people, and links.</p>
 
-  <div class="map-wrap" id="mapContainer">
-    <div class="tooltip" id="tooltip"><strong></strong><span></span></div>
-    <svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg">
-      <!-- simplified US outline -->
-      <path d="M150 450 L160 420 L200 380 L240 370 L270 340 L290 330 L320 300 L350 280 L380 260 L430 250 L480 240 L520 230 L560 210 L600 200 L650 190 L700 180 L730 170 L780 160 L830 180 L860 210 L870 240 L860 280 L840 310 L830 340 L810 360 L780 380 L740 400 L700 410 L660 420 L620 430 L580 440 L540 450 L500 460 L460 470 L420 480 L380 490 L340 500 L300 505 L260 500 L220 490 L180 480 L150 450Z"
-        fill="none" stroke="var(--border)" stroke-width="1.5" opacity="0.5"/>
-      <!-- state outlines simplified as regions -->
-      <line x1="560" y1="180" x2="560" y2="460" stroke="var(--border)" stroke-width="0.5" opacity="0.2"/>
-      <line x1="400" y1="240" x2="400" y2="500" stroke="var(--border)" stroke-width="0.5" opacity="0.2"/>
-      <line x1="700" y1="170" x2="700" y2="420" stroke="var(--border)" stroke-width="0.5" opacity="0.2"/>
-
-      <!-- Pins -->
-      <g class="pin" data-name="Institute for Research on Poverty" data-loc="UW-Madison, WI" data-desc="Nation's first poverty research center (1966). Federally designated, focuses on causes/consequences of poverty and social policy.">
-        <circle cx="575" cy="230" r="7" fill="var(--accent)" opacity="0.85"/>
-        <circle cx="575" cy="230" r="3" fill="var(--bg)"/>
-      </g>
-      <g class="pin" data-name="Stanford Center on Poverty &amp; Inequality" data-loc="Stanford, CA" data-desc="Founded 2006. Developed the California Poverty Measure, publishes Pathways Magazine, runs the American Opportunity Study.">
-        <circle cx="175" cy="340" r="7" fill="var(--accent2)" opacity="0.85"/>
-        <circle cx="175" cy="340" r="3" fill="var(--bg)"/>
-      </g>
-      <g class="pin" data-name="Opportunity Insights" data-loc="Harvard University, Cambridge, MA" data-desc="Founded 2018 by Chetty, Friedman &amp; Hendren. Uses big data to map economic mobility and partner with cities nationwide.">
-        <circle cx="840" cy="210" r="7" fill="var(--accent3)" opacity="0.85"/>
-        <circle cx="840" cy="210" r="3" fill="var(--bg)"/>
-      </g>
-      <g class="pin" data-name="Georgetown Center on Poverty &amp; Inequality" data-loc="Georgetown University, Washington, DC" data-desc="Founded by Peter Edelman. Bridges research and policy on public benefits, jobs, care, housing, and income support. Helped design monthly CTC payments.">
-        <circle cx="790" cy="280" r="7" fill="var(--warm)" opacity="0.85"/>
-        <circle cx="790" cy="280" r="3" fill="var(--bg)"/>
-      </g>
-      <g class="pin" data-name="Center for Poverty &amp; Inequality Research" data-loc="UC Davis, CA" data-desc="Federally designated since 2011. Studies labor markets, safety net, intergenerational mobility, and immigration &amp; poverty.">
-        <circle cx="185" cy="300" r="7" fill="var(--danger)" opacity="0.85"/>
-        <circle cx="185" cy="300" r="3" fill="var(--bg)"/>
-      </g>
-      <g class="pin" data-name="Russell Sage Foundation" data-loc="New York, NY" data-desc="Est. 1907. One of America's oldest foundations. Funds social science research on poverty, immigration, inequality, and the future of work.">
-        <circle cx="820" cy="235" r="7" fill="var(--accent)" opacity="0.85"/>
-        <circle cx="820" cy="235" r="3" fill="var(--bg)"/>
-      </g>
-      <g class="pin" data-name="National Center for Children in Poverty" data-loc="Bank Street College, New York, NY" data-desc="Founded 1989 at Columbia, now at Bank Street. Researches child poverty, TANF/SNAP policy, early childhood education, and foster care.">
-        <circle cx="830" cy="220" r="7" fill="var(--accent2)" opacity="0.85"/>
-        <circle cx="830" cy="220" r="3" fill="var(--bg)"/>
-      </g>
-    </svg>
-  </div>
-
-  <div class="center-list">
-    <div class="center-card">
-      <h3>Institute for Research on Poverty</h3>
-      <div class="loc">University of Wisconsin&ndash;Madison</div>
-      <p>The nation's first federally funded poverty research center (1966). Core areas: causes and consequences of poverty, social policy evaluation.</p>
-      <div class="links">
-        <a href="https://www.irp.wisc.edu" target="_blank">irp.wisc.edu</a>
-      </div>
-    </div>
-    <div class="center-card">
-      <h3>Stanford Center on Poverty &amp; Inequality</h3>
-      <div class="loc">Stanford University, CA</div>
-      <p>Founded 2006. Developed the California Poverty Measure and the American Opportunity Study. Publishes <em>Pathways Magazine</em>.</p>
-      <div class="links">
-        <a href="https://inequality.stanford.edu" target="_blank">inequality.stanford.edu</a>
-        <a href="Raw/History%20%26%20Acknowledgments%20-%20Stanford%20Center%20on%20Poverty%20and%20Inequality.pdf">Source PDF</a>
-      </div>
-    </div>
-    <div class="center-card">
-      <h3>Opportunity Insights</h3>
-      <div class="loc">Harvard University, Cambridge, MA</div>
-      <p>Founded 2018 by Chetty, Friedman &amp; Hendren. Uses anonymized tax records and big data to map economic mobility at the neighborhood level.</p>
-      <div class="links">
-        <a href="https://opportunityinsights.org" target="_blank">opportunityinsights.org</a>
-        <a href="Raw/Chetty%2C%20Friedman%2C%20and%20Hendren%20Launch%20Opportunity%20Insights%20_%20Opportunity%20Insights.pdf">Source PDF</a>
-      </div>
-    </div>
-    <div class="center-card">
-      <h3>Georgetown Center on Poverty &amp; Inequality</h3>
-      <div class="loc">Georgetown Law, Washington, DC</div>
-      <p>Founded by Peter Edelman. Focuses on public benefits, good jobs, income support, care, and housing policy. Helped design monthly CTC payments.</p>
-      <div class="links">
-        <a href="https://www.georgetownpoverty.org" target="_blank">georgetownpoverty.org</a>
-        <a href="Raw/About%20-%20Georgetown%20Center%20on%20Poverty%20and%20Inequality.pdf">Source PDF</a>
-      </div>
-    </div>
-    <div class="center-card">
-      <h3>Center for Poverty &amp; Inequality Research</h3>
-      <div class="loc">UC Davis, CA</div>
-      <p>Federally designated since 2011. Four themes: labor markets, non-cash safety net, children &amp; intergenerational mobility, immigration &amp; poverty.</p>
-      <div class="links">
-        <a href="https://poverty.ucdavis.edu" target="_blank">poverty.ucdavis.edu</a>
-        <a href="Raw/About%20the%20Center%20-%20Center%20for%20Poverty%20and%20Inequality%20Research.pdf">Source PDF</a>
-      </div>
-    </div>
-    <div class="center-card">
-      <h3>Russell Sage Foundation</h3>
-      <div class="loc">New York, NY</div>
-      <p>America's oldest social-science foundation (1907). Funds research on poverty, immigration, inequality, and the future of work.</p>
-      <div class="links">
-        <a href="https://www.russellsage.org" target="_blank">russellsage.org</a>
-        <a href="Raw/Foundation%20History%20_%20Russell%20Sage%20Foundation.pdf">Source PDF</a>
-      </div>
-    </div>
-    <div class="center-card">
-      <h3>National Center for Children in Poverty</h3>
-      <div class="loc">Bank Street College, New York, NY</div>
-      <p>Founded 1989 at Columbia; moved to Bank Street 2019. Researches child poverty, TANF/SNAP, early childhood education, and foster care.</p>
-      <div class="links">
-        <a href="https://www.nccp.org" target="_blank">nccp.org</a>
-        <a href="Raw/National%20Center%20for%20Children%20in%20Poverty%20(NCCP)%20-%20Bank%20Street%20College%20of%20Education.pdf">Source PDF</a>
-      </div>
-    </div>
+  <div class="map-container">
+    <svg id="usMap" viewBox="0 0 960 600"></svg>
+    <div class="map-hint">Click a pin on the map to explore each center</div>
   </div>
 </section>
+
+<!-- Detail overlay -->
+<div class="detail-overlay" id="detailOverlay">
+  <div class="detail-panel" id="detailPanel">
+    <button class="close-btn" id="detailClose">&times;</button>
+    <div class="dp-badge" id="dpBadge"></div>
+    <h3 id="dpName"></h3>
+    <div class="dp-loc" id="dpLoc"></div>
+    <div class="dp-founded" id="dpFounded"></div>
+    <div class="dp-desc" id="dpDesc"></div>
+    <div class="dp-focus-title">Focus Areas</div>
+    <div class="dp-tags" id="dpTags"></div>
+    <div class="dp-links" id="dpLinks"></div>
+  </div>
+</div>
 
 <!-- ═══════ FURTHER READING ═══════ -->
 <section id="reading">
@@ -582,32 +532,296 @@
 </section>
 
 <footer>
-  Econ 136 &middot; Poverty Research Knowledge Base &middot; 16 sources &middot; 7 centers mapped
+  Econ 136 &middot; Poverty Research Knowledge Base &middot; 16 sources &middot; 12 centers mapped
 </footer>
 
+<!-- ═══════ JS: MAP + PINS + DETAIL PANEL ═══════ -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
 <script>
-const tooltip = document.getElementById("tooltip");
-const mapContainer = document.getElementById("mapContainer");
+const CENTERS = [
+  {
+    id: "irp",
+    name: "Institute for Research on Poverty",
+    abbr: "IRP",
+    lat: 43.076, lon: -89.412,
+    color: "#6c9bff",
+    badge: "Federally Designated",
+    badgeColor: "#6c9bff",
+    location: "University of Wisconsin\u2013Madison",
+    founded: "Founded 1966 \u2014 the nation\u2019s first federally funded poverty research center",
+    desc: "Created as part of the War on Poverty, IRP has been the leading U.S. center for academic poverty research for nearly 60 years. It pioneered the negative income tax experiments and has trained generations of poverty scholars. Robert Haveman, Robert Lampman, and Timothy Smeeding are among its most influential affiliates.",
+    focus: ["Poverty causes & consequences", "Social policy evaluation", "Income inequality", "Welfare reform effects", "Child well-being"],
+    website: "https://www.irp.wisc.edu",
+    pdf: null
+  },
+  {
+    id: "stanford",
+    name: "Stanford Center on Poverty & Inequality",
+    abbr: "Stanford CPI",
+    lat: 37.427, lon: -122.170,
+    color: "#a07cff",
+    badge: "Federally Designated",
+    badgeColor: "#a07cff",
+    location: "Stanford University, CA",
+    founded: "Founded 2006 with Hewlett & Elfenworks Foundation support",
+    desc: "Stanford CPI provides research, policy analysis, and training on poverty and inequality. It developed the California Poverty Measure (a state-level SPM), the American Opportunity Study, the American Voices Project, and publishes Pathways Magazine. Led the field in connecting poverty measurement to state-level policy.",
+    focus: ["California Poverty Measure", "Pathways Magazine", "Anti-poverty interventions", "Inequality data", "American Opportunity Study"],
+    website: "https://inequality.stanford.edu",
+    pdf: "Raw/History%20%26%20Acknowledgments%20-%20Stanford%20Center%20on%20Poverty%20and%20Inequality.pdf"
+  },
+  {
+    id: "oi",
+    name: "Opportunity Insights",
+    abbr: "OI",
+    lat: 42.378, lon: -71.117,
+    color: "#5cf0b0",
+    badge: "Big Data Lab",
+    badgeColor: "#5cf0b0",
+    location: "Harvard University, Cambridge, MA",
+    founded: "Founded 2018 by Raj Chetty, John Friedman & Nathaniel Hendren",
+    desc: "Opportunity Insights harnesses anonymized IRS tax records and Census data to map economic mobility at the neighborhood level across the entire U.S. Their Opportunity Atlas lets anyone look up upward-mobility rates by tract. Policy partnerships in Charlotte, Seattle, Minneapolis, and Detroit translate findings into local action. Called \u201cthe most important research effort in economics today\u201d by the New York Times.",
+    focus: ["Economic mobility", "Big data & IRS records", "Neighborhood effects", "Racial inequality", "Higher education access", "City policy partnerships"],
+    website: "https://opportunityinsights.org",
+    pdf: "Raw/Chetty%2C%20Friedman%2C%20and%20Hendren%20Launch%20Opportunity%20Insights%20_%20Opportunity%20Insights.pdf"
+  },
+  {
+    id: "georgetown",
+    name: "Georgetown Center on Poverty & Inequality",
+    abbr: "GCPI",
+    lat: 38.907, lon: -77.073,
+    color: "#ffa96c",
+    badge: "Policy-Focused",
+    badgeColor: "#ffa96c",
+    location: "Georgetown University Law Center, Washington, DC",
+    founded: "Founded by Peter Edelman, who served alongside Robert F. Kennedy",
+    desc: "GCPI bridges research and policy, delivering evidence-based ideas to Congress and federal agencies. It helped design the monthly payment structure of the expanded Child Tax Credit during the pandemic. Core issues include public benefits, good jobs, income & cash assistance, child care & paid leave, and housing. Its founding reflects a half-century lineage from the civil rights and anti-poverty movements.",
+    focus: ["Public benefits (SNAP, TANF)", "Child Tax Credit design", "Good jobs & worker power", "Care & paid leave", "Housing policy", "Racial & gender equity"],
+    website: "https://www.georgetownpoverty.org",
+    pdf: "Raw/About%20-%20Georgetown%20Center%20on%20Poverty%20and%20Inequality.pdf"
+  },
+  {
+    id: "ucdavis",
+    name: "Center for Poverty & Inequality Research",
+    abbr: "UC Davis CPIR",
+    lat: 38.543, lon: -121.741,
+    color: "#ff6c8a",
+    badge: "Federally Designated",
+    badgeColor: "#ff6c8a",
+    location: "UC Davis, CA",
+    founded: "Founded 2011 with a $4M HHS grant \u2014 one of three federally designated Poverty Research Centers",
+    desc: "UC Davis CPIR engages faculty across economics, sociology, psychology, political science, education, and law. It is one of only three federally designated poverty centers (alongside IRP and Stanford CPI). Research themes span labor markets, the non-cash safety net, intergenerational mobility, and immigration. It runs conferences, visiting scholar programs, and an extramural grants program for new researchers.",
+    focus: ["Labor markets & poverty", "Non-cash safety net", "Children & intergenerational mobility", "Immigration & poverty"],
+    website: "https://poverty.ucdavis.edu",
+    pdf: "Raw/About%20the%20Center%20-%20Center%20for%20Poverty%20and%20Inequality%20Research.pdf"
+  },
+  {
+    id: "rsf",
+    name: "Russell Sage Foundation",
+    abbr: "RSF",
+    lat: 40.765, lon: -73.966,
+    color: "#6c9bff",
+    badge: "Foundation \u2022 Est. 1907",
+    badgeColor: "#6c9bff",
+    location: "New York, NY",
+    founded: "Established 1907 by Margaret Olivia Sage \u2014 the nation\u2019s first general-purpose social science foundation",
+    desc: "With a $10 million founding gift, RSF has funded poverty and inequality research for over a century. Current program areas include the social, economic, and political effects of the Great Recession; the future of work; race, ethnicity, and immigration; and social inequality. It publishes the RSF Journal and funds visiting scholar fellowships at its New York headquarters.",
+    focus: ["Social inequality", "Future of work", "Immigration", "Race & ethnicity", "Economic insecurity", "RSF Journal"],
+    website: "https://www.russellsage.org",
+    pdf: "Raw/Foundation%20History%20_%20Russell%20Sage%20Foundation.pdf"
+  },
+  {
+    id: "nccp",
+    name: "National Center for Children in Poverty",
+    abbr: "NCCP",
+    lat: 40.812, lon: -73.961,
+    color: "#a07cff",
+    badge: "Child Poverty Focus",
+    badgeColor: "#a07cff",
+    location: "Bank Street College of Education, New York, NY",
+    founded: "Founded 1989 at Columbia University; moved to Bank Street College 2019",
+    desc: "NCCP is the nation\u2019s leading research center focused specifically on child poverty. It produces 50-state policy comparisons of TANF and SNAP, tracks child poverty demographics, and researches early childhood education, foster care, paid family leave, disability, and immigration as they affect low-income children. As of 2025 it is part of Bank Street\u2019s Institute for Thriving Children & Families.",
+    focus: ["Child poverty data", "TANF & SNAP policy", "Early childhood education", "Foster care", "Paid family leave", "50-state policy comparisons"],
+    website: "https://www.nccp.org",
+    pdf: "Raw/National%20Center%20for%20Children%20in%20Poverty%20(NCCP)%20-%20Bank%20Street%20College%20of%20Education.pdf"
+  },
+  {
+    id: "columbia",
+    name: "Center on Poverty & Social Policy",
+    abbr: "Columbia CPSP",
+    lat: 40.808, lon: -73.962,
+    color: "#5cf0b0",
+    badge: "University Lab",
+    badgeColor: "#5cf0b0",
+    location: "Columbia University, New York, NY",
+    founded: "Directed by Christopher Wimer; builds on Columbia\u2019s long poverty research tradition",
+    desc: "Columbia CPSP produces monthly and annual poverty estimates using the Supplemental Poverty Measure, often weeks before official Census reports. Its real-time tracking of the Child Tax Credit\u2019s antipoverty impact in 2021 was widely cited in policy debates. The center also studies cash transfer programs and the design of the social safety net.",
+    focus: ["Monthly poverty tracking (SPM)", "Child Tax Credit analysis", "Cash transfers", "Safety net design", "Real-time policy evaluation"],
+    website: "https://www.povertycenter.columbia.edu",
+    pdf: null
+  },
+  {
+    id: "umich",
+    name: "Poverty Solutions",
+    abbr: "U-M Poverty Solutions",
+    lat: 42.278, lon: -83.738,
+    color: "#ffa96c",
+    badge: "University Initiative",
+    badgeColor: "#ffa96c",
+    location: "University of Michigan, Ann Arbor, MI",
+    founded: "Launched 2016; successor to the National Poverty Center (est. 2002)",
+    desc: "Poverty Solutions is a university-wide initiative that partners with communities to find and test strategies to prevent and alleviate poverty. U of Michigan also hosts the Panel Study of Income Dynamics (PSID), the world\u2019s longest-running household panel study (since 1968), and the former National Poverty Center. PSID has generated over 4,000 publications across economics and sociology.",
+    focus: ["PSID (Panel Study of Income Dynamics)", "Community-partnered research", "Intergenerational poverty", "Place-based interventions", "Financial security"],
+    website: "https://poverty.umich.edu",
+    pdf: "Raw/The%20Longitudinal%20Revolution_%20Sociological%20research%20at%20the%2050-year%20milestone%20of%20the%20Panel%20Study%20of%20Income%20Dynamics%20-%20PMC.pdf"
+  },
+  {
+    id: "urban",
+    name: "Urban Institute",
+    abbr: "Urban",
+    lat: 38.898, lon: -77.017,
+    color: "#6c9bff",
+    badge: "Think Tank",
+    badgeColor: "#6c9bff",
+    location: "Washington, DC",
+    founded: "Founded 1968 by President Johnson to study the nation\u2019s urban problems",
+    desc: "The Urban Institute was created in the same wave as the War on Poverty to provide independent, evidence-based research on urban policy. Its Income and Benefits Policy Center and the TRIM3 microsimulation model are standard tools for estimating the effects of tax and transfer policy changes on poverty. It publishes the annual \"State of Poverty\" analyses and runs the Safety Net Scorecard.",
+    focus: ["Tax & transfer microsimulation (TRIM3)", "Safety net policy", "Housing & homelessness", "Workforce development", "Racial equity analysis"],
+    website: "https://www.urban.org",
+    pdf: null
+  },
+  {
+    id: "brookings",
+    name: "Brookings Institution",
+    abbr: "Brookings",
+    lat: 38.916, lon: -77.064,
+    color: "#a07cff",
+    badge: "Think Tank",
+    badgeColor: "#a07cff",
+    location: "Washington, DC",
+    founded: "Founded 1916; Economic Studies program deeply engaged in poverty policy since the 1960s",
+    desc: "Brookings\u2019 Economic Studies program and its Center on Children and Families produce some of the most cited policy analyses on poverty in America. The Hamilton Project proposes economic strategies to promote broad-based growth. Ron Haskins, Isabel Sawhill, and Richard Reeves have led influential research on mobility, opportunity, and the middle class. Its 50th-anniversary review of the War on Poverty is a landmark assessment.",
+    focus: ["Economic mobility", "Hamilton Project", "Children & families", "Middle-class economics", "War on Poverty assessments"],
+    website: "https://www.brookings.edu",
+    pdf: null
+  },
+  {
+    id: "census",
+    name: "U.S. Census Bureau \u2014 Poverty Statistics",
+    abbr: "Census Bureau",
+    lat: 38.848, lon: -76.926,
+    color: "#ff6c8a",
+    badge: "Federal Agency",
+    badgeColor: "#ff6c8a",
+    location: "Suitland, MD (outside Washington, DC)",
+    founded: "Poverty measurement program since 1967; SPM since 2011",
+    desc: "The Census Bureau is the authoritative source for official U.S. poverty statistics, publishing annual estimates from the Current Population Survey since 1967. It also produces the Supplemental Poverty Measure (since 2011), which accounts for taxes, in-kind transfers, and geographic cost-of-living variation. The American Community Survey provides poverty data at the local level for every community in America.",
+    focus: ["Official Poverty Measure", "Supplemental Poverty Measure (SPM)", "Current Population Survey", "American Community Survey", "Small-area poverty estimates"],
+    website: "https://www.census.gov/topics/income-poverty/poverty.html",
+    pdf: "Raw/poverty_measure-history.pdf"
+  }
+];
 
-document.querySelectorAll(".pin").forEach(pin => {
-  pin.addEventListener("mouseenter", e => {
-    const name = pin.dataset.name;
-    const desc = pin.dataset.loc + " — " + pin.dataset.desc;
-    tooltip.querySelector("strong").textContent = name;
-    tooltip.querySelector("span").textContent = desc;
-    tooltip.classList.add("visible");
+const width = 960, height = 600;
+const svg = d3.select("#usMap");
+const projection = d3.geoAlbersUsa().scale(1280).translate([width / 2, height / 2]);
+const path = d3.geoPath().projection(projection);
+
+d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us => {
+  svg.append("g")
+    .selectAll("path")
+    .data(topojson.feature(us, us.objects.states).features)
+    .join("path")
+    .attr("class", "state")
+    .attr("d", path);
+
+  svg.append("path")
+    .datum(topojson.mesh(us, us.objects.states, (a, b) => a !== b))
+    .attr("fill", "none")
+    .attr("stroke", "var(--border)")
+    .attr("stroke-width", 0.6)
+    .attr("d", path);
+
+  const pins = svg.selectAll(".map-pin")
+    .data(CENTERS)
+    .join("g")
+    .attr("class", "map-pin")
+    .attr("transform", d => {
+      const p = projection([d.lon, d.lat]);
+      return p ? `translate(${p[0]},${p[1]})` : "translate(-100,-100)";
+    })
+    .on("click", (e, d) => openDetail(d));
+
+  pins.append("circle")
+    .attr("class", "pulse-ring")
+    .attr("r", 6)
+    .attr("fill", d => d.color)
+    .attr("opacity", 0.25);
+
+  pins.append("circle")
+    .attr("class", "ring")
+    .attr("r", 14)
+    .attr("stroke", d => d.color);
+
+  pins.append("circle")
+    .attr("class", "dot")
+    .attr("r", 6)
+    .attr("fill", d => d.color)
+    .attr("opacity", 0.9);
+
+  pins.append("circle")
+    .attr("r", 2.5)
+    .attr("fill", "var(--bg)");
+});
+
+const overlay = document.getElementById("detailOverlay");
+const panel = document.getElementById("detailPanel");
+
+function openDetail(d) {
+  document.getElementById("dpBadge").textContent = d.badge;
+  document.getElementById("dpBadge").style.background = d.badgeColor + "22";
+  document.getElementById("dpBadge").style.color = d.badgeColor;
+  document.getElementById("dpName").textContent = d.name;
+  document.getElementById("dpLoc").textContent = d.location;
+  document.getElementById("dpFounded").textContent = d.founded;
+  document.getElementById("dpDesc").textContent = d.desc;
+
+  const tagsEl = document.getElementById("dpTags");
+  tagsEl.innerHTML = "";
+  d.focus.forEach(f => {
+    const span = document.createElement("span");
+    span.className = "dp-tag";
+    span.textContent = f;
+    tagsEl.appendChild(span);
   });
-  pin.addEventListener("mousemove", e => {
-    const rect = mapContainer.getBoundingClientRect();
-    let x = e.clientX - rect.left + 14;
-    let y = e.clientY - rect.top - 10;
-    if (x + 270 > rect.width) x = e.clientX - rect.left - 270;
-    tooltip.style.left = x + "px";
-    tooltip.style.top = y + "px";
-  });
-  pin.addEventListener("mouseleave", () => {
-    tooltip.classList.remove("visible");
-  });
+
+  const linksEl = document.getElementById("dpLinks");
+  linksEl.innerHTML = "";
+  if (d.website) {
+    const a = document.createElement("a");
+    a.href = d.website;
+    a.target = "_blank";
+    a.textContent = "Visit website \u2192";
+    linksEl.appendChild(a);
+  }
+  if (d.pdf) {
+    const a = document.createElement("a");
+    a.href = d.pdf;
+    a.textContent = "Source PDF \u2192";
+    linksEl.appendChild(a);
+  }
+
+  overlay.classList.add("open");
+}
+
+document.getElementById("detailClose").addEventListener("click", () => {
+  overlay.classList.remove("open");
+});
+overlay.addEventListener("click", e => {
+  if (e.target === overlay) overlay.classList.remove("open");
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") overlay.classList.remove("open");
 });
 </script>
 
