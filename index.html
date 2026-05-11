@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poverty Research in America</title>
+<style>
+  :root {
+    --bg: #0c0e14;
+    --surface: #151820;
+    --card: #1a1e2a;
+    --border: #262c3d;
+    --text: #dce0ed;
+    --muted: #7e879e;
+    --accent: #6c9bff;
+    --accent2: #a07cff;
+    --accent3: #5cf0b0;
+    --warm: #ffa96c;
+    --danger: #ff6c8a;
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(12,14,20,0.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 1.5rem;
+    display: flex; align-items: center; gap: 1.5rem;
+    font-size: 0.85rem;
+  }
+  nav .logo { font-weight: 700; font-size: 1rem; color: var(--accent); white-space: nowrap; }
+  nav a { color: var(--muted); }
+  nav a:hover { color: var(--text); text-decoration: none; }
+
+  /* ─── HERO ─── */
+  .hero {
+    text-align: center;
+    padding: 6rem 1.5rem 4rem;
+    background: linear-gradient(180deg, #111528 0%, var(--bg) 100%);
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero p {
+    max-width: 640px; margin: 1rem auto 0;
+    color: var(--muted); font-size: 1.1rem;
+  }
+
+  /* ─── SECTIONS ─── */
+  section { padding: 4rem 1.5rem; max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: 0.72rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--accent); margin-bottom: 0.4rem;
+  }
+  section > h2 {
+    font-size: 1.75rem; font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  section > .intro {
+    color: var(--muted); max-width: 700px; margin-bottom: 2.5rem;
+  }
+
+  /* ─── TIMELINE ─── */
+  .timeline { position: relative; padding-left: 2.5rem; }
+  .timeline::before {
+    content: "";
+    position: absolute; left: 0.55rem; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--accent), var(--accent2), var(--accent3));
+    border-radius: 2px;
+  }
+  .tl-item { position: relative; margin-bottom: 2rem; }
+  .tl-dot {
+    position: absolute; left: -2.5rem; top: 0.35rem;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: var(--bg);
+  }
+  .tl-item:nth-child(even) .tl-dot { border-color: var(--accent2); }
+  .tl-item:nth-child(3n) .tl-dot { border-color: var(--accent3); }
+  .tl-year {
+    font-size: 0.78rem; font-weight: 700;
+    color: var(--accent); margin-bottom: 0.15rem;
+  }
+  .tl-item:nth-child(even) .tl-year { color: var(--accent2); }
+  .tl-item:nth-child(3n) .tl-year { color: var(--accent3); }
+  .tl-title {
+    font-size: 1.05rem; font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+  .tl-body {
+    color: var(--muted); font-size: 0.92rem;
+  }
+  .tl-body .src {
+    display: inline-block; margin-top: 0.3rem;
+    font-size: 0.78rem; color: var(--accent);
+  }
+
+  /* ─── APPROACHES CARDS ─── */
+  .approach-grid {
+    display: grid; gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+  .approach-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem;
+  }
+  .approach-card .era {
+    font-size: 0.7rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 0.15rem 0.5rem; border-radius: 4px;
+    display: inline-block; margin-bottom: 0.6rem;
+  }
+  .approach-card:nth-child(1) .era { background: rgba(108,155,255,0.15); color: var(--accent); }
+  .approach-card:nth-child(2) .era { background: rgba(160,124,255,0.15); color: var(--accent2); }
+  .approach-card:nth-child(3) .era { background: rgba(92,240,176,0.15); color: var(--accent3); }
+  .approach-card:nth-child(4) .era { background: rgba(255,169,108,0.15); color: var(--warm); }
+  .approach-card:nth-child(5) .era { background: rgba(255,108,138,0.15); color: var(--danger); }
+  .approach-card h3 { font-size: 1rem; margin-bottom: 0.4rem; }
+  .approach-card p { font-size: 0.88rem; color: var(--muted); }
+
+  /* ─── MAP ─── */
+  .map-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1.6 / 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  .map-wrap svg { width: 100%; height: 100%; }
+  .pin {
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .pin:hover { transform: scale(1.35); }
+  .pin circle { transition: fill 0.15s; }
+
+  .center-list {
+    display: grid; gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+  .center-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
+  }
+  .center-card h3 { font-size: 0.95rem; margin-bottom: 0.15rem; }
+  .center-card .loc { font-size: 0.78rem; color: var(--accent); margin-bottom: 0.35rem; }
+  .center-card p { font-size: 0.85rem; color: var(--muted); }
+  .center-card .links { margin-top: 0.5rem; font-size: 0.8rem; }
+  .center-card .links a + a { margin-left: 0.75rem; }
+
+  /* ─── FURTHER READING ─── */
+  .reading-list { list-style: none; padding: 0; }
+  .reading-list li {
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.92rem;
+  }
+  .reading-list li:last-child { border-bottom: none; }
+  .reading-list .tag {
+    font-size: 0.68rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    background: rgba(108,155,255,0.1);
+    color: var(--accent);
+    padding: 0.1rem 0.35rem; border-radius: 3px;
+    margin-left: 0.5rem; vertical-align: middle;
+  }
+  .reading-list .tag.suggested {
+    background: rgba(255,169,108,0.12); color: var(--warm);
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+  }
+
+  /* ─── TOOLTIP ─── */
+  .tooltip {
+    display: none;
+    position: absolute;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.82rem;
+    max-width: 260px;
+    pointer-events: none;
+    z-index: 50;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  .tooltip.visible { display: block; }
+  .tooltip strong { display: block; margin-bottom: 0.15rem; color: var(--text); }
+  .tooltip span { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="logo">Poverty Research in America</span>
+  <a href="#timeline">Timeline</a>
+  <a href="#approaches">Approaches</a>
+  <a href="#map">Research Centers</a>
+  <a href="#reading">Sources</a>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <h1>The Story of Poverty Research in America</h1>
+  <p>From the first poverty thresholds of the 1960s to today's big-data mobility labs &mdash; a visual guide to how the U.S. has studied, measured, and fought poverty.</p>
+</header>
+
+<!-- ═══════ TIMELINE ═══════ -->
+<section id="timeline">
+  <div class="section-label">History</div>
+  <h2>Timeline of Poverty Research</h2>
+  <p class="intro">Key moments in measurement, legislation, institutions, and scholarship that shaped how America understands poverty.</p>
+
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1907</div>
+      <div class="tl-title">Russell Sage Foundation established</div>
+      <div class="tl-body">Margaret Olivia Sage creates the nation's first general-purpose foundation with a $10 million gift, dedicated to "the improvement of social and living conditions in the United States." It becomes one of the earliest funders of social-science research on poverty.
+        <a class="src" href="Raw/Foundation%20History%20_%20Russell%20Sage%20Foundation.pdf">Source PDF &rarr;</a>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1962</div>
+      <div class="tl-title">Michael Harrington publishes <em>The Other America</em></div>
+      <div class="tl-body">Harrington's book exposes the "invisible poor" and helps ignite political will for federal antipoverty action. Dwight MacDonald's 1963 article amplifies the argument, and John Kenneth Galbraith's earlier work provides intellectual grounding.
+        <a class="src" href="Raw/The%20War%20on%20Poverty_%20Measurement%2C%20Trends%2C%20and%20Policy%20-%20PMC.pdf">Source PDF &rarr;</a>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">Jan 1964</div>
+      <div class="tl-title">LBJ declares the "War on Poverty"</div>
+      <div class="tl-body">In his State of the Union address, President Lyndon Johnson announces the War on Poverty. By August the Economic Opportunity Act is signed, creating the Office of Economic Opportunity (OEO) and launching Head Start, Job Corps, Community Action Program, Legal Services, and more. First-year funding: ~$800 million ($6 billion in 2014 dollars).
+        <a class="src" href="Raw/The%20War%20on%20Poverty_%20Measurement%2C%20Trends%2C%20and%20Policy%20-%20PMC.pdf">Source PDF &rarr;</a>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1965</div>
+      <div class="tl-title">Mollie Orshansky's poverty thresholds adopted</div>
+      <div class="tl-body">The OEO adopts a working definition of poverty based on Orshansky's methodology: the cost of a minimum diet &times; 3. Medicaid and Medicare also pass this year as extensions of Social Security.
+        <a class="src" href="Raw/poverty_measure-history.pdf">Source PDF &rarr;</a>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1966</div>
+      <div class="tl-title">Institute for Research on Poverty (IRP) founded</div>
+      <div class="tl-body">The University of Wisconsin&ndash;Madison establishes IRP as the nation's first federally funded center for poverty research, providing a model that future centers will follow.
+        <a class="src" href="Raw/War%20On%20Poverty%20_%20Encyclopedia.com.pdf">Source PDF &rarr;</a>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1967&ndash;68</div>
+      <div class="tl-title">First Census poverty statistics &amp; PSID launches</div>
+      <div class="tl-body">The Census Bureau publishes its first poverty estimates (1967). In 1968 the Panel Study of Income Dynamics begins tracking 4,802 families longitudinally &mdash; the world's longest-running household panel study, originally designed to track entries and exits from poverty.
+        <a class="src" href="Raw/The%20Longitudinal%20Revolution_%20Sociological%20research%20at%20the%2050-year%20milestone%20of%20the%20Panel%20Study%20of%20Income%20Dynamics%20-%20PMC.pdf">Source PDF &rarr;</a>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1972&ndash;74</div>
+      <div class="tl-title">Social Security expansion &amp; SSI created</div>
+      <div class="tl-body">A 20% across-the-board Social Security increase plus automatic COLAs dramatically reduces elderly poverty. The Supplemental Security Income (SSI) program for aged, blind, and disabled Americans becomes law in 1974, along with EITC in 1975.
+        <a class="src" href="Raw/The%20War%20on%20Poverty_%20Measurement%2C%20Trends%2C%20and%20Policy%20-%20PMC.pdf">Source PDF &rarr;</a>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1978</div>
+      <div class="tl-title">OMB formalizes the official poverty measure</div>
+      <div class="tl-body">Statistical Policy Directive No. 14 locks in the Orshansky-based thresholds as the government's official poverty definition. Critics note it ignores in-kind benefits and regional cost variation.
+        <a class="src" href="Raw/poverty_measure-history.pdf">Source PDF &rarr;</a>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1964&ndash;1981</div>
+      <div class="tl-title">Rise and fall of the OEO</div>
+      <div class="tl-body">The Office of Economic Opportunity oversees the bulk of War on Poverty programs for nearly two decades before being dismantled. Its community action approach and evaluation experiments shape future policy research methodology.
+        <a class="src" href="Raw/Project%20MUSE%20-%20%22A%20Mission%20Without%20Precedent%22_%20The%20Rise%20and%20Fall%20of%20the%20Office%20of%20Economic%20Opportunity%2C%201964-1981.pdf">Source PDF &rarr;</a>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1989</div>
+      <div class="tl-title">National Center for Children in Poverty (NCCP) founded</div>
+      <div class="tl-body">Columbia University establishes NCCP to focus research on low-income children and families. It later moves to Bank Street College (2019) and becomes part of its Institute for Thriving Children &amp; Families.
+        <a class="src" href="Raw/National%20Center%20for%20Children%20in%20Poverty%20(NCCP)%20-%20Bank%20Street%20College%20of%20Education.pdf">Source PDF &rarr;</a>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1992&ndash;95</div>
+      <div class="tl-title">NAS panel proposes a new poverty measure</div>
+      <div class="tl-body">The National Academy of Sciences convenes experts who publish <em>Measuring Poverty: A New Approach</em> (1995), arguing the official measure ignores in-kind benefits, payroll taxes, child care costs, and medical expenses. This eventually leads to the Supplemental Poverty Measure.
+        <a class="src" href="Raw/poverty_measure-history.pdf">Source PDF &rarr;</a>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1996</div>
+      <div class="tl-title">Welfare reform &mdash; PRWORA</div>
+      <div class="tl-body">The Personal Responsibility and Work Opportunity Act replaces AFDC with TANF, adding work requirements, time limits, and block grants. The shift from cash welfare to work-conditioned support marks a sea change in antipoverty philosophy.</div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2006</div>
+      <div class="tl-title">Stanford Center on Poverty and Inequality opens</div>
+      <div class="tl-body">Stanford launches CPI with support from the Hewlett and Elfenworks foundations, recognizing poverty as "an unprecedented threat" requiring world-class university research. It develops the California Poverty Measure and Pathways Magazine.
+        <a class="src" href="Raw/History%20%26%20Acknowledgments%20-%20Stanford%20Center%20on%20Poverty%20and%20Inequality.pdf">Source PDF &rarr;</a>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2011</div>
+      <div class="tl-title">Supplemental Poverty Measure &amp; UC Davis center</div>
+      <div class="tl-body">The Census Bureau publishes its first SPM estimates, incorporating taxes, transfers, and regional housing costs. Separately, UC Davis receives a $4M HHS grant to become one of three federally designated Poverty Research Centers. Mark Rank publishes "Rethinking American Poverty," arguing 60% of Americans will experience poverty between ages 20&ndash;75.
+        <a class="src" href="Raw/Rethinking%20American%20Poverty%20-%20Mark%20R.%20Rank%2C%202011.pdf">Source PDF &rarr;</a>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2018</div>
+      <div class="tl-title">Opportunity Insights launches</div>
+      <div class="tl-body">Raj Chetty, John Friedman, and Nathaniel Hendren found Opportunity Insights at Harvard, using big data and IRS records to map economic mobility by neighborhood. Backed by the Gates Foundation and Chan Zuckerberg Initiative, it partners with cities including Charlotte, Seattle, Minneapolis, and Detroit.
+        <a class="src" href="Raw/Chetty%2C%20Friedman%2C%20and%20Hendren%20Launch%20Opportunity%20Insights%20_%20Opportunity%20Insights.pdf">Source PDF &rarr;</a>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2020s</div>
+      <div class="tl-title">Pandemic-era expansion &amp; retrenchment</div>
+      <div class="tl-body">COVID relief temporarily expands the Child Tax Credit, SNAP, and unemployment insurance, cutting child poverty nearly in half in 2021. The Georgetown Center on Poverty and Inequality helps design the monthly CTC payment structure. Expiration of expansions triggers renewed debate on the future of the safety net.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════ APPROACHES ═══════ -->
+<section id="approaches">
+  <div class="section-label">Paradigms</div>
+  <h2>How America Has Studied Poverty</h2>
+  <p class="intro">Research approaches have evolved through distinct eras, each layering new tools and frameworks onto earlier ones.</p>
+
+  <div class="approach-grid">
+    <div class="approach-card">
+      <span class="era">1960s&ndash;70s</span>
+      <h3>Income Measurement &amp; Thresholds</h3>
+      <p>Mollie Orshansky's "food budget &times; 3" formula created the first standardized poverty line. The Census Bureau began annual poverty counts. The focus was on defining <em>who</em> is poor using cash income.</p>
+    </div>
+    <div class="approach-card">
+      <span class="era">1960s&ndash;80s</span>
+      <h3>Experimental &amp; Program Evaluation</h3>
+      <p>The negative income tax experiments and OEO evaluations pioneered randomized social policy research. Head Start, Job Corps, and welfare programs were assessed for causal impact on work, education, and family outcomes.</p>
+    </div>
+    <div class="approach-card">
+      <span class="era">1968&ndash;present</span>
+      <h3>Longitudinal Panel Data</h3>
+      <p>The Panel Study of Income Dynamics (PSID) showed poverty is dynamic: people cycle in and out. This revolutionized the field, enabling research on intergenerational transmission, neighborhood effects, and life-course risk.</p>
+    </div>
+    <div class="approach-card">
+      <span class="era">1990s&ndash;2010s</span>
+      <h3>Structural &amp; Comparative Analysis</h3>
+      <p>Scholars like Mark Rank reframed poverty as a structural "musical chairs" problem rather than individual failure. Cross-national comparisons (Alesina &amp; Glaeser; Brady) showed U.S. poverty rates reflect policy choices, not cultural differences.</p>
+    </div>
+    <div class="approach-card">
+      <span class="era">2010s&ndash;present</span>
+      <h3>Big Data &amp; Spatial Mobility</h3>
+      <p>Raj Chetty and Opportunity Insights use anonymized IRS records to map mobility at the neighborhood level. Machine learning, administrative data linkages, and the Supplemental Poverty Measure give a far richer picture of material hardship.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ MAP ═══════ -->
+<section id="map">
+  <div class="section-label">Present Day</div>
+  <h2>Major Poverty Research Centers</h2>
+  <p class="intro">The current landscape of institutions driving poverty research across the United States.</p>
+
+  <div class="map-wrap" id="mapContainer">
+    <div class="tooltip" id="tooltip"><strong></strong><span></span></div>
+    <svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg">
+      <!-- simplified US outline -->
+      <path d="M150 450 L160 420 L200 380 L240 370 L270 340 L290 330 L320 300 L350 280 L380 260 L430 250 L480 240 L520 230 L560 210 L600 200 L650 190 L700 180 L730 170 L780 160 L830 180 L860 210 L870 240 L860 280 L840 310 L830 340 L810 360 L780 380 L740 400 L700 410 L660 420 L620 430 L580 440 L540 450 L500 460 L460 470 L420 480 L380 490 L340 500 L300 505 L260 500 L220 490 L180 480 L150 450Z"
+        fill="none" stroke="var(--border)" stroke-width="1.5" opacity="0.5"/>
+      <!-- state outlines simplified as regions -->
+      <line x1="560" y1="180" x2="560" y2="460" stroke="var(--border)" stroke-width="0.5" opacity="0.2"/>
+      <line x1="400" y1="240" x2="400" y2="500" stroke="var(--border)" stroke-width="0.5" opacity="0.2"/>
+      <line x1="700" y1="170" x2="700" y2="420" stroke="var(--border)" stroke-width="0.5" opacity="0.2"/>
+
+      <!-- Pins -->
+      <g class="pin" data-name="Institute for Research on Poverty" data-loc="UW-Madison, WI" data-desc="Nation's first poverty research center (1966). Federally designated, focuses on causes/consequences of poverty and social policy.">
+        <circle cx="575" cy="230" r="7" fill="var(--accent)" opacity="0.85"/>
+        <circle cx="575" cy="230" r="3" fill="var(--bg)"/>
+      </g>
+      <g class="pin" data-name="Stanford Center on Poverty &amp; Inequality" data-loc="Stanford, CA" data-desc="Founded 2006. Developed the California Poverty Measure, publishes Pathways Magazine, runs the American Opportunity Study.">
+        <circle cx="175" cy="340" r="7" fill="var(--accent2)" opacity="0.85"/>
+        <circle cx="175" cy="340" r="3" fill="var(--bg)"/>
+      </g>
+      <g class="pin" data-name="Opportunity Insights" data-loc="Harvard University, Cambridge, MA" data-desc="Founded 2018 by Chetty, Friedman &amp; Hendren. Uses big data to map economic mobility and partner with cities nationwide.">
+        <circle cx="840" cy="210" r="7" fill="var(--accent3)" opacity="0.85"/>
+        <circle cx="840" cy="210" r="3" fill="var(--bg)"/>
+      </g>
+      <g class="pin" data-name="Georgetown Center on Poverty &amp; Inequality" data-loc="Georgetown University, Washington, DC" data-desc="Founded by Peter Edelman. Bridges research and policy on public benefits, jobs, care, housing, and income support. Helped design monthly CTC payments.">
+        <circle cx="790" cy="280" r="7" fill="var(--warm)" opacity="0.85"/>
+        <circle cx="790" cy="280" r="3" fill="var(--bg)"/>
+      </g>
+      <g class="pin" data-name="Center for Poverty &amp; Inequality Research" data-loc="UC Davis, CA" data-desc="Federally designated since 2011. Studies labor markets, safety net, intergenerational mobility, and immigration &amp; poverty.">
+        <circle cx="185" cy="300" r="7" fill="var(--danger)" opacity="0.85"/>
+        <circle cx="185" cy="300" r="3" fill="var(--bg)"/>
+      </g>
+      <g class="pin" data-name="Russell Sage Foundation" data-loc="New York, NY" data-desc="Est. 1907. One of America's oldest foundations. Funds social science research on poverty, immigration, inequality, and the future of work.">
+        <circle cx="820" cy="235" r="7" fill="var(--accent)" opacity="0.85"/>
+        <circle cx="820" cy="235" r="3" fill="var(--bg)"/>
+      </g>
+      <g class="pin" data-name="National Center for Children in Poverty" data-loc="Bank Street College, New York, NY" data-desc="Founded 1989 at Columbia, now at Bank Street. Researches child poverty, TANF/SNAP policy, early childhood education, and foster care.">
+        <circle cx="830" cy="220" r="7" fill="var(--accent2)" opacity="0.85"/>
+        <circle cx="830" cy="220" r="3" fill="var(--bg)"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="center-list">
+    <div class="center-card">
+      <h3>Institute for Research on Poverty</h3>
+      <div class="loc">University of Wisconsin&ndash;Madison</div>
+      <p>The nation's first federally funded poverty research center (1966). Core areas: causes and consequences of poverty, social policy evaluation.</p>
+      <div class="links">
+        <a href="https://www.irp.wisc.edu" target="_blank">irp.wisc.edu</a>
+      </div>
+    </div>
+    <div class="center-card">
+      <h3>Stanford Center on Poverty &amp; Inequality</h3>
+      <div class="loc">Stanford University, CA</div>
+      <p>Founded 2006. Developed the California Poverty Measure and the American Opportunity Study. Publishes <em>Pathways Magazine</em>.</p>
+      <div class="links">
+        <a href="https://inequality.stanford.edu" target="_blank">inequality.stanford.edu</a>
+        <a href="Raw/History%20%26%20Acknowledgments%20-%20Stanford%20Center%20on%20Poverty%20and%20Inequality.pdf">Source PDF</a>
+      </div>
+    </div>
+    <div class="center-card">
+      <h3>Opportunity Insights</h3>
+      <div class="loc">Harvard University, Cambridge, MA</div>
+      <p>Founded 2018 by Chetty, Friedman &amp; Hendren. Uses anonymized tax records and big data to map economic mobility at the neighborhood level.</p>
+      <div class="links">
+        <a href="https://opportunityinsights.org" target="_blank">opportunityinsights.org</a>
+        <a href="Raw/Chetty%2C%20Friedman%2C%20and%20Hendren%20Launch%20Opportunity%20Insights%20_%20Opportunity%20Insights.pdf">Source PDF</a>
+      </div>
+    </div>
+    <div class="center-card">
+      <h3>Georgetown Center on Poverty &amp; Inequality</h3>
+      <div class="loc">Georgetown Law, Washington, DC</div>
+      <p>Founded by Peter Edelman. Focuses on public benefits, good jobs, income support, care, and housing policy. Helped design monthly CTC payments.</p>
+      <div class="links">
+        <a href="https://www.georgetownpoverty.org" target="_blank">georgetownpoverty.org</a>
+        <a href="Raw/About%20-%20Georgetown%20Center%20on%20Poverty%20and%20Inequality.pdf">Source PDF</a>
+      </div>
+    </div>
+    <div class="center-card">
+      <h3>Center for Poverty &amp; Inequality Research</h3>
+      <div class="loc">UC Davis, CA</div>
+      <p>Federally designated since 2011. Four themes: labor markets, non-cash safety net, children &amp; intergenerational mobility, immigration &amp; poverty.</p>
+      <div class="links">
+        <a href="https://poverty.ucdavis.edu" target="_blank">poverty.ucdavis.edu</a>
+        <a href="Raw/About%20the%20Center%20-%20Center%20for%20Poverty%20and%20Inequality%20Research.pdf">Source PDF</a>
+      </div>
+    </div>
+    <div class="center-card">
+      <h3>Russell Sage Foundation</h3>
+      <div class="loc">New York, NY</div>
+      <p>America's oldest social-science foundation (1907). Funds research on poverty, immigration, inequality, and the future of work.</p>
+      <div class="links">
+        <a href="https://www.russellsage.org" target="_blank">russellsage.org</a>
+        <a href="Raw/Foundation%20History%20_%20Russell%20Sage%20Foundation.pdf">Source PDF</a>
+      </div>
+    </div>
+    <div class="center-card">
+      <h3>National Center for Children in Poverty</h3>
+      <div class="loc">Bank Street College, New York, NY</div>
+      <p>Founded 1989 at Columbia; moved to Bank Street 2019. Researches child poverty, TANF/SNAP, early childhood education, and foster care.</p>
+      <div class="links">
+        <a href="https://www.nccp.org" target="_blank">nccp.org</a>
+        <a href="Raw/National%20Center%20for%20Children%20in%20Poverty%20(NCCP)%20-%20Bank%20Street%20College%20of%20Education.pdf">Source PDF</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FURTHER READING ═══════ -->
+<section id="reading">
+  <div class="section-label">Sources &amp; Further Reading</div>
+  <h2>Your Documents &amp; Suggested Additions</h2>
+  <p class="intro">All PDFs in your knowledge base, plus suggested articles that would strengthen the collection.</p>
+
+  <ul class="reading-list">
+    <li><a href="Raw/The%20War%20on%20Poverty_%20Measurement%2C%20Trends%2C%20and%20Policy%20-%20PMC.pdf">Haveman, Blank, Moffitt, Smeeding &amp; Wallace &mdash; "The War on Poverty: Measurement, Trends, and Policy" (2015)</a> <span class="tag">in kb</span></li>
+    <li><a href="Raw/poverty_measure-history.pdf">Census Bureau &mdash; "Poverty: The History of a Measure"</a> <span class="tag">in kb</span></li>
+    <li><a href="Raw/History%20of%20poverty%20in%20the%20United%20States%20-%20Wikipedia.pdf">Wikipedia &mdash; "History of Poverty in the United States"</a> <span class="tag">in kb</span></li>
+    <li><a href="Raw/Rethinking%20American%20Poverty%20-%20Mark%20R.%20Rank%2C%202011.pdf">Mark R. Rank &mdash; "Rethinking American Poverty" (2011)</a> <span class="tag">in kb</span></li>
+    <li><a href="Raw/The%20Longitudinal%20Revolution_%20Sociological%20research%20at%20the%2050-year%20milestone%20of%20the%20Panel%20Study%20of%20Income%20Dynamics%20-%20PMC.pdf">Pfeffer, Fomby &amp; Insolera &mdash; "The Longitudinal Revolution: 50 Years of PSID" (2020)</a> <span class="tag">in kb</span></li>
+    <li><a href="Raw/War%20On%20Poverty%20_%20Encyclopedia.com.pdf">Encyclopedia.com &mdash; "War on Poverty"</a> <span class="tag">in kb</span></li>
+    <li><a href="Raw/Project%20MUSE%20-%20%22A%20Mission%20Without%20Precedent%22_%20The%20Rise%20and%20Fall%20of%20the%20Office%20of%20Economic%20Opportunity%2C%201964-1981.pdf">Project MUSE &mdash; "A Mission Without Precedent: Rise &amp; Fall of the OEO" (1964&ndash;1981)</a> <span class="tag">in kb</span></li>
+    <li><a href="Raw/Chetty%2C%20Friedman%2C%20and%20Hendren%20Launch%20Opportunity%20Insights%20_%20Opportunity%20Insights.pdf">Opportunity Insights &mdash; Launch Announcement (2018)</a> <span class="tag">in kb</span></li>
+    <li><a href="Raw/Back%20at%20Harvard%2C%20Chetty%20Explores%20Economic%20Inequality%20Through%20%27Opportunity%20Insights%27%20Initiative%20_%20News%20_%20The%20Harvard%20Crimson.pdf">Harvard Crimson &mdash; "Chetty Explores Economic Inequality Through Opportunity Insights"</a> <span class="tag">in kb</span></li>
+    <li><a href="Raw/Foundation%20History%20_%20Russell%20Sage%20Foundation.pdf">Russell Sage Foundation &mdash; History</a> <span class="tag">in kb</span></li>
+    <li><a href="Raw/History%20%26%20Acknowledgments%20-%20Stanford%20Center%20on%20Poverty%20and%20Inequality.pdf">Stanford CPI &mdash; History &amp; Acknowledgments</a> <span class="tag">in kb</span></li>
+    <li><a href="Raw/About%20-%20Georgetown%20Center%20on%20Poverty%20and%20Inequality.pdf">Georgetown Center on Poverty &amp; Inequality &mdash; About</a> <span class="tag">in kb</span></li>
+    <li><a href="Raw/About%20the%20Center%20-%20Center%20for%20Poverty%20and%20Inequality%20Research.pdf">UC Davis Center for Poverty Research &mdash; About</a> <span class="tag">in kb</span></li>
+    <li><a href="Raw/National%20Center%20for%20Children%20in%20Poverty%20(NCCP)%20-%20Bank%20Street%20College%20of%20Education.pdf">NCCP &mdash; Bank Street College overview</a> <span class="tag">in kb</span></li>
+    <li><a href="Raw/NCCP.pdf">NCCP website capture</a> <span class="tag">in kb</span></li>
+
+    <li style="margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--border);">
+      <strong style="color: var(--warm);">Suggested additions to strengthen the knowledge base:</strong>
+    </li>
+    <li><a href="https://www.nber.org/papers/w23618" target="_blank">Chetty et al. &mdash; "The Fading American Dream" (NBER, 2017)</a> <span class="tag suggested">suggested</span></li>
+    <li><a href="https://opportunityinsights.org/paper/land-of-opportunity/" target="_blank">Chetty et al. &mdash; "Where Is the Land of Opportunity?" (2014)</a> <span class="tag suggested">suggested</span></li>
+    <li><a href="https://www.census.gov/library/publications/2023/demo/p60-280.html" target="_blank">Census Bureau &mdash; SPM Report 2022</a> <span class="tag suggested">suggested</span></li>
+    <li><a href="https://www.cbpp.org/research/poverty-and-inequality/the-supplemental-poverty-measure-a-better-measure-for-assessing" target="_blank">CBPP &mdash; "The SPM: A Better Measure for Assessing Poverty"</a> <span class="tag suggested">suggested</span></li>
+    <li><a href="https://www.irp.wisc.edu/resource/50-years-of-irp/" target="_blank">IRP &mdash; "50 Years of the Institute for Research on Poverty"</a> <span class="tag suggested">suggested</span></li>
+    <li><a href="https://academic.oup.com/qje/article/131/2/519/2607080" target="_blank">Chetty, Hendren &amp; Katz &mdash; "The Effects of Exposure to Better Neighborhoods on Children" (QJE, 2016)</a> <span class="tag suggested">suggested</span></li>
+    <li><a href="https://www.nber.org/papers/w25147" target="_blank">Chetty et al. &mdash; "Race and Economic Opportunity in the United States" (NBER, 2018)</a> <span class="tag suggested">suggested</span></li>
+    <li><a href="https://www.brookings.edu/articles/an-overview-of-the-war-on-poverty/" target="_blank">Brookings &mdash; "An Overview of the War on Poverty"</a> <span class="tag suggested">suggested</span></li>
+    <li><a href="https://www.npc.umich.edu" target="_blank">National Poverty Center (University of Michigan) &mdash; homepage</a> <span class="tag suggested">suggested</span></li>
+    <li><a href="https://www.povertycenter.columbia.edu" target="_blank">Columbia Center on Poverty &amp; Social Policy &mdash; homepage</a> <span class="tag suggested">suggested</span></li>
+  </ul>
+</section>
+
+<footer>
+  Econ 136 &middot; Poverty Research Knowledge Base &middot; 16 sources &middot; 7 centers mapped
+</footer>
+
+<script>
+const tooltip = document.getElementById("tooltip");
+const mapContainer = document.getElementById("mapContainer");
+
+document.querySelectorAll(".pin").forEach(pin => {
+  pin.addEventListener("mouseenter", e => {
+    const name = pin.dataset.name;
+    const desc = pin.dataset.loc + " — " + pin.dataset.desc;
+    tooltip.querySelector("strong").textContent = name;
+    tooltip.querySelector("span").textContent = desc;
+    tooltip.classList.add("visible");
+  });
+  pin.addEventListener("mousemove", e => {
+    const rect = mapContainer.getBoundingClientRect();
+    let x = e.clientX - rect.left + 14;
+    let y = e.clientY - rect.top - 10;
+    if (x + 270 > rect.width) x = e.clientX - rect.left - 270;
+    tooltip.style.left = x + "px";
+    tooltip.style.top = y + "px";
+  });
+  pin.addEventListener("mouseleave", () => {
+    tooltip.classList.remove("visible");
+  });
+});
+</script>
+
+</body>
+</html>
