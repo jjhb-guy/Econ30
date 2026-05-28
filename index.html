@@ -392,6 +392,74 @@
     text-align: center; padding: 1.5rem;
   }
 
+  /* ─── TAKEAWAYS / CONCLUSION ─── */
+  #takeaways {
+    background: linear-gradient(180deg, var(--bg) 0%, #111528 50%, var(--bg) 100%);
+    padding: 4rem 1.5rem;
+  }
+  #takeaways .verdict-tag {
+    display: inline-block;
+    font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--accent3);
+    margin-bottom: 0.8rem;
+  }
+  #takeaways h2 {
+    font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+    background: linear-gradient(135deg, var(--accent3), var(--accent));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1.2rem;
+  }
+  #takeaways .verdict-lead {
+    max-width: 820px; margin-bottom: 2rem;
+    font-size: 1.02rem; color: var(--text); line-height: 1.75;
+  }
+  .takeaway-grid {
+    display: grid; gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    margin-bottom: 2rem;
+  }
+  .takeaway-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.25rem 1.3rem;
+    border-left: 3px solid var(--accent);
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .takeaway-card:hover { transform: translateY(-2px); }
+  .takeaway-card:nth-child(2) { border-left-color: var(--accent2); }
+  .takeaway-card:nth-child(3) { border-left-color: var(--accent3); }
+  .takeaway-card:nth-child(4) { border-left-color: var(--warm); }
+  .takeaway-card .t-num {
+    font-size: 0.65rem; font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .takeaway-card .t-num::before { content: "▸ "; }
+  .takeaway-card h3 {
+    font-size: 1rem; font-weight: 700; color: var(--text);
+    line-height: 1.4; margin-bottom: 0.6rem;
+  }
+  .takeaway-card h3 em { font-style: normal; color: var(--accent3); }
+  .takeaway-card p {
+    font-size: 0.86rem; color: var(--muted); line-height: 1.65;
+  }
+  .takeaway-card p + p { margin-top: 0.55rem; }
+  .verdict-box {
+    background: var(--card); border: 1px solid var(--border);
+    border-left: 3px solid var(--accent3);
+    border-radius: 12px; padding: 1.4rem 1.6rem;
+    max-width: 900px;
+  }
+  .verdict-box h3 {
+    font-size: 0.9rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--accent3); margin-bottom: 0.7rem;
+  }
+  .verdict-box p { font-size: 0.92rem; color: var(--text); line-height: 1.75; }
+  .verdict-box p + p { margin-top: 0.7rem; color: var(--muted); }
+  .verdict-box strong { color: var(--text); }
+
   /* ─── RESEARCH QUESTION ─── */
   .question-block {
     text-align: center;
@@ -976,6 +1044,7 @@
   <a href="#alignment">Alignment</a>
   <a href="#map">Centers</a>
   <a href="#reading">Sources</a>
+  <a href="#takeaways">Takeaways</a>
 </nav>
 
 <!-- ═══════ CUTSCENE ═══════ -->
@@ -1128,7 +1197,8 @@
   <p class="intro">Google Books Ngram frequencies measure how often selected terms appear in published English (corpus and smoothing from <code>data/ngrams.js</code>). This tracks <strong>public language</strong>, not academic themes&mdash;for those, see the OpenAlex topic chart below.</p>
 
   <div class="method-box">
-    <strong>Ngrams method:</strong> term frequency = share of all tokens in the corpus that year. Toggle terms below. The Google JSON API stops returning data after ~2011 (zeros after that); <code>build_ngrams.py</code> auto-trims. Refresh: <code>python build_ngrams.py</code>
+    <strong>Ngrams method:</strong> term frequency = share of all tokens in the corpus that year. Toggle terms below.<br>
+    <strong>Source:</strong> data extracted directly from the user&rsquo;s saved <a href="https://books.google.com/ngrams/graph?content=inequality,poverty,innovation,tech,progress&amp;year_start=1800&amp;year_end=2022&amp;corpus=en&amp;smoothing=3" target="_blank" rel="noreferrer">Google Ngram Viewer page</a> (English corpus, 1800&ndash;2022, smoothing&nbsp;=&nbsp;3). Refresh: <code>python build_ngrams_from_saved.py</code>
   </div>
 
   <div class="ngram-toggles" id="ngramToggles"></div>
@@ -1479,8 +1549,51 @@
   </ul>
 </section>
 
+<!-- ═══════ TAKEAWAYS / CONCLUSION ═══════ -->
+<section id="takeaways">
+  <div class="verdict-tag">So: is research aligned?</div>
+  <h2>Takeaways &mdash; what the data on this page actually says</h2>
+  <p class="verdict-lead">Going back to the central question: <em>has poverty &amp; inequality research kept pace with actual inequality and with how Americans talk about it?</em> Pulling together the OpenAlex trends, the methods/data fingerprint, the Google Books series, and the alignment overlay, four things hold up.</p>
+
+  <div class="takeaway-grid">
+    <div class="takeaway-card">
+      <div class="t-num">Takeaway 01 · Volume</div>
+      <h3>Research <em>did</em> ramp up as inequality rose</h3>
+      <p>Cited econ + sociology papers tagged poverty or economic inequality grew from a few hundred in the late 1970s to roughly <strong>9,000 per five-year window in 2015&ndash;19</strong> (OpenAlex Trends chart).</p>
+      <p>The top-1% income share and the volume of research broadly co-rise from the late 1990s onward, the period the alignment chart highlights most cleanly.</p>
+    </div>
+
+    <div class="takeaway-card">
+      <div class="t-num">Takeaway 02 · Methods</div>
+      <h3>The field had its own <em>credibility revolution</em></h3>
+      <p>In the methods fingerprint, &ldquo;decomposition&rdquo; was the dominant named technique in the 1980s&ndash;90s. By 2015&ndash;19 <strong>&ldquo;randomized&rdquo; / experiment</strong> overtakes it, and &ldquo;longitudinal / panel&rdquo; passes &ldquo;survey data&rdquo; in 2020&ndash;24.</p>
+      <p>The papers Chetty, Hoynes, Hendren, Katz and others produced in that window pushed empirical poverty work toward administrative-record linkage and quasi-experimental designs.</p>
+    </div>
+
+    <div class="takeaway-card">
+      <div class="t-num">Takeaway 03 · Public discourse</div>
+      <h3>Books lagged scholarship by roughly a decade</h3>
+      <p>In your Google Books series, <strong>&ldquo;inequality&rdquo; barely moves until the mid&ndash;2000s and then surges through 2019</strong>&mdash;peaking after Piketty&rsquo;s 2014 <em>Capital</em>. Academic publication share was already climbing well before that.</p>
+      <p>So research wasn&rsquo;t just keeping pace with the conversation; for much of the 2000s it was <em>leading</em> the conversation.</p>
+    </div>
+
+    <div class="takeaway-card">
+      <div class="t-num">Takeaway 04 · Subjects</div>
+      <h3>Place, children, and health are the <em>persistent</em> subjects</h3>
+      <p>In the per-era subject heatmap, three terms dominate across every five-year window: <strong>health, education, and children</strong>. Neighborhood / place rises with the Chetty&ndash;Hendren&ndash;Katz wave.</p>
+      <p>The Top-Cited Works panel underlines the same thing&mdash;Wilson&rsquo;s <em>Truly Disadvantaged</em>, Sen&rsquo;s <em>On Economic Inequality</em>, and the Acemoglu/Piketty/Chetty cluster set what each decade was reading.</p>
+    </div>
+  </div>
+
+  <div class="verdict-box">
+    <h3>Verdict</h3>
+    <p><strong>Mostly yes&mdash;research has tracked reality, and in places it led public attention.</strong> The volume of cited work, the shift toward administrative data and causal designs, and the alignment overlay all point in the same direction: as the top-1% income share rose from the late 1970s onward, the field grew, retooled methodologically, and built dedicated labs (Opportunity Insights, Columbia CPSP, UC Davis CPIR) that produce policy-ready estimates at near-real-time cadence.</p>
+    <p>The honest qualification is that the lag isn&rsquo;t zero. Inequality measured in tax records started rising in the early 1980s, but the publication wave and the broad public-discourse wave both arrived ~20 years later. The field also remains heavily English-language and U.S./Western-European in focus, which the OpenAlex topic mix makes visible.</p>
+  </div>
+</section>
+
 <footer>
-  Econ 136 capstone · Refresh data: <code>python build_ngrams.py</code> · <code>python build_topics.py</code> · <code>python build_methods.py</code> · <code>python build_top_works.py</code> · <code>python build_funding.py</code>
+  Econ 136 capstone · Refresh data: <code>python build_ngrams_from_saved.py</code> · <code>python build_topics.py</code> · <code>python build_methods.py</code> · <code>python build_top_works.py</code> · <code>python build_funding.py</code>
 </footer>
 
 <!-- ═══════ JS: MAP + PINS + DETAIL PANEL ═══════ -->
@@ -1647,12 +1760,11 @@ resetMiniTlAuto();
 
 /* ═══════ NGRAMS ═══════ */
 const NGRAM_SERIES = {
-  poverty:       { label: "poverty",       color: "#ff9e3d", group: "pi" },
-  inequality:    { label: "inequality",    color: "#ff6c8a", group: "pi" },
-  progress:      { label: "progress",      color: "#6c9bff", group: "tp" },
-  technology:    { label: "technology",    color: "#a07cff", group: "tp" },
-  innovation:    { label: "innovation",    color: "#5cf0b0", group: "tp" },
-  economic_growth: { label: "economic growth", color: "#ffa96c", group: "tp" },
+  poverty:    { label: "poverty",    color: "#ff9e3d", group: "pi" },
+  inequality: { label: "inequality", color: "#ff6c8a", group: "pi" },
+  progress:   { label: "progress",   color: "#6c9bff", group: "tp" },
+  technology: { label: "tech",       color: "#a07cff", group: "tp" },
+  innovation: { label: "innovation", color: "#5cf0b0", group: "tp" },
 };
 const ngramVisible = new Set(["poverty", "inequality", "progress", "technology", "innovation"]);
 
