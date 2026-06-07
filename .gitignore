@@ -2,15 +2,10 @@
 data/_cache/
 
 # Local personal source material kept outside the deployed site
-Raw/*.html
-Raw/Google Ngram Viewer_*_files/
-Raw/Market design*
-Raw/Economy _ Gallup*
-Raw/Economic Inequality Seen*
-Raw/A Guide to Statistics*
-Raw/Telling the nuanced story*
-Raw/Income Inequality in the U.S._ Major Events*
-Raw/The American Middle Class*
+Raw/
+
+# Raw fetch output (the site consumes the generated data/*.js instead)
+data/*.json
 
 # OS / editor
 .DS_Store

@@ -46,53 +46,105 @@
   nav a { color: var(--muted); }
   nav a:hover { color: var(--text); text-decoration: none; }
 
-  /* ─── CUTSCENE (mandatory intro) ─── */
+  /* ─── CUTSCENE (mandatory comic intro) ─── */
   body.cutscene-lock { overflow: hidden; }
   body.cutscene-lock nav { opacity: 0; pointer-events: none; }
   .cutscene {
     position: fixed; inset: 0; z-index: 500;
-    background: #0a0c12;
+    background: radial-gradient(circle at 50% 0%, #14182a 0%, #0a0c12 70%);
     display: flex; align-items: center; justify-content: center;
-    transition: opacity 0.5s ease, visibility 0.5s;
+    transition: opacity 0.6s ease, visibility 0.6s;
   }
-  .cutscene.done {
-    opacity: 0; visibility: hidden; pointer-events: none;
-  }
+  .cutscene.done { opacity: 0; visibility: hidden; pointer-events: none; }
   .cutscene-inner {
-    width: min(640px, 92vw);
+    width: min(720px, 94vw);
     text-align: center;
-    padding: 2rem 1.5rem;
   }
-  .cutscene-scene {
-    height: 200px; margin-bottom: 1.5rem;
-    display: flex; align-items: flex-end; justify-content: center;
+  .cutscene-kicker {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--accent3);
+    margin-bottom: 0.9rem; opacity: 0.85;
   }
-  .cutscene-scene svg { width: 320px; max-width: 100%; height: auto; }
+
+  /* comic panel stage */
+  .cutscene-stage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(108,155,255,0.08);
+    cursor: pointer;
+    background: #0a0c12;
+  }
+  .cutscene-frame {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+    opacity: 0;
+    transform: scale(1.06);
+    transition: opacity 0.7s ease;
+  }
+  .cutscene-frame.on {
+    opacity: 1;
+    animation: cs-kenburns 7s ease-out forwards;
+  }
+  @keyframes cs-kenburns {
+    from { transform: scale(1.085); }
+    to   { transform: scale(1.0); }
+  }
+  /* gradient + caption overlay inside the panel */
+  .cutscene-caption {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 2.6rem 1.4rem 1.2rem;
+    background: linear-gradient(180deg, transparent 0%, rgba(8,10,18,0.55) 35%, rgba(8,10,18,0.94) 100%);
+    text-align: left;
+  }
+  .cutscene-caption .speaker {
+    font-size: 0.66rem; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--warm);
+    margin-bottom: 0.3rem;
+  }
   .cutscene-text {
-    font-size: 1.05rem; line-height: 1.65; color: var(--text);
-    min-height: 4.5em;
-    transition: opacity 0.3s;
+    font-size: clamp(0.98rem, 2.2vw, 1.18rem);
+    line-height: 1.55; color: #fff;
+    font-weight: 500;
+    min-height: 3.2em;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
   }
-  .cutscene-text.fade { opacity: 0; }
+  .cutscene-text .caret {
+    display: inline-block; width: 2px; height: 1.05em;
+    background: var(--accent3); margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: cs-blink 0.9s steps(1) infinite;
+  }
+  @keyframes cs-blink { 50% { opacity: 0; } }
+  .cutscene-tap {
+    position: absolute; right: 0.9rem; bottom: 0.8rem;
+    font-size: 0.66rem; color: var(--muted);
+    letter-spacing: 0.06em; opacity: 0.7;
+    pointer-events: none;
+  }
+
   .cutscene-dots {
-    display: flex; justify-content: center; gap: 0.45rem;
-    margin: 1.2rem 0;
+    display: flex; justify-content: center; gap: 0.5rem;
+    margin: 1.2rem 0 1rem;
   }
   .cutscene-dots span {
-    width: 7px; height: 7px; border-radius: 50%;
+    width: 26px; height: 4px; border-radius: 3px;
     background: var(--border);
-    transition: background 0.2s, transform 0.2s;
+    transition: background 0.25s, transform 0.25s;
   }
-  .cutscene-dots span.on { background: var(--accent3); transform: scale(1.2); }
+  .cutscene-dots span.on { background: var(--accent3); }
   .cutscene-actions {
-    display: flex; justify-content: center; gap: 0.75rem; margin-top: 0.5rem;
+    display: flex; justify-content: center; gap: 0.75rem;
   }
   .cutscene-btn {
     background: var(--card); border: 1px solid var(--border);
-    color: var(--muted); padding: 0.55rem 1.1rem;
-    border-radius: 8px; font-size: 0.85rem; font-weight: 600;
+    color: var(--muted); padding: 0.6rem 1.3rem;
+    border-radius: 9px; font-size: 0.86rem; font-weight: 600;
     cursor: pointer; font-family: inherit;
-    transition: color 0.15s, border-color 0.15s, background 0.15s;
+    transition: color 0.15s, border-color 0.15s, background 0.15s, opacity 0.15s;
   }
   .cutscene-btn:hover { color: var(--text); border-color: var(--accent); }
   .cutscene-btn.primary {
@@ -100,9 +152,9 @@
     color: #0c0e14; border: none;
   }
   .cutscene-btn.primary:hover { opacity: 0.92; }
-
-  @keyframes cutscene-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-  .cs-bob { animation: cutscene-bob 2.5s ease-in-out infinite; transform-origin: center bottom; }
+  @media (max-width: 540px) {
+    .cutscene-caption { padding: 2rem 1rem 1rem; }
+  }
 
   /* ─── INTRO ─── */
   .intro-hero {
@@ -173,6 +225,112 @@
     padding: 0.15rem 0.5rem; border-radius: 4px;
     margin-right: 0.3rem;
   }
+
+  /* ─── ROTATING RESEARCH REEL ─── */
+  .research-reel {
+    display: grid;
+    grid-template-columns: 1.55fr 1fr;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  @media (max-width: 760px) { .research-reel { grid-template-columns: 1fr; } }
+
+  .rr-feature {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.6rem 1.5rem 1.4rem;
+    overflow: hidden;
+    min-height: 250px;
+    display: flex; flex-direction: column;
+  }
+  .rr-feature.flip { animation: rr-flip 0.45s ease; }
+  @keyframes rr-flip {
+    0% { opacity: 0; transform: translateY(8px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .rr-progress {
+    position: absolute; top: 0; left: 0; height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent3), var(--accent));
+  }
+  .rr-progress.run { transition: width linear; }
+  .rr-badge {
+    align-self: flex-start;
+    font-size: 0.66rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.25rem 0.6rem; border-radius: 999px;
+    margin-bottom: 0.85rem;
+  }
+  .rr-badge.oi { background: rgba(92,240,176,0.14); color: var(--accent3); border: 1px solid rgba(92,240,176,0.35); }
+  .rr-badge.class { background: rgba(108,155,255,0.14); color: var(--accent); border: 1px solid rgba(108,155,255,0.35); }
+  .rr-meta {
+    font-size: 0.74rem; font-weight: 600; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 0.45rem;
+  }
+  .rr-feature h3 {
+    font-size: 1.18rem; line-height: 1.32; color: var(--text);
+    margin-bottom: 0.6rem; font-weight: 700;
+  }
+  .rr-feature p {
+    font-size: 0.92rem; color: var(--muted); line-height: 1.65;
+    margin-bottom: 0.9rem; flex: 1;
+  }
+  .rr-tags { margin-bottom: 0.8rem; }
+  .rr-tags .h-tag {
+    display: inline-block;
+    font-size: 0.68rem; font-weight: 600;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--accent3);
+    padding: 0.15rem 0.5rem; border-radius: 4px;
+    margin-right: 0.3rem;
+  }
+  .rr-link {
+    font-size: 0.8rem; font-weight: 600; color: var(--accent);
+    align-self: flex-start;
+  }
+  .rr-link::after { content: " \2197"; }
+  .rr-link:empty { display: none; }
+
+  .rr-playlist {
+    display: flex; flex-direction: column; gap: 0.4rem;
+    max-height: 320px; overflow-y: auto;
+    padding-right: 0.25rem;
+  }
+  .rr-item {
+    text-align: left;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid transparent;
+    border-radius: 9px;
+    padding: 0.6rem 0.75rem;
+    cursor: pointer; font-family: inherit;
+    transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  }
+  .rr-item:hover { transform: translateX(2px); border-color: var(--accent); }
+  .rr-item.on { border-left-color: var(--accent3); background: var(--card); }
+  .rr-item .ri-src {
+    font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 0.15rem;
+  }
+  .rr-item .ri-src.oi { color: var(--accent3); }
+  .rr-item .ri-src.class { color: var(--accent); }
+  .rr-item .ri-title { font-size: 0.82rem; color: var(--text); line-height: 1.3; font-weight: 600; }
+
+  .rr-controls {
+    display: flex; align-items: center; gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .rr-ctrl {
+    background: var(--card); border: 1px solid var(--border);
+    color: var(--muted); width: 34px; height: 34px;
+    border-radius: 8px; cursor: pointer; font-size: 0.9rem;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .rr-ctrl:hover { color: var(--text); border-color: var(--accent); }
+  .rr-hint { font-size: 0.74rem; color: var(--muted); margin-left: 0.4rem; }
 
   /* ─── METHODOLOGY CALLOUT ─── */
   .method-box {
@@ -479,66 +637,6 @@
     max-width: 640px; margin: 1.2rem auto 0;
     font-size: 0.95rem; color: var(--muted);
   }
-
-  /* ─── MINI TIMELINE (ANIMATED) ─── */
-  .mini-tl-wrap {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 1.5rem 1rem 1rem;
-    overflow: hidden;
-  }
-  .mini-tl-track {
-    position: relative; height: 4px;
-    background: var(--border); border-radius: 2px;
-    margin: 0 1rem 1.5rem;
-  }
-  .mini-tl-progress {
-    position: absolute; left: 0; top: 0; height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
-    border-radius: 2px;
-    width: 0%;
-    transition: width 0.6s ease;
-  }
-  .mini-tl-dot {
-    position: absolute; top: 50%;
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    background: var(--card);
-    border: 2px solid var(--border);
-    transform: translate(-50%, -50%);
-    transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
-    cursor: pointer;
-  }
-  .mini-tl-dot.active {
-    border-color: var(--accent3);
-    background: var(--accent3);
-    box-shadow: 0 0 12px rgba(92,240,176,0.5);
-  }
-  .mini-tl-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.2rem 1.4rem;
-    min-height: 120px;
-    transition: opacity 0.35s ease;
-  }
-  .mini-tl-card .mt-year {
-    font-size: 0.75rem; font-weight: 700;
-    color: var(--accent3); margin-bottom: 0.25rem;
-  }
-  .mini-tl-card .mt-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.35rem; }
-  .mini-tl-card .mt-body { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
-  .mini-tl-controls {
-    display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem;
-  }
-  .mini-tl-btn {
-    background: var(--card); border: 1px solid var(--border);
-    color: var(--muted); width: 36px; height: 36px;
-    border-radius: 8px; cursor: pointer; font-size: 1rem;
-    transition: color 0.15s, border-color 0.15s;
-  }
-  .mini-tl-btn:hover { color: var(--text); border-color: var(--accent); }
 
   /* ─── NGRAMS + LANDMARKS ─── */
   .ngram-chart {
@@ -1036,7 +1134,6 @@
   <span class="logo">Poverty Research in America</span>
   <a href="#intro">Intro</a>
   <a href="#question">Question</a>
-  <a href="#mini-timeline">Timeline</a>
   <a href="#trends">Trends</a>
   <a href="#discourse">Discourse</a>
   <a href="#themes">Themes</a>
@@ -1047,14 +1144,21 @@
   <a href="#takeaways">Takeaways</a>
 </nav>
 
-<!-- ═══════ CUTSCENE ═══════ -->
+<!-- ═══════ CUTSCENE (comic intro) ═══════ -->
 <div id="cutscene" class="cutscene" aria-modal="true" role="dialog" aria-label="Introduction">
   <div class="cutscene-inner">
-    <div class="cutscene-scene" id="cutsceneScene"></div>
-    <div class="cutscene-text" id="cutsceneText"></div>
+    <div class="cutscene-kicker">How I got pulled into this</div>
+    <div class="cutscene-stage" id="cutsceneStage">
+      <div class="cutscene-frame" id="cutsceneFrame"></div>
+      <div class="cutscene-caption">
+        <div class="speaker" id="cutsceneSpeaker"></div>
+        <div class="cutscene-text" id="cutsceneText"></div>
+      </div>
+      <div class="cutscene-tap" id="cutsceneTap">tap to continue &rarr;</div>
+    </div>
     <div class="cutscene-dots" id="cutsceneDots"></div>
     <div class="cutscene-actions">
-      <button type="button" class="cutscene-btn" id="cutsceneSkip">Skip</button>
+      <button type="button" class="cutscene-btn" id="cutsceneSkip">Skip intro</button>
       <button type="button" class="cutscene-btn primary" id="cutsceneNext">Next</button>
     </div>
   </div>
@@ -1065,35 +1169,28 @@
   <div class="intro-tag">A personal entry point</div>
   <h1>Why I got interested in poverty research</h1>
   <p class="intro-lead">I started taking poverty and inequality seriously while doing research with <span class="name-em">Professor David Grusky</span> at the <span class="name-em">Stanford Center on Poverty and Inequality</span>. Two projects&mdash;one on the <em>college wage premium</em>, one on <em>intergenerational mobility</em>&mdash;made the field feel suddenly alive: a small set of administrative datasets and clever research designs were rewriting what we thought we knew about who moves up in America.</p>
-  <p class="intro-sub">That experience nudged me into a bigger question about the field itself. Below I lay out a few of the papers I keep coming back to, then ask whether the broader literature&mdash;and the public conversation&mdash;is keeping pace with the inequality it studies.</p>
+  <p class="intro-sub">That experience nudged me into a bigger question about the field itself. But first&mdash;it&rsquo;s genuinely the most productive moment poverty research has ever had, so here are some of the highlights driving it.</p>
 
-  <div class="highlight-label">Why it's a cool moment for the field</div>
-  <div class="highlight-head">Four lines of work that make poverty research <em>feel different</em> right now</div>
-  <div class="highlight-grid">
-    <div class="highlight-card">
-      <div class="h-meta">Tax records · 2003, 2014</div>
-      <h3>Piketty &amp; Saez open up the top of the distribution</h3>
-      <p>Decades of IRS income tax returns rebuilt the long-run U.S. top-income share series back to 1913. Capital in the 21st Century then turned that into a public conversation about wealth and r&nbsp;&gt;&nbsp;g.</p>
-      <span class="h-tag">administrative data</span><span class="h-tag">top shares</span>
+  <div class="highlight-label">Key highlights of cool research right now</div>
+  <div class="highlight-head">Work bringing more insight and productivity to poverty research than ever before &mdash; <em>Opportunity Insights</em> and other teams unlocking new datasets and methods</div>
+
+  <div class="research-reel" id="researchReel">
+    <div class="rr-feature" id="rrFeature">
+      <div class="rr-progress" id="rrProgress"></div>
+      <div class="rr-badge" id="rrBadge"></div>
+      <div class="rr-meta" id="rrMeta"></div>
+      <h3 id="rrTitle"></h3>
+      <p id="rrBody"></p>
+      <div class="rr-tags" id="rrTags"></div>
+      <a class="rr-link" id="rrLink" target="_blank" rel="noreferrer"></a>
     </div>
-    <div class="highlight-card">
-      <div class="h-meta">Big data · 2014, 2018</div>
-      <h3>Chetty et al. map opportunity at neighborhood scale</h3>
-      <p>"Where is the Land of Opportunity?" and the Opportunity Atlas link anonymized IRS records to Census tracts, showing upward mobility differs enormously across small geographic areas&mdash;sometimes block by block.</p>
-      <span class="h-tag">IRS linkage</span><span class="h-tag">place effects</span>
-    </div>
-    <div class="highlight-card">
-      <div class="h-meta">Causal experiment · 2016</div>
-      <h3>Moving to Opportunity, re-analyzed</h3>
-      <p>Chetty, Hendren &amp; Katz revisit the HUD MTO voucher experiment and show that moving young children to lower-poverty neighborhoods raises adult earnings&mdash;the cleanest causal evidence we have on neighborhoods.</p>
-      <span class="h-tag">RCT</span><span class="h-tag">long-run outcomes</span>
-    </div>
-    <div class="highlight-card">
-      <div class="h-meta">Real-time policy · 2021&ndash;</div>
-      <h3>Columbia's monthly SPM tracks the Child Tax Credit</h3>
-      <p>Wimer and colleagues publish a Supplemental Poverty Measure <em>every month</em>, so during the 2021 expanded Child Tax Credit researchers could quantify how many kids it lifted out of poverty in near real time.</p>
-      <span class="h-tag">SPM</span><span class="h-tag">monthly</span>
-    </div>
+    <div class="rr-playlist" id="rrPlaylist" aria-label="Choose a study"></div>
+  </div>
+  <div class="rr-controls">
+    <button type="button" class="rr-ctrl" id="rrPrev" aria-label="Previous">&#8592;</button>
+    <button type="button" class="rr-ctrl" id="rrPlayPause" aria-label="Pause rotation">&#10073;&#10073;</button>
+    <button type="button" class="rr-ctrl" id="rrNext" aria-label="Next">&#8594;</button>
+    <span class="rr-hint">auto-rotating &middot; hover or click to explore</span>
   </div>
 </header>
 
@@ -1103,29 +1200,7 @@
   <blockquote>
     How has research on <em>inequality and poverty</em> developed over time in the U.S.&mdash;and is it aligned with public sentiment and/or actual levels of inequality?
   </blockquote>
-  <p class="question-bridge">The rest of the site answers that quantitatively: a brief timeline, live OpenAlex publication trends, a per-era fingerprint of the data and methods inside those papers, the Google Books discourse, and finally an overlay against Census/Piketty&ndash;Saez inequality measures and NSF funding.</p>
-</section>
-
-<!-- ═══════ MINI TIMELINE (ANIMATED) ═══════ -->
-<section id="mini-timeline">
-  <div class="section-label">At a glance</div>
-  <h2>A brief animated timeline</h2>
-  <p class="intro">Seven turning points in American poverty and inequality research. Auto-advances every few seconds, or click any dot to jump.</p>
-
-  <div class="mini-tl-wrap">
-    <div class="mini-tl-track" id="miniTlTrack">
-      <div class="mini-tl-progress" id="miniTlProgress"></div>
-    </div>
-    <div class="mini-tl-card" id="miniTlCard">
-      <div class="mt-year" id="miniTlYear"></div>
-      <div class="mt-title" id="miniTlTitle"></div>
-      <div class="mt-body" id="miniTlBody"></div>
-    </div>
-    <div class="mini-tl-controls">
-      <button class="mini-tl-btn" id="miniTlPrev" aria-label="Previous">&#8592;</button>
-      <button class="mini-tl-btn" id="miniTlNext" aria-label="Next">&#8594;</button>
-    </div>
-  </div>
+  <p class="question-bridge">The rest of the site answers that quantitatively: live OpenAlex publication trends, a per-era fingerprint of the data and methods inside those papers, the Google Books discourse, and finally an overlay against Census/Piketty&ndash;Saez inequality measures and NSF funding.</p>
 </section>
 
 <!-- ═══════ TRENDS (LIVE OPENALEX QUERY) — moved up ═══════ -->
@@ -1606,81 +1681,87 @@
 <script src="data/top_works.js"></script>
 <script>
 
-/* ═══════ CUTSCENE ═══════ */
+/* ═══════ CUTSCENE (interactive comic) ═══════ */
 const CUTSCENE_STEPS = [
   {
-    text: "Stanford CPI — working on the college premium and intergenerational mobility with Professor Grusky.",
-    svg: `<svg viewBox="0 0 320 180" aria-hidden="true">
-      <rect x="0" y="155" width="320" height="6" fill="#262c3d"/>
-      <text x="160" y="30" text-anchor="middle" fill="#7e879e" font-size="9" letter-spacing="2">STANFORD CENTER ON POVERTY &amp; INEQUALITY</text>
-      <g class="cs-bob">
-        <line x1="115" y1="155" x2="115" y2="108" stroke="#dce0ed" stroke-width="3" stroke-linecap="round"/>
-        <circle cx="115" cy="100" r="11" fill="#dce0ed"/>
-        <path d="M104,93 Q101,78 114,75 Q126,73 128,86" fill="none" stroke="#e84545" stroke-width="3" stroke-linecap="round"/>
-        <line x1="115" y1="120" x2="105" y2="135" stroke="#dce0ed" stroke-width="2.5" stroke-linecap="round"/>
-        <line x1="115" y1="120" x2="128" y2="132" stroke="#dce0ed" stroke-width="2.5" stroke-linecap="round"/>
-      </g>
-      <g class="cs-bob" style="animation-delay:.5s">
-        <line x1="205" y1="155" x2="205" y2="105" stroke="#dce0ed" stroke-width="2.5" stroke-linecap="round"/>
-        <circle cx="205" cy="97" r="10" fill="#dce0ed"/>
-        <path d="M196,89 Q195,77 205,76 Q216,76 218,86" fill="none" stroke="#8b5a2b" stroke-width="2.5"/>
-        <circle cx="201" cy="96" r="3" fill="none" stroke="#6c9bff" stroke-width="1.3"/>
-        <circle cx="209" cy="96" r="3" fill="none" stroke="#6c9bff" stroke-width="1.3"/>
-        <line x1="204" y1="96" x2="206" y2="96" stroke="#6c9bff" stroke-width="1.3"/>
-      </g>
-      <text x="160" y="148" text-anchor="middle" fill="#5cf0b0" font-size="10" font-style="italic">college premium · mobility · opportunity</text>
-    </svg>`,
+    img: "assets/comic_panel_1.png",
+    speaker: "Stanford · late night",
+    text: "It started in a research office around 1 a.m. I was supposed to be cleaning a dataset \u2014 instead I couldn't look away from it.",
   },
   {
-    text: "That pulled me into a wider question: how has the field built itself, and is it keeping pace with the inequality it studies?",
-    svg: `<svg viewBox="0 0 320 180" aria-hidden="true">
-      <g opacity=".55">
-        <text x="48"  y="58" fill="#6c9bff" font-size="9">1965 thresholds</text>
-        <text x="48"  y="78" fill="#a07cff" font-size="9">1968 PSID</text>
-        <text x="48"  y="98" fill="#5cf0b0" font-size="9">2003 Piketty–Saez</text>
-        <text x="48"  y="118" fill="#ffa96c" font-size="9">2014 Opportunity Atlas</text>
-        <text x="48"  y="138" fill="#ff6c8a" font-size="9">2021 monthly SPM</text>
-      </g>
-      <g class="cs-bob">
-        <line x1="245" y1="155" x2="245" y2="105" stroke="#dce0ed" stroke-width="3" stroke-linecap="round"/>
-        <circle cx="245" cy="97" r="11" fill="#dce0ed"/>
-        <path d="M234,90 Q232,76 244,73 Q256,71 260,82" fill="none" stroke="#e84545" stroke-width="3"/>
-        <line x1="245" y1="118" x2="232" y2="135" stroke="#dce0ed" stroke-width="2.5" stroke-linecap="round"/>
-        <line x1="245" y1="118" x2="258" y2="132" stroke="#dce0ed" stroke-width="2.5" stroke-linecap="round"/>
-      </g>
-      <line x1="190" y1="80" x2="220" y2="80" stroke="#7e879e" stroke-width="1" stroke-dasharray="2,2"/>
-      <text x="186" y="74" fill="#7e879e" font-size="8" text-anchor="end">data + methods</text>
-    </svg>`,
+    img: "assets/comic_panel_2.png",
+    speaker: "With Professor Grusky",
+    text: "He walked me through the college wage premium and intergenerational mobility. Suddenly the graphs weren't abstract \u2014 they were about who actually gets a shot.",
+  },
+  {
+    img: "assets/comic_panel_3.png",
+    speaker: "The part that stuck",
+    text: "Then it hit me: every dot on that opportunity map is a real kid walking home tonight, and their odds aren't the same. I had to know \u2014 how did this field grow, and is it keeping up?",
   },
 ];
 
-let cutsceneStep = 0;
+let cutsceneStep = -1;
+let cutsceneTyping = null;
 const cutsceneEl = document.getElementById("cutscene");
 const cutsceneText = document.getElementById("cutsceneText");
-const cutsceneScene = document.getElementById("cutsceneScene");
+const cutsceneFrame = document.getElementById("cutsceneFrame");
+const cutsceneSpeaker = document.getElementById("cutsceneSpeaker");
+const cutsceneStage = document.getElementById("cutsceneStage");
+const cutsceneTap = document.getElementById("cutsceneTap");
 const cutsceneNext = document.getElementById("cutsceneNext");
 const cutsceneDots = document.getElementById("cutsceneDots");
 
-CUTSCENE_STEPS.forEach((_, i) => {
-  const d = document.createElement("span");
-  cutsceneDots.appendChild(d);
-});
+// Preload panels so transitions are instant.
+CUTSCENE_STEPS.forEach((s) => { const im = new Image(); im.src = s.img; });
+
+CUTSCENE_STEPS.forEach(() => cutsceneDots.appendChild(document.createElement("span")));
 document.body.classList.add("cutscene-lock");
 
+function typeText(el, str) {
+  clearInterval(cutsceneTyping);
+  el.innerHTML = "";
+  const caret = document.createElement("span");
+  caret.className = "caret";
+  el.appendChild(caret);
+  let i = 0;
+  cutsceneTyping = setInterval(() => {
+    if (i >= str.length) {
+      clearInterval(cutsceneTyping);
+      setTimeout(() => { if (caret.parentNode) caret.remove(); }, 600);
+      return;
+    }
+    caret.insertAdjacentText("beforebegin", str[i]);
+    i++;
+  }, 22);
+}
+
 function renderCutscene(i) {
+  if (i === cutsceneStep) return;
   cutsceneStep = i;
   const step = CUTSCENE_STEPS[i];
-  cutsceneText.classList.add("fade");
-  setTimeout(() => {
-    cutsceneScene.innerHTML = step.svg;
-    cutsceneText.textContent = step.text;
-    cutsceneText.classList.remove("fade");
-  }, 150);
+
+  cutsceneFrame.classList.remove("on");
+  // force reflow so the Ken Burns animation restarts each panel
+  void cutsceneFrame.offsetWidth;
+  cutsceneFrame.style.backgroundImage = `url("${step.img}")`;
+  cutsceneFrame.classList.add("on");
+
+  cutsceneSpeaker.textContent = step.speaker;
+  typeText(cutsceneText, step.text);
+
   cutsceneDots.querySelectorAll("span").forEach((d, j) => d.classList.toggle("on", j === i));
-  cutsceneNext.textContent = i === CUTSCENE_STEPS.length - 1 ? "Enter" : "Next";
+  const last = i === CUTSCENE_STEPS.length - 1;
+  cutsceneNext.textContent = last ? "Enter the site" : "Next";
+  cutsceneTap.innerHTML = last ? "tap to enter &rarr;" : "tap to continue &rarr;";
+}
+
+function advanceCutscene() {
+  if (cutsceneStep >= CUTSCENE_STEPS.length - 1) endCutscene();
+  else renderCutscene(cutsceneStep + 1);
 }
 
 function endCutscene() {
+  clearInterval(cutsceneTyping);
   cutsceneEl.classList.add("done");
   document.body.classList.remove("cutscene-lock");
   try { sessionStorage.setItem("cutsceneSeen", "1"); } catch (_) {}
@@ -1692,71 +1773,196 @@ if (sessionStorage.getItem("cutsceneSeen") === "1") {
   renderCutscene(0);
 }
 
+cutsceneStage.addEventListener("click", advanceCutscene);
+cutsceneNext.addEventListener("click", advanceCutscene);
 document.getElementById("cutsceneSkip").addEventListener("click", endCutscene);
-cutsceneNext.addEventListener("click", () => {
-  if (cutsceneStep >= CUTSCENE_STEPS.length - 1) endCutscene();
-  else renderCutscene(cutsceneStep + 1);
+document.addEventListener("keydown", (e) => {
+  if (cutsceneEl.classList.contains("done")) return;
+  if (e.key === "ArrowRight" || e.key === "Enter" || e.key === " ") { e.preventDefault(); advanceCutscene(); }
+  else if (e.key === "Escape") endCutscene();
 });
 
-/* ═══════ MINI TIMELINE (ANIMATED) ═══════ */
-const MINI_TL = [
-  { year: 1962, title: "The Other America", body: "Michael Harrington exposes the 'invisible poor,' helping ignite political will for federal antipoverty action." },
-  { year: 1964, title: "War on Poverty declared", body: "LBJ's State of the Union launches the OEO, Head Start, Job Corps, and the first wave of federally funded poverty research." },
-  { year: 1968, title: "PSID & first Census poverty stats", body: "The Panel Study of Income Dynamics begins tracking families longitudinally; Census publishes its first official poverty estimates." },
-  { year: 1978, title: "Official poverty measure locked in", body: "OMB Statistical Policy Directive No. 14 formalizes Orshansky's thresholds — still the basis for official U.S. poverty statistics." },
-  { year: 1996, title: "Welfare reform (PRWORA)", body: "AFDC becomes TANF with work requirements and time limits — a sea change in antipoverty philosophy and research focus." },
-  { year: 2014, title: "Piketty's Capital & mobility revolution", body: "Capital in the Twenty-First Century sparks public debate on inequality; Chetty's neighborhood mobility work transforms the field." },
-  { year: 2018, title: "Opportunity Insights launches", body: "Chetty, Friedman, and Hendren open a big-data lab mapping economic mobility with IRS records — the model for modern poverty research." },
+/* ═══════ ROTATING RESEARCH REEL ═══════ */
+const RESEARCH_REEL = [
+  {
+    src: "oi", srcLabel: "Opportunity Insights",
+    meta: "Chetty, Friedman, Hendren, Jones, Porter · 2018",
+    title: "The Opportunity Atlas maps mobility block by block",
+    body: "Anonymized IRS + Census records traced 20 million Americans back to the exact neighborhood they grew up in. The result is an interactive map where two tracts a mile apart can mean wildly different odds of escaping poverty.",
+    tags: ["IRS linkage", "place effects"],
+    link: "https://www.opportunityatlas.org/",
+  },
+  {
+    src: "oi", srcLabel: "Opportunity Insights",
+    meta: "Chetty, Hendren, Kline, Saez · QJE 2014",
+    title: "\u201CWhere is the Land of Opportunity?\u201D",
+    body: "The paper that started the lab: upward mobility varies enormously across U.S. commuting zones \u2014 a kid in San Jose has roughly double the shot of one in Charlotte. It put a number on the American Dream by place.",
+    tags: ["mobility", "geography"],
+    link: "https://opportunityinsights.org/paper/land-of-opportunity/",
+  },
+  {
+    src: "oi", srcLabel: "Opportunity Insights",
+    meta: "Chetty, Grusky, Hell, Hendren, Manduca, Narang · 2017",
+    title: "The fading American Dream: 90% \u2192 50%",
+    body: "Share of kids who out-earn their parents fell from ~90% (born 1940) to ~50% (born 1984). Grusky is a co-author \u2014 this is one of the projects that first pulled me in. Most of the decline is rising inequality, not slow growth.",
+    tags: ["absolute mobility", "generations"],
+    link: "https://www.nber.org/papers/w22910",
+  },
+  {
+    src: "oi", srcLabel: "Opportunity Insights",
+    meta: "Chetty, Hendren, Jones, Porter · 2018",
+    title: "Race and economic opportunity",
+    body: "Black and white boys raised in the same income households, same neighborhood, still grow up to very different outcomes \u2014 a gap that barely closes even in the richest areas. A striking, uncomfortable use of big administrative data.",
+    tags: ["race", "intergenerational"],
+    link: "https://www.nber.org/papers/w25147",
+  },
+  {
+    src: "oi", srcLabel: "Opportunity Insights",
+    meta: "Chetty et al. · Nature 2022",
+    title: "Economic connectedness predicts mobility",
+    body: "Using 21 billion Facebook friendships, they show the single strongest neighborhood predictor of upward mobility is how many friends low-income kids have across class lines \u2014 not inequality or school quality alone.",
+    tags: ["social capital", "networks"],
+    link: "https://opportunityinsights.org/paper/social-capital-i-measurement-and-associations-with-economic-mobility/",
+  },
+  {
+    src: "oi", srcLabel: "Opportunity Insights",
+    meta: "Chetty, Hendren, Katz · QJE 2016",
+    title: "Moving to Opportunity, re-analyzed",
+    body: "Revisiting the HUD voucher experiment with tax data: moving young children to lower-poverty neighborhoods raised their adult earnings. The cleanest causal evidence we have that place itself shapes life chances.",
+    tags: ["RCT", "long-run outcomes"],
+    link: "https://academic.oup.com/qje/article/131/2/519/2607080",
+  },
+  {
+    src: "class", srcLabel: "From class",
+    meta: "Piketty & Saez · 2003, 2014",
+    title: "Top income shares and r > g",
+    body: "A century of tax records rebuilt the U.S. top-1% income share back to 1913, and Capital in the 21st Century turned r&nbsp;>&nbsp;g into a dinner-table phrase. The benchmark our Alignment chart still leans on.",
+    tags: ["top shares", "tax data"],
+    link: "https://wid.world/",
+  },
+  {
+    src: "class", srcLabel: "From class",
+    meta: "Goldin & Katz · 2008",
+    title: "The race between education and technology",
+    body: "Inequality widens when technology outruns the supply of skilled workers and narrows when schooling catches up. A clean lens for why the college wage premium exploded after 1980.",
+    tags: ["skill premium", "education"],
+    link: "",
+  },
+  {
+    src: "class", srcLabel: "From class",
+    meta: "Autor, Dorn & Hanson · 2013, 2016",
+    title: "Job polarization & the China Shock",
+    body: "Automation hollowed out middle-skill jobs, and import competition from China hit specific U.S. local labor markets hard \u2014 concentrating the losses from \u201Cprogress\u201D in particular places and people.",
+    tags: ["labor markets", "trade"],
+    link: "https://www.nber.org/papers/w21906",
+  },
+  {
+    src: "class", srcLabel: "From class",
+    meta: "Glaeser · Triumph of the City",
+    title: "Cities as engines of opportunity and inequality",
+    body: "Density makes cities the most productive places on earth and ladders out of poverty \u2014 but the same forces drive housing costs and segregation that can wall opportunity off. Straight from our cities lecture.",
+    tags: ["cities", "agglomeration"],
+    link: "",
+  },
+  {
+    src: "class", srcLabel: "From class",
+    meta: "Acemoglu & Robinson · Why Nations Fail",
+    title: "Institutions decide who shares in progress",
+    body: "Long-run prosperity tracks inclusive vs. extractive institutions far more than geography or culture. The macro backdrop to why some societies turn growth into broad opportunity and others don't.",
+    tags: ["institutions", "long run"],
+    link: "",
+  },
 ];
 
-let miniTlIdx = 0;
-let miniTlTimer = null;
-const miniTlTrack = document.getElementById("miniTlTrack");
-const miniTlProgress = document.getElementById("miniTlProgress");
-const miniTlYear = document.getElementById("miniTlYear");
-const miniTlTitle = document.getElementById("miniTlTitle");
-const miniTlBody = document.getElementById("miniTlBody");
-const miniTlCard = document.getElementById("miniTlCard");
+(function initResearchReel() {
+  const reel = document.getElementById("researchReel");
+  if (!reel) return;
+  const feature = document.getElementById("rrFeature");
+  const progress = document.getElementById("rrProgress");
+  const badge = document.getElementById("rrBadge");
+  const metaEl = document.getElementById("rrMeta");
+  const titleEl = document.getElementById("rrTitle");
+  const bodyEl = document.getElementById("rrBody");
+  const tagsEl = document.getElementById("rrTags");
+  const linkEl = document.getElementById("rrLink");
+  const playlist = document.getElementById("rrPlaylist");
+  const prevBtn = document.getElementById("rrPrev");
+  const nextBtn = document.getElementById("rrNext");
+  const playPauseBtn = document.getElementById("rrPlayPause");
 
-function renderMiniTl(i) {
-  miniTlIdx = ((i % MINI_TL.length) + MINI_TL.length) % MINI_TL.length;
-  const item = MINI_TL[miniTlIdx];
-  miniTlCard.style.opacity = 0;
-  setTimeout(() => {
-    miniTlYear.textContent = item.year;
-    miniTlTitle.textContent = item.title;
-    miniTlBody.textContent = item.body;
-    miniTlCard.style.opacity = 1;
-  }, 180);
+  const ROTATE_MS = 6500;
+  let idx = 0;
+  let timer = null;
+  let playing = true;
 
-  miniTlTrack.querySelectorAll(".mini-tl-dot").forEach((dot, j) => {
-    dot.classList.toggle("active", j === miniTlIdx);
+  RESEARCH_REEL.forEach((item, i) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "rr-item" + (i === 0 ? " on" : "");
+    btn.innerHTML =
+      `<div class="ri-src ${item.src}">${item.srcLabel}</div>` +
+      `<div class="ri-title">${item.title}</div>`;
+    btn.addEventListener("click", () => { show(i); restart(); });
+    playlist.appendChild(btn);
   });
-  const pct = miniTlIdx / (MINI_TL.length - 1) * 100;
-  miniTlProgress.style.width = pct + "%";
-}
+  const items = [...playlist.querySelectorAll(".rr-item")];
 
-function buildMiniTlDots() {
-  MINI_TL.forEach((item, i) => {
-    const dot = document.createElement("div");
-    dot.className = "mini-tl-dot" + (i === 0 ? " active" : "");
-    dot.style.left = (i / (MINI_TL.length - 1) * 100) + "%";
-    dot.title = item.year + ": " + item.title;
-    dot.addEventListener("click", () => { renderMiniTl(i); resetMiniTlAuto(); });
-    miniTlTrack.appendChild(dot);
-  });
-}
+  function show(i) {
+    idx = ((i % RESEARCH_REEL.length) + RESEARCH_REEL.length) % RESEARCH_REEL.length;
+    const item = RESEARCH_REEL[idx];
+    feature.classList.remove("flip");
+    void feature.offsetWidth;
+    feature.classList.add("flip");
 
-function resetMiniTlAuto() {
-  clearInterval(miniTlTimer);
-  miniTlTimer = setInterval(() => renderMiniTl(miniTlIdx + 1), 4500);
-}
+    badge.className = "rr-badge " + item.src;
+    badge.textContent = item.srcLabel;
+    metaEl.textContent = item.meta;
+    titleEl.textContent = item.title;
+    bodyEl.innerHTML = item.body;
+    tagsEl.innerHTML = item.tags.map(t => `<span class="h-tag">${t}</span>`).join("");
+    if (item.link) { linkEl.href = item.link; linkEl.textContent = "Read more"; }
+    else { linkEl.removeAttribute("href"); linkEl.textContent = ""; }
 
-document.getElementById("miniTlPrev").addEventListener("click", () => { renderMiniTl(miniTlIdx - 1); resetMiniTlAuto(); });
-document.getElementById("miniTlNext").addEventListener("click", () => { renderMiniTl(miniTlIdx + 1); resetMiniTlAuto(); });
-buildMiniTlDots();
-renderMiniTl(0);
-resetMiniTlAuto();
+    items.forEach((el, j) => el.classList.toggle("on", j === idx));
+    if (items[idx]) items[idx].scrollIntoView({ block: "nearest" });
+    runProgress();
+  }
+
+  function runProgress() {
+    progress.classList.remove("run");
+    progress.style.width = "0%";
+    void progress.offsetWidth;
+    if (!playing) return;
+    progress.style.transitionDuration = ROTATE_MS + "ms";
+    progress.classList.add("run");
+    progress.style.width = "100%";
+  }
+
+  function startTimer() {
+    clearInterval(timer);
+    if (!playing) return;
+    timer = setInterval(() => show(idx + 1), ROTATE_MS);
+  }
+  function restart() { startTimer(); }
+
+  function setPlaying(on) {
+    playing = on;
+    playPauseBtn.innerHTML = on ? "&#10073;&#10073;" : "&#9654;";
+    playPauseBtn.setAttribute("aria-label", on ? "Pause rotation" : "Play rotation");
+    if (on) { runProgress(); startTimer(); }
+    else { clearInterval(timer); progress.classList.remove("run"); }
+  }
+
+  prevBtn.addEventListener("click", () => { show(idx - 1); restart(); });
+  nextBtn.addEventListener("click", () => { show(idx + 1); restart(); });
+  playPauseBtn.addEventListener("click", () => setPlaying(!playing));
+
+  reel.addEventListener("mouseenter", () => { if (playing) { clearInterval(timer); progress.classList.remove("run"); const w = getComputedStyle(progress).width; progress.style.width = w; } });
+  reel.addEventListener("mouseleave", () => { if (playing) { runProgress(); startTimer(); } });
+
+  show(0);
+  startTimer();
+})();
 
 /* ═══════ NGRAMS ═══════ */
 const NGRAM_SERIES = {
