@@ -362,25 +362,6 @@
   .trend-query-link { font-size: 0.78rem; word-break: break-all; }
 
   /* ─── THEME CHART (OPENALEX TOPICS) ─── */
-  .theme-chart {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    overflow-x: auto;
-  }
-  #themeChart { display: block; font-family: inherit; }
-  #themeChart text { fill: var(--muted); font-size: 10px; }
-  .theme-scale {
-    display: flex; align-items: center; gap: 0.5rem;
-    margin-top: 0.75rem; font-size: 0.72rem; color: var(--muted);
-  }
-  .theme-scale-bar {
-    flex: 1; max-width: 180px; height: 8px; border-radius: 4px;
-    background: linear-gradient(90deg, #151820, #3656a8, #6c9bff, #a07cff);
-  }
-
   /* ─── SCOPE CHART (US vs GLOBAL) ─── */
   .scope-panel {
     margin-top: 2rem;
@@ -1146,7 +1127,6 @@
   <a href="#question">Question</a>
   <a href="#trends">Trends</a>
   <a href="#discourse">Discourse</a>
-  <a href="#themes">Themes</a>
   <a href="#methods">Inside papers</a>
   <a href="#alignment">Alignment</a>
   <a href="#map">Centers</a>
@@ -1299,7 +1279,7 @@
 <section id="discourse">
   <div class="section-label">Cultural discourse</div>
   <h2>Poverty &amp; Inequality vs. Progress &amp; Innovation in Books</h2>
-  <p class="intro">Google Books Ngram frequencies measure how often selected terms appear in published English (corpus and smoothing from <code>data/ngrams.js</code>). This tracks <strong>public language</strong>, not academic themes&mdash;for those, see the OpenAlex topic chart below.</p>
+  <p class="intro">Google Books Ngram frequencies measure how often selected terms appear in published English (corpus and smoothing from <code>data/ngrams.js</code>). This tracks <strong>public language</strong>, not academic publication trends.</p>
 
   <div class="method-box">
     <strong>Ngrams method:</strong> term frequency = share of all tokens in the corpus that year. Toggle terms below.<br>
@@ -1327,27 +1307,6 @@
     <div class="topworks-list" id="topworksList"></div>
     <p class="method-caveat" id="topworksCaveat"></p>
   </div>
-</section>
-
-<!-- ═══════ OPENALEX THEMES (QUANTITATIVE) ═══════ -->
-<section id="themes">
-  <div class="section-label">Quantitative themes</div>
-  <h2>What Subjects Co-Occur with Poverty &amp; Inequality Research?</h2>
-  <p class="intro">OpenAlex assigns each paper a set of topics. For cited econ/sociology poverty/inequality works, the heatmap shows what <em>other</em> topics appear alongside them in each era&mdash;share of papers in that 5-year window (poverty/inequality topics themselves excluded).</p>
-
-  <div class="method-box" id="themeMethodBox">
-    <strong>Source:</strong> <code>data/topics.js</code> via <code>python build_topics.py</code> &mdash; OpenAlex Works API, same concept filters as the trends chart, min 25 citations.
-  </div>
-
-  <div class="theme-chart">
-    <svg id="themeChart"></svg>
-    <div class="theme-scale">
-      <span>Low share</span>
-      <div class="theme-scale-bar"></div>
-      <span>High share</span>
-    </div>
-  </div>
-  <div class="theme-insights" id="themeInsights"></div>
 </section>
 
 <!-- ═══════ METHODS / DATA FINGERPRINT ═══════ -->
@@ -1702,7 +1661,6 @@
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
 <script src="data/funding.js"></script>
 <script src="data/ngrams.js"></script>
-<script src="data/topics.js"></script>
 <script src="data/scope.js"></script>
 <script src="data/methods.js"></script>
 <script src="data/top_works.js"></script>
@@ -2292,109 +2250,6 @@ function escapeHtml(s) {
 
 initTopWorksPanel();
 
-/* ═══════ OPENALEX TOPIC THEMES (from topics.js) ═══════ */
-function drawThemeChart() {
-  const data = window.TOPIC_DATA;
-  const svg = d3.select("#themeChart");
-  svg.selectAll("*").remove();
-
-  if (!data || !data.eras || data.eras.length === 0) {
-    document.getElementById("themeMethodBox").innerHTML +=
-      " <em>Run <code>python build_topics.py</code> to generate.</em>";
-    return;
-  }
-
-  const meta = data.meta;
-  document.getElementById("themeMethodBox").innerHTML =
-    `<strong>Source:</strong> OpenAlex Works API · ${meta.filter || ""} · ` +
-    `${data.eras.length} eras · generated ${meta.generated || "—"}. ` +
-    `Refresh: <code>python build_topics.py</code>`;
-
-  const eras = data.eras;
-  const topics = (data.allTopics || []).slice(0, 8).map(t => t[0]);
-  const matrix = topics.map(name =>
-    eras.map(era => {
-      const hit = (era.topics || []).find(t => t.name === name);
-      return {
-        era: era.label,
-        share: hit ? hit.share : 0,
-        count: hit ? hit.count : 0,
-        total: era.paperCount,
-      };
-    })
-  );
-
-  const cellW = 68, cellH = 24, leftPad = 250, topPad = 40, bottomPad = 8;
-  const W = leftPad + cellW * eras.length + 16;
-  const H = topPad + cellH * topics.length + bottomPad;
-  svg.attr("viewBox", `0 0 ${W} ${H}`).attr("width", "100%").attr("height", H);
-
-  const allShares = matrix.flat().map(c => c.share);
-  const maxShare = Math.max(0.5, d3.max(allShares) || 1);
-  const color = d3.scaleSequential()
-    .domain([0, maxShare])
-    .interpolator(d3.interpolateRgbBasis(["#151820", "#1f2a4a", "#3656a8", "#6c9bff", "#a07cff"]));
-
-  eras.forEach((era, j) => {
-    svg.append("text")
-      .attr("x", leftPad + j * cellW + cellW / 2)
-      .attr("y", topPad - 18)
-      .attr("text-anchor", "middle")
-      .attr("font-size", 10)
-      .text(era.label);
-    svg.append("text")
-      .attr("x", leftPad + j * cellW + cellW / 2)
-      .attr("y", topPad - 6)
-      .attr("text-anchor", "middle")
-      .attr("font-size", 8.5)
-      .attr("fill", "#5cf0b0")
-      .text("n=" + era.paperCount.toLocaleString());
-  });
-
-  topics.forEach((name, i) => {
-    const y = topPad + i * cellH;
-    svg.append("text")
-      .attr("x", leftPad - 10)
-      .attr("y", y + cellH * 0.62)
-      .attr("text-anchor", "end")
-      .attr("font-size", 10)
-      .attr("fill", "#dce0ed")
-      .text(name.length > 34 ? name.slice(0, 32) + "…" : name)
-      .append("title")
-      .text(name);
-
-    matrix[i].forEach((cell, j) => {
-      const x = leftPad + j * cellW;
-      svg.append("rect")
-        .attr("x", x + 1).attr("y", y + 1)
-        .attr("width", cellW - 2).attr("height", cellH - 2)
-        .attr("fill", color(cell.share))
-        .attr("rx", 3)
-        .append("title")
-        .text(`${name}\n${cell.era}: ${cell.share}% of papers (${cell.count.toLocaleString()} of ${cell.total.toLocaleString()})`);
-      if (cell.share >= maxShare * 0.18) {
-        svg.append("text")
-          .attr("x", x + cellW / 2).attr("y", y + cellH * 0.65)
-          .attr("text-anchor", "middle")
-          .attr("font-size", 9)
-          .attr("fill", cell.share > maxShare * 0.45 ? "#fff" : "#dce0ed")
-          .text(cell.share.toFixed(1) + "%");
-      }
-    });
-  });
-
-  const insightsEl = document.getElementById("themeInsights");
-  const first = eras[0], last = eras[eras.length - 1];
-  const urban = (data.allTopics || []).find(t => t[0].includes("Urban, Neighborhood"));
-  const covid = last.topics.find(t => t.name.includes("COVID"));
-  insightsEl.innerHTML = `<strong>Reading the heatmap</strong><ul>` +
-    `<li>Rows are the most common co-occurring OpenAlex topics across all eras; columns are 5-year windows. Darker cells = a larger share of papers in that era also carry that topic tag.</li>` +
-    `<li>Sample size rose from <strong>${first.paperCount.toLocaleString()}</strong> (${first.label}) to <strong>${last.paperCount.toLocaleString()}</strong> (${last.label}). Early eras emphasize <strong>${first.topics[0].name}</strong>; recent eras lean toward <strong>${last.topics[0].name}</strong>${covid ? " and pandemic-related topics" : ""}.</li>` +
-    (urban ? `<li><strong>${urban[0]}</strong> remains a steady co-tag (${urban[1].toLocaleString()} papers aggregate) — place and segregation stay linked to poverty/inequality scholarship.</li>` : "") +
-    `</ul>`;
-}
-
-drawThemeChart();
 
 /* ═══════ GEOGRAPHIC SCOPE (from scope.js) ═══════ */
 /* ═══════ LIGHT / DARK MODE TOGGLE ═══════ */
