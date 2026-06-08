@@ -75,6 +75,66 @@
   }
   .intro-tag::before { content: "▸ "; opacity: 0.7; }
 
+  /* ─── ORIGIN STRIP (rough comic storyboard) ─── */
+  .origin-strip { margin-bottom: 2rem; max-width: 960px; }
+  .os-panels {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.55rem;
+  }
+  @media (max-width: 820px) { .os-panels { grid-template-columns: repeat(2, 1fr); } }
+  .os-panel {
+    background: #ece6d8;
+    border: 3px solid #101010;
+    border-radius: 3px;
+    padding: 0.45rem;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.55);
+    opacity: 0.42;
+    transform: scale(0.97);
+    transition: opacity 0.35s, transform 0.35s;
+    cursor: pointer;
+  }
+  .os-panel.on { opacity: 1; transform: scale(1); }
+  .os-panel:hover { opacity: 0.88; }
+  .os-panel.on:hover { opacity: 1; }
+  .os-frame {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border: 2px solid #101010;
+    background: #fff;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .os-frame img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: contrast(1.08) saturate(0.82);
+  }
+  .os-frame.logo img { object-fit: contain; padding: 0.55rem; filter: none; }
+  .os-frame.text-only {
+    background: repeating-linear-gradient(-45deg, #f7f3ea, #f7f3ea 6px, #ece6d8 6px, #ece6d8 12px);
+    padding: 0.65rem;
+    align-items: flex-end;
+  }
+  .os-frame.text-only p {
+    font-size: 0.72rem; font-weight: 900; text-transform: uppercase;
+    letter-spacing: 0.03em; line-height: 1.35; color: #101010;
+    font-family: Arial, "Segoe UI", sans-serif;
+  }
+  .os-bubble {
+    margin-top: 0.4rem;
+    font-size: 0.56rem; font-weight: 900; text-transform: uppercase;
+    letter-spacing: 0.04em; line-height: 1.35; color: #101010;
+    font-family: Arial, "Segoe UI", sans-serif;
+  }
+  .os-dots {
+    display: flex; justify-content: center; gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+  .os-dots span {
+    width: 22px; height: 4px; border-radius: 2px;
+    background: var(--border); transition: background 0.25s;
+  }
+  .os-dots span.on { background: var(--accent3); }
+
   /* highlight cards for "cool research right now" */
   .highlight-label {
     font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
@@ -177,7 +237,7 @@
 
   .rr-playlist {
     display: flex; flex-direction: column; gap: 0.4rem;
-    max-height: 420px; overflow-y: auto;
+    max-height: 480px; overflow-y: auto;
     padding-right: 0.25rem;
   }
   .rr-item {
@@ -1026,8 +1086,31 @@
 <!-- ═══════ INTRO ═══════ -->
 <header id="intro" class="intro-hero">
   <div class="intro-tag">A personal entry point</div>
+
+  <div class="origin-strip" id="originStrip" aria-label="How Stanford CPI research led here">
+    <div class="os-panels" id="osPanels">
+      <div class="os-panel on" data-os="0">
+        <div class="os-frame"><img src="assets/julius.jpg" alt="Research at Stanford"></div>
+        <div class="os-bubble">Stanford CPI &middot; research assistant &middot; cleaning datasets at 1&nbsp;a.m.</div>
+      </div>
+      <div class="os-panel" data-os="1">
+        <div class="os-frame"><img src="assets/grusky.jpg" alt="Professor David Grusky"></div>
+        <div class="os-bubble">With Professor Grusky &mdash; microclasses, wage premium, mobility</div>
+      </div>
+      <div class="os-panel" data-os="2">
+        <div class="os-frame logo"><img src="assets/cpi-logo.png" alt="Stanford Center on Poverty and Inequality"></div>
+        <div class="os-bubble">CPI trend data, CA Poverty Measure, American Voices &mdash; super cool infrastructure</div>
+      </div>
+      <div class="os-panel" data-os="3">
+        <div class="os-frame text-only"><p>So what is the state of poverty &amp; inequality research right now?</p></div>
+        <div class="os-bubble">That question is what this site tries to answer &darr;</div>
+      </div>
+    </div>
+    <div class="os-dots" id="osDots" aria-hidden="true"></div>
+  </div>
+
   <h1>Why I got interested in poverty research</h1>
-  <p class="intro-lead">I started taking poverty and inequality seriously while doing research with <span class="name-em">Professor David Grusky</span> at the <span class="name-em">Stanford Center on Poverty and Inequality</span>. Two projects&mdash;one on the <em>college wage premium</em>, one on <em>intergenerational mobility</em>&mdash;made the field feel suddenly alive: a small set of administrative datasets and clever research designs were rewriting what we thought we knew about who moves up in America.</p>
+  <p class="intro-lead">I started taking poverty and inequality seriously while doing research with <span class="name-em">Professor David Grusky</span> at the <span class="name-em">Stanford Center on Poverty and Inequality</span>. Work on <em>microclasses</em>, the <em>college wage premium</em>, and <em>intergenerational mobility</em> made the field feel suddenly alive: a small set of administrative datasets and clever research designs were rewriting what we thought we knew about who moves up in America.</p>
   <p class="intro-sub">That experience nudged me into a bigger question about the field itself. But first&mdash;it&rsquo;s genuinely the most productive moment poverty research has ever had, so here are some of the highlights driving it.</p>
 
   <div class="highlight-label">Key highlights of cool research right now</div>
@@ -1539,56 +1622,52 @@
 <script src="data/top_works.js"></script>
 <script>
 
+/* ═══════ ORIGIN STRIP (quick comic storyboard) ═══════ */
+(function initOriginStrip() {
+  const panels = [...document.querySelectorAll("#osPanels .os-panel")];
+  const dotsEl = document.getElementById("osDots");
+  if (!panels.length || !dotsEl) return;
+  let i = 0;
+  let timer = null;
+  panels.forEach(() => dotsEl.appendChild(document.createElement("span")));
+  const dots = [...dotsEl.children];
+
+  function show(n) {
+    i = ((n % panels.length) + panels.length) % panels.length;
+    panels.forEach((p, j) => p.classList.toggle("on", j === i));
+    dots.forEach((d, j) => d.classList.toggle("on", j === i));
+  }
+  function start() {
+    clearInterval(timer);
+    timer = setInterval(() => show(i + 1), 4200);
+  }
+  panels.forEach((p, j) => p.addEventListener("click", () => { show(j); start(); }));
+  show(0);
+  start();
+})();
+
 /* ═══════ ROTATING RESEARCH REEL ═══════ */
 const RESEARCH_REEL = [
   {
-    meta: "Chetty, Friedman, Hendren, Jones & Porter · 2018 · Opportunity Insights",
-    title: "The Opportunity Atlas maps mobility block by block",
-    body: "Anonymized IRS + Census records traced 20 million Americans back to the exact neighborhood they grew up in. The result is an interactive map where two tracts a mile apart can mean wildly different odds of escaping poverty.",
-    tags: ["IRS linkage", "place effects"],
-    link: "https://www.opportunityatlas.org/",
-  },
-  {
-    meta: "Chetty, Hendren, Kline & Saez · QJE 2014 · Opportunity Insights",
-    title: "\u201CWhere is the Land of Opportunity?\u201D",
-    body: "Upward mobility varies enormously across U.S. commuting zones \u2014 a kid in San Jose has roughly double the shot of one in Charlotte. It put a number on the American Dream by place.",
-    tags: ["mobility", "geography"],
-    link: "https://opportunityinsights.org/paper/land-of-opportunity/",
+    meta: "Weeden & Grusky · 2005 · Stanford CPI",
+    title: "Are there any big classes at all? (Microclasses)",
+    body: "Grusky&rsquo;s microclass framework splits conventional big classes into detailed occupations that match institutional boundaries at the site of production. Much of life-chance variation lives at that finer grain &mdash; a lens I worked with directly at CPI.",
+    tags: ["microclasses", "stratification"],
+    link: "https://doi.org/10.1016/S0276-5624(04)22001-7",
   },
   {
     meta: "Chetty, Grusky, Hell, Hendren, Manduca & Narang · 2017 · Stanford CPI",
     title: "The fading American Dream: 90% \u2192 50%",
-    body: "Share of kids who out-earn their parents fell from ~90% (born 1940) to ~50% (born 1984). Grusky is a co-author \u2014 this is one of the projects that first pulled me in. Most of the decline is rising inequality, not slow growth.",
+    body: "Share of kids who out-earn their parents fell from ~90% (born 1940) to ~50% (born 1984). Grusky is a co-author &mdash; one of the projects that first pulled me in. Most of the decline is rising inequality, not slow growth.",
     tags: ["absolute mobility", "generations"],
     link: "https://www.nber.org/papers/w22910",
   },
   {
-    meta: "Chetty, Hendren, Jones & Porter · 2018 · Opportunity Insights",
-    title: "Race and economic opportunity",
-    body: "Black and white boys raised in the same income households, same neighborhood, still grow up to very different outcomes \u2014 a gap that barely closes even in the richest areas. A striking use of big administrative data.",
-    tags: ["race", "intergenerational"],
-    link: "https://www.nber.org/papers/w25147",
-  },
-  {
-    meta: "Chetty et al. · Nature 2022 · Opportunity Insights",
-    title: "Economic connectedness predicts mobility",
-    body: "Using 21 billion Facebook friendships, they show the single strongest neighborhood predictor of upward mobility is how many friends low-income kids have across class lines \u2014 not inequality or school quality alone.",
-    tags: ["social capital", "networks"],
-    link: "https://opportunityinsights.org/paper/social-capital-i-measurement-and-associations-with-economic-mobility/",
-  },
-  {
-    meta: "Chetty, Hendren & Katz · QJE 2016 · Opportunity Insights",
-    title: "Moving to Opportunity, re-analyzed",
-    body: "Revisiting the HUD voucher experiment with tax data: moving young children to lower-poverty neighborhoods raised their adult earnings. The cleanest causal evidence we have that place itself shapes life chances.",
-    tags: ["RCT", "long-run outcomes"],
-    link: "https://academic.oup.com/qje/article/131/2/519/2607080",
-  },
-  {
-    meta: "Manduca · AER 2019 · Stanford CPI",
-    title: "National inequality drives regional economic divergence",
-    body: "Rising national income inequality mechanically widens gaps between rich and poor U.S. regions \u2014 a structural explanation for why opportunity looks so different depending on where you grow up.",
-    tags: ["regional inequality", "decomposition"],
-    link: "https://doi.org/10.1257/aer.20161265",
+    meta: "Grusky et al. · Sociological Science 2024 · Stanford CPI",
+    title: "The American Opportunity Study",
+    body: "Links decennial Census records to modern surveys to build a national infrastructure for monitoring mobility, evaluating policy, and running basic science at scale &mdash; the kind of data backbone CPI specializes in.",
+    tags: ["administrative data", "infrastructure"],
+    link: "https://doi.org/10.15195/v11.a9",
   },
   {
     meta: "Fox et al. · Stanford CPI · ongoing",
@@ -1598,39 +1677,102 @@ const RESEARCH_REEL = [
     link: "https://inequality.stanford.edu/publications/california-poverty-measure",
   },
   {
-    meta: "Parolin, Curran & Wimer · 2020 · Columbia CPSP",
-    title: "Monthly Poverty Rates in the United States during the COVID-19 Pandemic",
-    body: "Columbia&rsquo;s Center on Poverty and Social Policy built near-real-time poverty estimates from the CPS, showing how stimulus checks and expanded CTC briefly cut child poverty nearly in half \u2014 and how fast it rebounded when they expired.",
-    tags: ["SPM", "safety net", "real time"],
-    link: "https://www.povertycenter.columbia.edu/publications/monthly-poverty-rates-during-covid-19-pandemic",
+    meta: "Manduca · AER 2019 · Stanford CPI",
+    title: "National inequality drives regional economic divergence",
+    body: "Rising national income inequality mechanically widens gaps between rich and poor U.S. regions &mdash; a structural explanation for why opportunity looks so different depending on where you grow up.",
+    tags: ["regional inequality", "decomposition"],
+    link: "https://doi.org/10.1257/aer.20161265",
   },
   {
-    meta: "Wimer et al. · Columbia CPSP · ongoing",
-    title: "The Poverty Tracker",
-    body: "A longitudinal panel following New York City households over time captures poverty, material hardship, and health together \u2014 showing that income alone misses how many families bounce above and below the line.",
-    tags: ["longitudinal", "hardship"],
-    link: "https://www.povertycenter.columbia.edu/poverty-tracker",
+    meta: "Opportunity Insights · July 2024",
+    title: "Changing Opportunity",
+    body: "Children&rsquo;s social environments shifted over recent decades: class gaps in mobility widened even as racial gaps narrowed. A non-technical summary of how place, peers, and institutions jointly shape who gets ahead.",
+    tags: ["mobility trends", "class & race"],
+    link: "https://opportunityinsights.org/",
   },
   {
-    meta: "Hoynes & Schanzenbach · 2018 · Georgetown CPI",
-    title: "Safety net investments in children",
-    body: "Georgetown CPI synthesizes decades of evidence that SNAP, Medicaid, EITC, and Head Start pay long-run dividends in health, education, and earnings \u2014 and helped shape the design of the monthly Child Tax Credit payments.",
-    tags: ["safety net", "children"],
-    link: "https://www.georgetownpoverty.org/",
+    meta: "Chetty, Friedman, Hendren, Jones & Porter · 2018 · Opportunity Insights",
+    title: "The Opportunity Atlas maps mobility block by block",
+    body: "Anonymized IRS + Census records traced 20 million Americans back to the exact neighborhood they grew up in. Two tracts a mile apart can mean wildly different odds of escaping poverty.",
+    tags: ["IRS linkage", "place effects"],
+    link: "https://www.opportunityatlas.org/",
   },
   {
-    meta: "Rank · Contexts 2011 · IRP / Michigan",
-    title: "Rethinking American Poverty",
-    body: "Rank reframes poverty as a structural &ldquo;musical chairs&rdquo; problem: roughly 60% of Americans experience poverty between ages 20&ndash;75, even though only ~15% are poor at any moment. A classic that shifts the whole conversation.",
-    tags: ["life course", "structure"],
-    link: "https://doi.org/10.1177/1536504211426556",
+    meta: "Chetty, Hendren, Kline & Saez · QJE 2014 · Opportunity Insights",
+    title: "\u201CWhere is the Land of Opportunity?\u201D",
+    body: "Upward mobility varies enormously across U.S. commuting zones &mdash; a kid in San Jose has roughly double the shot of one in Charlotte. It put a number on the American Dream by place.",
+    tags: ["mobility", "geography"],
+    link: "https://opportunityinsights.org/paper/land-of-opportunity/",
   },
   {
-    meta: "Piketty & Saez · QJE 2003; Capital 2014",
-    title: "Top income shares and r > g",
-    body: "A century of tax records rebuilt the U.S. top-1% income share back to 1913, and Capital in the 21st Century turned r&nbsp;>&nbsp;g into a dinner-table phrase. The benchmark our Alignment chart still leans on.",
+    meta: "Chetty, Hendren, Jones & Porter · 2018 · Opportunity Insights",
+    title: "Race and economic opportunity",
+    body: "Black and white boys raised in the same income households, same neighborhood, still grow up to very different outcomes &mdash; a gap that barely closes even in the richest areas.",
+    tags: ["race", "intergenerational"],
+    link: "https://www.nber.org/papers/w25147",
+  },
+  {
+    meta: "Chetty et al. · Nature 2022 · Opportunity Insights",
+    title: "Economic connectedness predicts mobility",
+    body: "Using 21 billion Facebook friendships, the strongest neighborhood predictor of upward mobility is how many friends low-income kids have across class lines &mdash; not inequality or school quality alone.",
+    tags: ["social capital", "networks"],
+    link: "https://opportunityinsights.org/paper/social-capital-i-measurement-and-associations-with-economic-mobility/",
+  },
+  {
+    meta: "Chetty, Hendren & Katz · QJE 2016 · Opportunity Insights",
+    title: "Moving to Opportunity, re-analyzed",
+    body: "Revisiting the HUD voucher experiment with tax data: moving young children to lower-poverty neighborhoods raised their adult earnings. Clean causal evidence that place shapes life chances.",
+    tags: ["RCT", "long-run outcomes"],
+    link: "https://academic.oup.com/qje/article/131/2/519/2607080",
+  },
+  {
+    meta: "Chetty, Friedman, Hilger, Saez & Yagan · QJE 2011 · Opportunity Insights",
+    title: "How does your kindergarten classroom affect your earnings?",
+    body: "Project STAR&rsquo;s small-class random assignment in Tennessee shows early-school inputs have detectable earnings effects decades later &mdash; a bridge between education policy and long-run inequality.",
+    tags: ["education", "early childhood"],
+    link: "https://opportunityinsights.org/paper/kindergarten/",
+  },
+  {
+    meta: "Opportunity Insights · 2023",
+    title: "When resources meet relationships",
+    body: "Personalized supports for low-income students combine money with mentoring and coaching. Returns are largest when resources and relationships work together, not either alone.",
+    tags: ["education", "mentoring"],
+    link: "https://opportunityinsights.org/",
+  },
+  {
+    meta: "Piketty & Saez · QJE 2003",
+    title: "Income inequality in the United States, 1913\u20131998",
+    body: "Rebuilt the U.S. top-income series from tax records back to 1913 &mdash; the empirical foundation for everything that followed, including the Alignment chart on this site.",
     tags: ["top shares", "tax data"],
+    link: "https://doi.org/10.1162/00335530360535135",
+  },
+  {
+    meta: "Piketty · 2014",
+    title: "Capital in the Twenty-First Century",
+    body: "Turned r&nbsp;>&nbsp;g into a public vocabulary for wealth concentration and made inequality a mainstream research priority again.",
+    tags: ["wealth", "long run"],
     link: "https://wid.world/",
+  },
+  {
+    meta: "Saez & Zucman · QJE 2016",
+    title: "Wealth inequality since 1913",
+    body: "Capitalizes income-tax data to reconstruct the U.S. wealth distribution when direct wealth surveys fail. The top 0.1% share looks even more concentrated than income alone suggests.",
+    tags: ["wealth", "tax data"],
+    link: "https://doi.org/10.1093/qje/qjw004",
+  },
+  {
+    meta: "Acemoglu · JEL 2002",
+    title: "Technical change, inequality, and the labor market",
+    body: "Skill-biased technical change vs. task-based frameworks for why wage gaps open and close. The theoretical backbone for Katz & Murphy, Goldin & Katz, and the college premium work.",
+    tags: ["skill bias", "technology"],
+    link: "https://doi.org/10.1257/jel.40.1.7",
+  },
+  {
+    meta: "Katz & Murphy · QJE 1992",
+    title: "Changes in relative wages, 1963\u20131987",
+    body: "Demand for college-educated workers rose faster than supply, widening the high-school/college wage gap. A foundation for the Grusky mobility work I started with.",
+    tags: ["wage premium", "skill bias"],
+    link: "https://doi.org/10.2307/2118545",
   },
   {
     meta: "Goldin & Katz · 2008",
@@ -1640,72 +1782,114 @@ const RESEARCH_REEL = [
     link: "https://doi.org/10.2307/25057490",
   },
   {
-    meta: "Katz & Murphy · QJE 1992",
-    title: "Changes in relative wages, 1963\u20131987",
-    body: "The paper that formalized the college wage premium: demand for college-educated workers rose faster than supply, and the gap between high-school and college wages widened sharply. A foundation for the Grusky mobility work I started with.",
-    tags: ["wage premium", "skill bias"],
-    link: "https://doi.org/10.2307/2118545",
-  },
-  {
     meta: "Autor, Dorn & Hanson · AER 2013; NBER 2016",
     title: "Job polarization & the China Shock",
-    body: "Automation hollowed out middle-skill jobs, and import competition from China hit specific U.S. local labor markets hard \u2014 concentrating the losses from &ldquo;progress&rdquo; in particular places and people.",
+    body: "Automation hollowed out middle-skill jobs, and import competition from China hit specific U.S. local labor markets hard &mdash; concentrating losses from &ldquo;progress&rdquo; in particular places.",
     tags: ["labor markets", "trade"],
     link: "https://www.nber.org/papers/w21906",
   },
   {
+    meta: "Bowles & Fochesato · JEL 2023",
+    title: "The origins of enduring economic inequality",
+    body: "Synthesizes archaeological and historical evidence on when persistent inequality first emerged and what institutions sustained it &mdash; deep history for a field often stuck on the 20th century.",
+    tags: ["deep history", "institutions"],
+    link: "https://doi.org/10.1257/jel.20221761",
+  },
+  {
+    meta: "Dell · REStud 2010",
+    title: "The persistent effects of Peru&rsquo;s mining mita",
+    body: "Colonial forced-labor institutions cast a long shadow on modern development &mdash; a canonical natural experiment for how historical extraction shapes present-day poverty.",
+    tags: ["colonialism", "persistence"],
+    link: "https://doi.org/10.1111/j.1467-937X.2010.00612.x",
+  },
+  {
+    meta: "Althoff & Reichardt · 2024",
+    title: "Jim Crow and Black economic progress after slavery",
+    body: "Links 1870&ndash;1940 Census records across generations and uses state borders as RDDs: Jim Crow institutions, especially education, explain much of the Free&ndash;Enslaved mobility gap that persists today.",
+    tags: ["race", "institutions", "RDD"],
+    link: "https://doi.org/10.1093/qje/qjae012",
+  },
+  {
+    meta: "Heblich, Trew & Zylberberg · 2021",
+    title: "East-Side Story: pollution & neighborhood sorting",
+    body: "Historical coal pollution in 19th-century Britain sorted rich and poor across cities for generations. Place-based disadvantage can outlast the original shock by a century.",
+    tags: ["neighborhoods", "environment"],
+    link: "https://doi.org/10.1093/qje/qjab047",
+  },
+  {
+    meta: "NBER Digest · 2025",
+    title: "Long-term impacts of residential desegregation programs",
+    body: "Court-ordered school and housing desegregation programs had measurable long-run effects on where families lived and how opportunity was distributed &mdash; policy that actually moved people across neighborhood lines.",
+    tags: ["segregation", "policy"],
+    link: "https://www.nber.org/digest/202505/long-term-impacts-residential-racial-desegregation-programs",
+  },
+  {
+    meta: "Parolin, Curran & Wimer · 2020 · Columbia CPSP",
+    title: "Monthly poverty rates during COVID-19",
+    body: "Near-real-time SPM estimates showed stimulus and expanded CTC briefly cut child poverty nearly in half &mdash; and how fast it rebounded when they expired.",
+    tags: ["SPM", "safety net"],
+    link: "https://www.povertycenter.columbia.edu/publications/monthly-poverty-rates-during-covid-19-pandemic",
+  },
+  {
+    meta: "Wimer et al. · Columbia CPSP · ongoing",
+    title: "The Poverty Tracker",
+    body: "A longitudinal NYC panel tracks poverty, material hardship, and health together &mdash; showing that income alone misses how many families bounce above and below the line.",
+    tags: ["longitudinal", "hardship"],
+    link: "https://www.povertycenter.columbia.edu/poverty-tracker",
+  },
+  {
+    meta: "Hoynes & Schanzenbach · Georgetown CPI",
+    title: "Safety net investments in children",
+    body: "SNAP, Medicaid, EITC, and Head Start pay long-run dividends in health, education, and earnings. Georgetown CPI helped shape the monthly Child Tax Credit design.",
+    tags: ["safety net", "children"],
+    link: "https://www.georgetownpoverty.org/",
+  },
+  {
+    meta: "Rank · Contexts 2011 · IRP / Michigan",
+    title: "Rethinking American Poverty",
+    body: "Poverty as structural &ldquo;musical chairs&rdquo;: ~60% of Americans experience poverty between ages 20&ndash;75, though only ~15% are poor at any moment.",
+    tags: ["life course", "structure"],
+    link: "https://doi.org/10.1177/1536504211426556",
+  },
+  {
     meta: "Case & Deaton · Brookings 2015; PNAS 2020",
     title: "Deaths of despair",
-    body: "Midlife mortality from suicide, drugs, and alcohol rose for less-educated white Americans even as other groups&rsquo; health improved. A stark reminder that aggregate growth can mask deepening distress in specific communities.",
+    body: "Midlife mortality from suicide, drugs, and alcohol rose for less-educated white Americans even as other groups&rsquo; health improved &mdash; aggregate growth masking local distress.",
     tags: ["mortality", "health inequality"],
     link: "https://www.brookings.edu/articles/mortality-and-morbidity-in-the-21st-century/",
   },
   {
-    meta: "Wilson · 1987 / 2012 reissue",
+    meta: "Wilson · 1987",
     title: "The Truly Disadvantaged",
-    body: "Wilson showed how deindustrialization and middle-class flight left concentrated urban poverty with few ladders out. Still the anchor text for neighborhood effects and the geography of disadvantage.",
+    body: "Deindustrialization and middle-class flight left concentrated urban poverty with few ladders out. Still the anchor for neighborhood effects and the geography of disadvantage.",
     tags: ["neighborhoods", "urban poverty"],
     link: "https://doi.org/10.2307/2095853",
   },
   {
-    meta: "Sen · 1973 / 1997",
-    title: "On Economic Inequality",
-    body: "Sen&rsquo;s capability approach asks not just who is poor by income but who lacks the freedom to live a life they have reason to value. A philosophical backbone for modern poverty measurement debates.",
-    tags: ["measurement", "capability"],
-    link: "https://doi.org/10.1093/0198281935.001.0001",
-  },
-  {
     meta: "Mani, Mullainathan, Shafir & Zhao · Science 2013",
     title: "Poverty impedes cognitive function",
-    body: "Scarcity itself consumes mental bandwidth \u2014 the same person performs worse on cognitive tests when worried about money. Reframes poverty as a constraint on decision-making, not a character flaw.",
+    body: "Scarcity consumes mental bandwidth &mdash; the same person performs worse on cognitive tests when worried about money. Poverty as constraint, not character.",
     tags: ["behavioral", "scarcity"],
     link: "https://doi.org/10.1126/science.1238041",
   },
   {
-    meta: "Glaeser · Triumph of the City; Alesina & Glaeser 2004",
-    title: "Cities as engines of opportunity and inequality",
-    body: "Density makes cities the most productive places on earth and ladders out of poverty \u2014 but the same forces drive housing costs and segregation that can wall opportunity off.",
-    tags: ["cities", "agglomeration"],
-    link: "https://doi.org/10.1093/0199253498.001.0001",
-  },
-  {
     meta: "Hsieh & Moretti · AEJ: Macro 2019",
     title: "Housing constraints and spatial misallocation",
-    body: "Restrictive zoning in high-productivity cities like San Francisco and San Jose keeps workers out of the places where they would earn the most \u2014 a measurable drag on both growth and mobility.",
+    body: "Restrictive zoning in high-productivity cities keeps workers out of where they would earn most &mdash; a drag on both growth and mobility.",
     tags: ["housing", "zoning"],
     link: "https://doi.org/10.1257/mac.20170371",
   },
   {
     meta: "Desmond · 2016",
-    title: "Evicted: Poverty and Profit in the American City",
-    body: "Following Milwaukee families through eviction court, Desmond showed housing instability is a cause of poverty, not just a symptom. Won the Pulitzer; reshaped how researchers think about material hardship.",
+    title: "Evicted",
+    body: "Following Milwaukee families through eviction court: housing instability causes poverty, not just reflects it. Reshaped how researchers measure material hardship.",
     tags: ["housing", "ethnography"],
     link: "https://doi.org/10.4159/9780674969929",
   },
   {
     meta: "Acemoglu & Robinson · 2012",
     title: "Why Nations Fail",
-    body: "Long-run prosperity tracks inclusive vs. extractive institutions far more than geography or culture. The macro backdrop to why some societies turn growth into broad opportunity and others don&rsquo;t.",
+    body: "Long-run prosperity tracks inclusive vs. extractive institutions more than geography or culture &mdash; the macro frame for who shares in progress.",
     tags: ["institutions", "long run"],
     link: "https://doi.org/10.2307/41721546",
   },
@@ -1738,12 +1922,12 @@ const RESEARCH_REEL = [
     btn.innerHTML =
       `<div class="ri-meta">${item.meta}</div>` +
       `<div class="ri-title">${item.title}</div>`;
-    btn.addEventListener("click", () => { show(i); restart(); });
+    btn.addEventListener("click", () => { show(i, true); restart(); });
     playlist.appendChild(btn);
   });
   const items = [...playlist.querySelectorAll(".rr-item")];
 
-  function show(i) {
+  function show(i, scrollPlaylist) {
     idx = ((i % RESEARCH_REEL.length) + RESEARCH_REEL.length) % RESEARCH_REEL.length;
     const item = RESEARCH_REEL[idx];
     feature.classList.remove("flip");
@@ -1758,7 +1942,7 @@ const RESEARCH_REEL = [
     else { linkEl.removeAttribute("href"); linkEl.textContent = ""; }
 
     items.forEach((el, j) => el.classList.toggle("on", j === idx));
-    if (items[idx]) items[idx].scrollIntoView({ block: "nearest" });
+    if (scrollPlaylist && items[idx]) items[idx].scrollIntoView({ block: "nearest" });
     runProgress();
   }
 
@@ -1775,7 +1959,7 @@ const RESEARCH_REEL = [
   function startTimer() {
     clearInterval(timer);
     if (!playing) return;
-    timer = setInterval(() => show(idx + 1), ROTATE_MS);
+    timer = setInterval(() => show(idx + 1, false), ROTATE_MS);
   }
   function restart() { startTimer(); }
 
@@ -1787,8 +1971,8 @@ const RESEARCH_REEL = [
     else { clearInterval(timer); progress.classList.remove("run"); }
   }
 
-  prevBtn.addEventListener("click", () => { show(idx - 1); restart(); });
-  nextBtn.addEventListener("click", () => { show(idx + 1); restart(); });
+  prevBtn.addEventListener("click", () => { show(idx - 1, false); restart(); });
+  nextBtn.addEventListener("click", () => { show(idx + 1, false); restart(); });
   playPauseBtn.addEventListener("click", () => setPlaying(!playing));
 
   reel.addEventListener("mouseenter", () => { if (playing) { clearInterval(timer); progress.classList.remove("run"); const w = getComputedStyle(progress).width; progress.style.width = w; } });
