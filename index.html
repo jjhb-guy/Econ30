@@ -624,7 +624,7 @@
   .question-block {
     text-align: center;
     padding: 3.5rem 1.5rem;
-    background: linear-gradient(180deg, var(--bg) 0%, #111528 50%, var(--bg) 100%);
+    background: linear-gradient(180deg, var(--bg) 0%, var(--surface) 50%, var(--bg) 100%);
   }
   .question-block .section-label { margin-bottom: 0.6rem; }
   .question-block blockquote {
@@ -790,7 +790,7 @@
     overflow: hidden;
   }
   #usMap { display: block; width: 100%; }
-  #usMap .state { fill: #1e2235; stroke: var(--border); stroke-width: 0.5; }
+  #usMap .state { fill: var(--card); stroke: var(--border); stroke-width: 0.5; }
 
   @keyframes pulse {
     0%, 100% { r: 6; opacity: 0.85; }
@@ -1018,7 +1018,7 @@
     box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
   }
   .align-chip.on {
-    background: rgba(255,255,255,0.04);
+    background: var(--card);
     color: var(--text);
     border-color: var(--c, var(--accent));
   }
@@ -1165,7 +1165,7 @@
   <p class="intro-sub">That work opened up a specific question: how has poverty and inequality research developed over the decades&mdash;and how does it align, or not, with real-world trends and occurrences? Below, some of the papers and projects that made the field feel so alive to me, before the data sections take over.</p>
 
   <div class="highlight-label">Key highlights of cool research right now</div>
-  <div class="highlight-head">Papers and projects I saved from Econ 30 and CPI&mdash;titles and links matched to those sources</div>
+  <div class="highlight-head">Exciting works in poverty and inequality research</div>
 
   <div class="research-reel" id="researchReel">
     <div class="rr-feature" id="rrFeature">
@@ -1362,7 +1362,7 @@
 <!-- ═══════ FULL TIMELINE ═══════ -->
 <section id="timeline">
   <div class="section-label">Deep dive</div>
-  <h2>Full Timeline of Poverty Research</h2>
+  <h2>Brief Timeline of Poverty Research</h2>
   <p class="intro">Key moments in measurement, legislation, institutions, and scholarship that shaped how America understands poverty.</p>
 
   <div class="timeline">
@@ -1576,7 +1576,7 @@
 <section id="takeaways">
   <div class="verdict-tag">So: is research aligned?</div>
   <h2>Takeaways &mdash; what the data on this page actually says</h2>
-  <p class="verdict-lead">Going back to the central question: <em>how has poverty &amp; inequality research developed, and where does it align&mdash;or diverge&mdash;from real-world trends and public discourse?</em> Pulling together the OpenAlex trends, the methods/data fingerprint, the Google Books series, and the alignment overlay, four things hold up.</p>
+  <p class="verdict-lead">Going back to the central question: <em>how has poverty &amp; inequality research developed, and where does it align&mdash;or diverge&mdash;from real-world trends and public discourse?</em> Pulling together the OpenAlex trends, the methods/data fingerprint, the Google Books series, and the alignment overlay, three things hold up.</p>
 
   <div class="takeaway-grid">
     <div class="takeaway-card">
@@ -1594,17 +1594,10 @@
     </div>
 
     <div class="takeaway-card">
-      <div class="t-num">Takeaway 03 · Public discourse</div>
-      <h3>Books lagged scholarship by roughly a decade</h3>
-      <p>In your Google Books series, <strong>&ldquo;inequality&rdquo; barely moves until the mid&ndash;2000s and then surges through 2019</strong>&mdash;peaking after Piketty&rsquo;s 2014 <em>Capital</em>. Academic publication share was already climbing well before that.</p>
-      <p>So research wasn&rsquo;t just keeping pace with the conversation; for much of the 2000s it was <em>leading</em> the conversation.</p>
-    </div>
-
-    <div class="takeaway-card">
-      <div class="t-num">Takeaway 04 · Subjects</div>
-      <h3>Place, children, and health are the <em>persistent</em> subjects</h3>
-      <p>In the per-era subject heatmap, three terms dominate across every five-year window: <strong>health, education, and children</strong>. Neighborhood / place rises with the Chetty&ndash;Hendren&ndash;Katz wave.</p>
-      <p>The Top-Cited Works panel underlines the same thing&mdash;Wilson&rsquo;s <em>Truly Disadvantaged</em>, Sen&rsquo;s <em>On Economic Inequality</em>, and the Acemoglu/Piketty/Chetty cluster set what each decade was reading.</p>
+      <div class="t-num">Takeaway 03 · Subjects</div>
+      <h3>Education, health, and children are <em>persistent</em> topics</h3>
+      <p>Across every five-year window in the methods fingerprint, three terms dominate: <strong>health, education, and children</strong>. These aren&rsquo;t passing trends&mdash;they are the durable core of what poverty and inequality research is actually about.</p>
+      <p>Neighborhood and place rise sharply with the Chetty&ndash;Hendren&ndash;Katz wave, but the child/health/education core stays constant throughout.</p>
     </div>
   </div>
 
@@ -2746,6 +2739,81 @@ const CENTERS = [
     desc: "Brookings\u2019 Economic Studies program and its Center on Children and Families produce some of the most cited policy analyses on poverty in America. The Hamilton Project proposes economic strategies to promote broad-based growth. Ron Haskins, Isabel Sawhill, and Richard Reeves have led influential research on mobility, opportunity, and the middle class. Its 50th-anniversary review of the War on Poverty is a landmark assessment.",
     focus: ["Economic mobility", "Hamilton Project", "Children & families", "Middle-class economics", "War on Poverty assessments"],
     website: "https://www.brookings.edu",
+    pdf: null
+  },
+  {
+    id: "crw",
+    name: "Center on Race and Wealth",
+    abbr: "CRW",
+    lat: 38.921, lon: -77.020,
+    color: "#ff9e3d",
+    badge: "Race & Wealth Focus",
+    badgeColor: "#ff9e3d",
+    location: "Howard University, Washington, DC",
+    founded: "Established 2007 with a Ford Foundation grant on Building Economic Security",
+    desc: "Howard University\u2019s Center on Race and Wealth carries out research on racial wealth disparities, asset building, and wealth accumulation. It engages academic researchers and state and regional asset-building coalition leaders to inform policymakers about the causes, consequences, and solutions to the racial wealth gap. It partners with IRP on a Graduate Student Research Workshop for underrepresented doctoral students studying poverty and economic mobility.",
+    focus: ["Racial wealth disparities", "Asset building", "Poverty & economic mobility", "Wealth gap policy"],
+    website: "https://coascenters.howard.edu/research-centers/center-race-and-wealth",
+    pdf: null
+  },
+  {
+    id: "ukcpr",
+    name: "UK Center for Poverty Research",
+    abbr: "UKCPR",
+    lat: 38.032, lon: -84.503,
+    color: "#6c9bff",
+    badge: "University Center",
+    badgeColor: "#6c9bff",
+    location: "University of Kentucky, Lexington, KY",
+    founded: "Housed at the Gatton College of Business and Economics",
+    desc: "The UK Center for Poverty Research focuses on poverty measurement, the causes and consequences of poverty, and the effects of policies designed to reduce poverty. It conducts research on labor markets, food insecurity, housing, and the social safety net with particular attention to rural and Appalachian poverty.",
+    focus: ["Poverty measurement", "Rural & Appalachian poverty", "Labor markets", "Food insecurity", "Safety net policy"],
+    website: "https://ukcpr.org",
+    pdf: "Raw/CPR%20About%20Us%20_%20Gatton%20College%20of%20Business%20and%20Economics.pdf"
+  },
+  {
+    id: "leo",
+    name: "Wilson Sheehan Lab for Economic Opportunities",
+    abbr: "LEO",
+    lat: 41.704, lon: -86.239,
+    color: "#a07cff",
+    badge: "Evidence Lab",
+    badgeColor: "#a07cff",
+    location: "University of Notre Dame, Notre Dame, IN",
+    founded: "Part of Notre Dame\u2019s broader poverty and inequality research mission",
+    desc: "LEO partners with nonprofits, government agencies, and social enterprises to generate rigorous evidence on what works in the fight against poverty. By embedding researchers within organizations and running randomized evaluations, LEO produces actionable findings that practitioners can use immediately. Its tagline: \u201cCreating evidence by partnering with poverty\u2019s fiercest adversaries.\u201d",
+    focus: ["Randomized evaluations", "Nonprofit partnerships", "Workforce & earnings", "Evidence-based practice"],
+    website: "https://leo.nd.edu",
+    pdf: null
+  },
+  {
+    id: "wcpc",
+    name: "West Coast Poverty Center",
+    abbr: "WCPC",
+    lat: 47.655, lon: -122.308,
+    color: "#5cf0b0",
+    badge: "Regional Focus",
+    badgeColor: "#5cf0b0",
+    location: "University of Washington, Seattle, WA",
+    founded: "Housed at the UW School of Social Work",
+    desc: "The West Coast Poverty Center conducts and disseminates research on the nature, causes, and consequences of poverty in the western United States. It focuses on linking academic research to policy, with particular attention to how poverty manifests differently in western states\u2014including housing costs, homelessness, immigration, and rural poverty unique to the Pacific Northwest and Mountain West.",
+    focus: ["Western US poverty", "Housing & homelessness", "Immigration", "Rural poverty", "Research-to-policy translation"],
+    website: "https://depts.washington.edu/wcpc",
+    pdf: null
+  },
+  {
+    id: "cpip",
+    name: "Center for Population, Inequality, and Policy",
+    abbr: "CPIP",
+    lat: 33.641, lon: -117.843,
+    color: "#ffa96c",
+    badge: "University Center",
+    badgeColor: "#ffa96c",
+    location: "University of California, Irvine, CA",
+    founded: "Cross-disciplinary center spanning UCI\u2019s Social Sciences, Public Health, and Social Ecology schools",
+    desc: "UCI\u2019s Center for Population, Inequality, and Policy (CPIP) brings together researchers across legal, life course, migration, institutions, and human capital themes. It has a track record of high-quality population research and connects demography, sociology, economics, and public health to study how inequality develops and persists across generations.",
+    focus: ["Demography & inequality", "Life course research", "Migration & human capital", "Intergenerational mobility", "Cross-disciplinary methods"],
+    website: "https://cpip.uci.edu",
     pdf: null
   },
   {
