@@ -46,116 +46,6 @@
   nav a { color: var(--muted); }
   nav a:hover { color: var(--text); text-decoration: none; }
 
-  /* ─── CUTSCENE (mandatory comic intro) ─── */
-  body.cutscene-lock { overflow: hidden; }
-  body.cutscene-lock nav { opacity: 0; pointer-events: none; }
-  .cutscene {
-    position: fixed; inset: 0; z-index: 500;
-    background: radial-gradient(circle at 50% 0%, #14182a 0%, #0a0c12 70%);
-    display: flex; align-items: center; justify-content: center;
-    transition: opacity 0.6s ease, visibility 0.6s;
-  }
-  .cutscene.done { opacity: 0; visibility: hidden; pointer-events: none; }
-  .cutscene-inner {
-    width: min(720px, 94vw);
-    text-align: center;
-  }
-  .cutscene-kicker {
-    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em;
-    text-transform: uppercase; color: var(--accent3);
-    margin-bottom: 0.9rem; opacity: 0.85;
-  }
-
-  /* comic panel stage */
-  .cutscene-stage {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 3 / 2;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(108,155,255,0.08);
-    cursor: pointer;
-    background: #0a0c12;
-  }
-  .cutscene-frame {
-    position: absolute; inset: 0;
-    background-size: cover; background-position: center;
-    opacity: 0;
-    transform: scale(1.06);
-    transition: opacity 0.7s ease;
-  }
-  .cutscene-frame.on {
-    opacity: 1;
-    animation: cs-kenburns 7s ease-out forwards;
-  }
-  @keyframes cs-kenburns {
-    from { transform: scale(1.085); }
-    to   { transform: scale(1.0); }
-  }
-  /* gradient + caption overlay inside the panel */
-  .cutscene-caption {
-    position: absolute; left: 0; right: 0; bottom: 0;
-    padding: 2.6rem 1.4rem 1.2rem;
-    background: linear-gradient(180deg, transparent 0%, rgba(8,10,18,0.55) 35%, rgba(8,10,18,0.94) 100%);
-    text-align: left;
-  }
-  .cutscene-caption .speaker {
-    font-size: 0.66rem; font-weight: 700; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--warm);
-    margin-bottom: 0.3rem;
-  }
-  .cutscene-text {
-    font-size: clamp(0.98rem, 2.2vw, 1.18rem);
-    line-height: 1.55; color: #fff;
-    font-weight: 500;
-    min-height: 3.2em;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
-  }
-  .cutscene-text .caret {
-    display: inline-block; width: 2px; height: 1.05em;
-    background: var(--accent3); margin-left: 2px;
-    vertical-align: text-bottom;
-    animation: cs-blink 0.9s steps(1) infinite;
-  }
-  @keyframes cs-blink { 50% { opacity: 0; } }
-  .cutscene-tap {
-    position: absolute; right: 0.9rem; bottom: 0.8rem;
-    font-size: 0.66rem; color: var(--muted);
-    letter-spacing: 0.06em; opacity: 0.7;
-    pointer-events: none;
-  }
-
-  .cutscene-dots {
-    display: flex; justify-content: center; gap: 0.5rem;
-    margin: 1.2rem 0 1rem;
-  }
-  .cutscene-dots span {
-    width: 26px; height: 4px; border-radius: 3px;
-    background: var(--border);
-    transition: background 0.25s, transform 0.25s;
-  }
-  .cutscene-dots span.on { background: var(--accent3); }
-  .cutscene-actions {
-    display: flex; justify-content: center; gap: 0.75rem;
-  }
-  .cutscene-btn {
-    background: var(--card); border: 1px solid var(--border);
-    color: var(--muted); padding: 0.6rem 1.3rem;
-    border-radius: 9px; font-size: 0.86rem; font-weight: 600;
-    cursor: pointer; font-family: inherit;
-    transition: color 0.15s, border-color 0.15s, background 0.15s, opacity 0.15s;
-  }
-  .cutscene-btn:hover { color: var(--text); border-color: var(--accent); }
-  .cutscene-btn.primary {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: #0c0e14; border: none;
-  }
-  .cutscene-btn.primary:hover { opacity: 0.92; }
-  @media (max-width: 540px) {
-    .cutscene-caption { padding: 2rem 1rem 1rem; }
-  }
-
   /* ─── INTRO ─── */
   .intro-hero {
     padding: 3.5rem 1.5rem 2.5rem;
@@ -256,15 +146,6 @@
     background: linear-gradient(90deg, var(--accent3), var(--accent));
   }
   .rr-progress.run { transition: width linear; }
-  .rr-badge {
-    align-self: flex-start;
-    font-size: 0.66rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.1em;
-    padding: 0.25rem 0.6rem; border-radius: 999px;
-    margin-bottom: 0.85rem;
-  }
-  .rr-badge.oi { background: rgba(92,240,176,0.14); color: var(--accent3); border: 1px solid rgba(92,240,176,0.35); }
-  .rr-badge.class { background: rgba(108,155,255,0.14); color: var(--accent); border: 1px solid rgba(108,155,255,0.35); }
   .rr-meta {
     font-size: 0.74rem; font-weight: 600; color: var(--muted);
     text-transform: uppercase; letter-spacing: 0.06em;
@@ -296,7 +177,7 @@
 
   .rr-playlist {
     display: flex; flex-direction: column; gap: 0.4rem;
-    max-height: 320px; overflow-y: auto;
+    max-height: 420px; overflow-y: auto;
     padding-right: 0.25rem;
   }
   .rr-item {
@@ -311,12 +192,10 @@
   }
   .rr-item:hover { transform: translateX(2px); border-color: var(--accent); }
   .rr-item.on { border-left-color: var(--accent3); background: var(--card); }
-  .rr-item .ri-src {
-    font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.08em; margin-bottom: 0.15rem;
+  .rr-item .ri-meta {
+    font-size: 0.62rem; font-weight: 600; color: var(--muted);
+    letter-spacing: 0.04em; margin-bottom: 0.15rem;
   }
-  .rr-item .ri-src.oi { color: var(--accent3); }
-  .rr-item .ri-src.class { color: var(--accent); }
   .rr-item .ri-title { font-size: 0.82rem; color: var(--text); line-height: 1.3; font-weight: 600; }
 
   .rr-controls {
@@ -1144,26 +1023,6 @@
   <a href="#takeaways">Takeaways</a>
 </nav>
 
-<!-- ═══════ CUTSCENE (comic intro) ═══════ -->
-<div id="cutscene" class="cutscene" aria-modal="true" role="dialog" aria-label="Introduction">
-  <div class="cutscene-inner">
-    <div class="cutscene-kicker">How I got pulled into this</div>
-    <div class="cutscene-stage" id="cutsceneStage">
-      <div class="cutscene-frame" id="cutsceneFrame"></div>
-      <div class="cutscene-caption">
-        <div class="speaker" id="cutsceneSpeaker"></div>
-        <div class="cutscene-text" id="cutsceneText"></div>
-      </div>
-      <div class="cutscene-tap" id="cutsceneTap">tap to continue &rarr;</div>
-    </div>
-    <div class="cutscene-dots" id="cutsceneDots"></div>
-    <div class="cutscene-actions">
-      <button type="button" class="cutscene-btn" id="cutsceneSkip">Skip intro</button>
-      <button type="button" class="cutscene-btn primary" id="cutsceneNext">Next</button>
-    </div>
-  </div>
-</div>
-
 <!-- ═══════ INTRO ═══════ -->
 <header id="intro" class="intro-hero">
   <div class="intro-tag">A personal entry point</div>
@@ -1172,12 +1031,11 @@
   <p class="intro-sub">That experience nudged me into a bigger question about the field itself. But first&mdash;it&rsquo;s genuinely the most productive moment poverty research has ever had, so here are some of the highlights driving it.</p>
 
   <div class="highlight-label">Key highlights of cool research right now</div>
-  <div class="highlight-head">Work bringing more insight and productivity to poverty research than ever before &mdash; <em>Opportunity Insights</em> and other teams unlocking new datasets and methods</div>
+  <div class="highlight-head">Landmark papers from the last decade&mdash;administrative data, causal designs, and center-based research reshaping what we know about poverty and inequality</div>
 
   <div class="research-reel" id="researchReel">
     <div class="rr-feature" id="rrFeature">
       <div class="rr-progress" id="rrProgress"></div>
-      <div class="rr-badge" id="rrBadge"></div>
       <div class="rr-meta" id="rrMeta"></div>
       <h3 id="rrTitle"></h3>
       <p id="rrBody"></p>
@@ -1681,196 +1539,175 @@
 <script src="data/top_works.js"></script>
 <script>
 
-/* ═══════ CUTSCENE (interactive comic) ═══════ */
-const CUTSCENE_STEPS = [
-  {
-    img: "assets/comic_panel_1.png",
-    speaker: "Stanford · late night",
-    text: "It started in a research office around 1 a.m. I was supposed to be cleaning a dataset \u2014 instead I couldn't look away from it.",
-  },
-  {
-    img: "assets/comic_panel_2.png",
-    speaker: "With Professor Grusky",
-    text: "He walked me through the college wage premium and intergenerational mobility. Suddenly the graphs weren't abstract \u2014 they were about who actually gets a shot.",
-  },
-  {
-    img: "assets/comic_panel_3.png",
-    speaker: "The part that stuck",
-    text: "Then it hit me: every dot on that opportunity map is a real kid walking home tonight, and their odds aren't the same. I had to know \u2014 how did this field grow, and is it keeping up?",
-  },
-];
-
-let cutsceneStep = -1;
-let cutsceneTyping = null;
-const cutsceneEl = document.getElementById("cutscene");
-const cutsceneText = document.getElementById("cutsceneText");
-const cutsceneFrame = document.getElementById("cutsceneFrame");
-const cutsceneSpeaker = document.getElementById("cutsceneSpeaker");
-const cutsceneStage = document.getElementById("cutsceneStage");
-const cutsceneTap = document.getElementById("cutsceneTap");
-const cutsceneNext = document.getElementById("cutsceneNext");
-const cutsceneDots = document.getElementById("cutsceneDots");
-
-// Preload panels so transitions are instant.
-CUTSCENE_STEPS.forEach((s) => { const im = new Image(); im.src = s.img; });
-
-CUTSCENE_STEPS.forEach(() => cutsceneDots.appendChild(document.createElement("span")));
-document.body.classList.add("cutscene-lock");
-
-function typeText(el, str) {
-  clearInterval(cutsceneTyping);
-  el.innerHTML = "";
-  const caret = document.createElement("span");
-  caret.className = "caret";
-  el.appendChild(caret);
-  let i = 0;
-  cutsceneTyping = setInterval(() => {
-    if (i >= str.length) {
-      clearInterval(cutsceneTyping);
-      setTimeout(() => { if (caret.parentNode) caret.remove(); }, 600);
-      return;
-    }
-    caret.insertAdjacentText("beforebegin", str[i]);
-    i++;
-  }, 22);
-}
-
-function renderCutscene(i) {
-  if (i === cutsceneStep) return;
-  cutsceneStep = i;
-  const step = CUTSCENE_STEPS[i];
-
-  cutsceneFrame.classList.remove("on");
-  // force reflow so the Ken Burns animation restarts each panel
-  void cutsceneFrame.offsetWidth;
-  cutsceneFrame.style.backgroundImage = `url("${step.img}")`;
-  cutsceneFrame.classList.add("on");
-
-  cutsceneSpeaker.textContent = step.speaker;
-  typeText(cutsceneText, step.text);
-
-  cutsceneDots.querySelectorAll("span").forEach((d, j) => d.classList.toggle("on", j === i));
-  const last = i === CUTSCENE_STEPS.length - 1;
-  cutsceneNext.textContent = last ? "Enter the site" : "Next";
-  cutsceneTap.innerHTML = last ? "tap to enter &rarr;" : "tap to continue &rarr;";
-}
-
-function advanceCutscene() {
-  if (cutsceneStep >= CUTSCENE_STEPS.length - 1) endCutscene();
-  else renderCutscene(cutsceneStep + 1);
-}
-
-function endCutscene() {
-  clearInterval(cutsceneTyping);
-  cutsceneEl.classList.add("done");
-  document.body.classList.remove("cutscene-lock");
-  try { sessionStorage.setItem("cutsceneSeen", "1"); } catch (_) {}
-}
-
-if (sessionStorage.getItem("cutsceneSeen") === "1") {
-  endCutscene();
-} else {
-  renderCutscene(0);
-}
-
-cutsceneStage.addEventListener("click", advanceCutscene);
-cutsceneNext.addEventListener("click", advanceCutscene);
-document.getElementById("cutsceneSkip").addEventListener("click", endCutscene);
-document.addEventListener("keydown", (e) => {
-  if (cutsceneEl.classList.contains("done")) return;
-  if (e.key === "ArrowRight" || e.key === "Enter" || e.key === " ") { e.preventDefault(); advanceCutscene(); }
-  else if (e.key === "Escape") endCutscene();
-});
-
 /* ═══════ ROTATING RESEARCH REEL ═══════ */
 const RESEARCH_REEL = [
   {
-    src: "oi", srcLabel: "Opportunity Insights",
-    meta: "Chetty, Friedman, Hendren, Jones, Porter · 2018",
+    meta: "Chetty, Friedman, Hendren, Jones & Porter · 2018 · Opportunity Insights",
     title: "The Opportunity Atlas maps mobility block by block",
     body: "Anonymized IRS + Census records traced 20 million Americans back to the exact neighborhood they grew up in. The result is an interactive map where two tracts a mile apart can mean wildly different odds of escaping poverty.",
     tags: ["IRS linkage", "place effects"],
     link: "https://www.opportunityatlas.org/",
   },
   {
-    src: "oi", srcLabel: "Opportunity Insights",
-    meta: "Chetty, Hendren, Kline, Saez · QJE 2014",
+    meta: "Chetty, Hendren, Kline & Saez · QJE 2014 · Opportunity Insights",
     title: "\u201CWhere is the Land of Opportunity?\u201D",
-    body: "The paper that started the lab: upward mobility varies enormously across U.S. commuting zones \u2014 a kid in San Jose has roughly double the shot of one in Charlotte. It put a number on the American Dream by place.",
+    body: "Upward mobility varies enormously across U.S. commuting zones \u2014 a kid in San Jose has roughly double the shot of one in Charlotte. It put a number on the American Dream by place.",
     tags: ["mobility", "geography"],
     link: "https://opportunityinsights.org/paper/land-of-opportunity/",
   },
   {
-    src: "oi", srcLabel: "Opportunity Insights",
-    meta: "Chetty, Grusky, Hell, Hendren, Manduca, Narang · 2017",
+    meta: "Chetty, Grusky, Hell, Hendren, Manduca & Narang · 2017 · Stanford CPI",
     title: "The fading American Dream: 90% \u2192 50%",
     body: "Share of kids who out-earn their parents fell from ~90% (born 1940) to ~50% (born 1984). Grusky is a co-author \u2014 this is one of the projects that first pulled me in. Most of the decline is rising inequality, not slow growth.",
     tags: ["absolute mobility", "generations"],
     link: "https://www.nber.org/papers/w22910",
   },
   {
-    src: "oi", srcLabel: "Opportunity Insights",
-    meta: "Chetty, Hendren, Jones, Porter · 2018",
+    meta: "Chetty, Hendren, Jones & Porter · 2018 · Opportunity Insights",
     title: "Race and economic opportunity",
-    body: "Black and white boys raised in the same income households, same neighborhood, still grow up to very different outcomes \u2014 a gap that barely closes even in the richest areas. A striking, uncomfortable use of big administrative data.",
+    body: "Black and white boys raised in the same income households, same neighborhood, still grow up to very different outcomes \u2014 a gap that barely closes even in the richest areas. A striking use of big administrative data.",
     tags: ["race", "intergenerational"],
     link: "https://www.nber.org/papers/w25147",
   },
   {
-    src: "oi", srcLabel: "Opportunity Insights",
-    meta: "Chetty et al. · Nature 2022",
+    meta: "Chetty et al. · Nature 2022 · Opportunity Insights",
     title: "Economic connectedness predicts mobility",
     body: "Using 21 billion Facebook friendships, they show the single strongest neighborhood predictor of upward mobility is how many friends low-income kids have across class lines \u2014 not inequality or school quality alone.",
     tags: ["social capital", "networks"],
     link: "https://opportunityinsights.org/paper/social-capital-i-measurement-and-associations-with-economic-mobility/",
   },
   {
-    src: "oi", srcLabel: "Opportunity Insights",
-    meta: "Chetty, Hendren, Katz · QJE 2016",
+    meta: "Chetty, Hendren & Katz · QJE 2016 · Opportunity Insights",
     title: "Moving to Opportunity, re-analyzed",
     body: "Revisiting the HUD voucher experiment with tax data: moving young children to lower-poverty neighborhoods raised their adult earnings. The cleanest causal evidence we have that place itself shapes life chances.",
     tags: ["RCT", "long-run outcomes"],
     link: "https://academic.oup.com/qje/article/131/2/519/2607080",
   },
   {
-    src: "class", srcLabel: "From class",
-    meta: "Piketty & Saez · 2003, 2014",
+    meta: "Manduca · AER 2019 · Stanford CPI",
+    title: "National inequality drives regional economic divergence",
+    body: "Rising national income inequality mechanically widens gaps between rich and poor U.S. regions \u2014 a structural explanation for why opportunity looks so different depending on where you grow up.",
+    tags: ["regional inequality", "decomposition"],
+    link: "https://doi.org/10.1257/aer.20161265",
+  },
+  {
+    meta: "Fox et al. · Stanford CPI · ongoing",
+    title: "The California Poverty Measure",
+    body: "Stanford CPI&rsquo;s flagship local measure adjusts for housing costs, in-kind benefits, and regional variation. California&rsquo;s official poverty rate looks very different once you account for what it actually costs to live here.",
+    tags: ["poverty measurement", "local policy"],
+    link: "https://inequality.stanford.edu/publications/california-poverty-measure",
+  },
+  {
+    meta: "Parolin, Curran & Wimer · 2020 · Columbia CPSP",
+    title: "Monthly Poverty Rates in the United States during the COVID-19 Pandemic",
+    body: "Columbia&rsquo;s Center on Poverty and Social Policy built near-real-time poverty estimates from the CPS, showing how stimulus checks and expanded CTC briefly cut child poverty nearly in half \u2014 and how fast it rebounded when they expired.",
+    tags: ["SPM", "safety net", "real time"],
+    link: "https://www.povertycenter.columbia.edu/publications/monthly-poverty-rates-during-covid-19-pandemic",
+  },
+  {
+    meta: "Wimer et al. · Columbia CPSP · ongoing",
+    title: "The Poverty Tracker",
+    body: "A longitudinal panel following New York City households over time captures poverty, material hardship, and health together \u2014 showing that income alone misses how many families bounce above and below the line.",
+    tags: ["longitudinal", "hardship"],
+    link: "https://www.povertycenter.columbia.edu/poverty-tracker",
+  },
+  {
+    meta: "Hoynes & Schanzenbach · 2018 · Georgetown CPI",
+    title: "Safety net investments in children",
+    body: "Georgetown CPI synthesizes decades of evidence that SNAP, Medicaid, EITC, and Head Start pay long-run dividends in health, education, and earnings \u2014 and helped shape the design of the monthly Child Tax Credit payments.",
+    tags: ["safety net", "children"],
+    link: "https://www.georgetownpoverty.org/",
+  },
+  {
+    meta: "Rank · Contexts 2011 · IRP / Michigan",
+    title: "Rethinking American Poverty",
+    body: "Rank reframes poverty as a structural &ldquo;musical chairs&rdquo; problem: roughly 60% of Americans experience poverty between ages 20&ndash;75, even though only ~15% are poor at any moment. A classic that shifts the whole conversation.",
+    tags: ["life course", "structure"],
+    link: "https://doi.org/10.1177/1536504211426556",
+  },
+  {
+    meta: "Piketty & Saez · QJE 2003; Capital 2014",
     title: "Top income shares and r > g",
     body: "A century of tax records rebuilt the U.S. top-1% income share back to 1913, and Capital in the 21st Century turned r&nbsp;>&nbsp;g into a dinner-table phrase. The benchmark our Alignment chart still leans on.",
     tags: ["top shares", "tax data"],
     link: "https://wid.world/",
   },
   {
-    src: "class", srcLabel: "From class",
     meta: "Goldin & Katz · 2008",
     title: "The race between education and technology",
     body: "Inequality widens when technology outruns the supply of skilled workers and narrows when schooling catches up. A clean lens for why the college wage premium exploded after 1980.",
     tags: ["skill premium", "education"],
-    link: "",
+    link: "https://doi.org/10.2307/25057490",
   },
   {
-    src: "class", srcLabel: "From class",
-    meta: "Autor, Dorn & Hanson · 2013, 2016",
+    meta: "Katz & Murphy · QJE 1992",
+    title: "Changes in relative wages, 1963\u20131987",
+    body: "The paper that formalized the college wage premium: demand for college-educated workers rose faster than supply, and the gap between high-school and college wages widened sharply. A foundation for the Grusky mobility work I started with.",
+    tags: ["wage premium", "skill bias"],
+    link: "https://doi.org/10.2307/2118545",
+  },
+  {
+    meta: "Autor, Dorn & Hanson · AER 2013; NBER 2016",
     title: "Job polarization & the China Shock",
-    body: "Automation hollowed out middle-skill jobs, and import competition from China hit specific U.S. local labor markets hard \u2014 concentrating the losses from \u201Cprogress\u201D in particular places and people.",
+    body: "Automation hollowed out middle-skill jobs, and import competition from China hit specific U.S. local labor markets hard \u2014 concentrating the losses from &ldquo;progress&rdquo; in particular places and people.",
     tags: ["labor markets", "trade"],
     link: "https://www.nber.org/papers/w21906",
   },
   {
-    src: "class", srcLabel: "From class",
-    meta: "Glaeser · Triumph of the City",
-    title: "Cities as engines of opportunity and inequality",
-    body: "Density makes cities the most productive places on earth and ladders out of poverty \u2014 but the same forces drive housing costs and segregation that can wall opportunity off. Straight from our cities lecture.",
-    tags: ["cities", "agglomeration"],
-    link: "",
+    meta: "Case & Deaton · Brookings 2015; PNAS 2020",
+    title: "Deaths of despair",
+    body: "Midlife mortality from suicide, drugs, and alcohol rose for less-educated white Americans even as other groups&rsquo; health improved. A stark reminder that aggregate growth can mask deepening distress in specific communities.",
+    tags: ["mortality", "health inequality"],
+    link: "https://www.brookings.edu/articles/mortality-and-morbidity-in-the-21st-century/",
   },
   {
-    src: "class", srcLabel: "From class",
-    meta: "Acemoglu & Robinson · Why Nations Fail",
-    title: "Institutions decide who shares in progress",
-    body: "Long-run prosperity tracks inclusive vs. extractive institutions far more than geography or culture. The macro backdrop to why some societies turn growth into broad opportunity and others don't.",
+    meta: "Wilson · 1987 / 2012 reissue",
+    title: "The Truly Disadvantaged",
+    body: "Wilson showed how deindustrialization and middle-class flight left concentrated urban poverty with few ladders out. Still the anchor text for neighborhood effects and the geography of disadvantage.",
+    tags: ["neighborhoods", "urban poverty"],
+    link: "https://doi.org/10.2307/2095853",
+  },
+  {
+    meta: "Sen · 1973 / 1997",
+    title: "On Economic Inequality",
+    body: "Sen&rsquo;s capability approach asks not just who is poor by income but who lacks the freedom to live a life they have reason to value. A philosophical backbone for modern poverty measurement debates.",
+    tags: ["measurement", "capability"],
+    link: "https://doi.org/10.1093/0198281935.001.0001",
+  },
+  {
+    meta: "Mani, Mullainathan, Shafir & Zhao · Science 2013",
+    title: "Poverty impedes cognitive function",
+    body: "Scarcity itself consumes mental bandwidth \u2014 the same person performs worse on cognitive tests when worried about money. Reframes poverty as a constraint on decision-making, not a character flaw.",
+    tags: ["behavioral", "scarcity"],
+    link: "https://doi.org/10.1126/science.1238041",
+  },
+  {
+    meta: "Glaeser · Triumph of the City; Alesina & Glaeser 2004",
+    title: "Cities as engines of opportunity and inequality",
+    body: "Density makes cities the most productive places on earth and ladders out of poverty \u2014 but the same forces drive housing costs and segregation that can wall opportunity off.",
+    tags: ["cities", "agglomeration"],
+    link: "https://doi.org/10.1093/0199253498.001.0001",
+  },
+  {
+    meta: "Hsieh & Moretti · AEJ: Macro 2019",
+    title: "Housing constraints and spatial misallocation",
+    body: "Restrictive zoning in high-productivity cities like San Francisco and San Jose keeps workers out of the places where they would earn the most \u2014 a measurable drag on both growth and mobility.",
+    tags: ["housing", "zoning"],
+    link: "https://doi.org/10.1257/mac.20170371",
+  },
+  {
+    meta: "Desmond · 2016",
+    title: "Evicted: Poverty and Profit in the American City",
+    body: "Following Milwaukee families through eviction court, Desmond showed housing instability is a cause of poverty, not just a symptom. Won the Pulitzer; reshaped how researchers think about material hardship.",
+    tags: ["housing", "ethnography"],
+    link: "https://doi.org/10.4159/9780674969929",
+  },
+  {
+    meta: "Acemoglu & Robinson · 2012",
+    title: "Why Nations Fail",
+    body: "Long-run prosperity tracks inclusive vs. extractive institutions far more than geography or culture. The macro backdrop to why some societies turn growth into broad opportunity and others don&rsquo;t.",
     tags: ["institutions", "long run"],
-    link: "",
+    link: "https://doi.org/10.2307/41721546",
   },
 ];
 
@@ -1879,7 +1716,6 @@ const RESEARCH_REEL = [
   if (!reel) return;
   const feature = document.getElementById("rrFeature");
   const progress = document.getElementById("rrProgress");
-  const badge = document.getElementById("rrBadge");
   const metaEl = document.getElementById("rrMeta");
   const titleEl = document.getElementById("rrTitle");
   const bodyEl = document.getElementById("rrBody");
@@ -1900,7 +1736,7 @@ const RESEARCH_REEL = [
     btn.type = "button";
     btn.className = "rr-item" + (i === 0 ? " on" : "");
     btn.innerHTML =
-      `<div class="ri-src ${item.src}">${item.srcLabel}</div>` +
+      `<div class="ri-meta">${item.meta}</div>` +
       `<div class="ri-title">${item.title}</div>`;
     btn.addEventListener("click", () => { show(i); restart(); });
     playlist.appendChild(btn);
@@ -1914,8 +1750,6 @@ const RESEARCH_REEL = [
     void feature.offsetWidth;
     feature.classList.add("flip");
 
-    badge.className = "rr-badge " + item.src;
-    badge.textContent = item.srcLabel;
     metaEl.textContent = item.meta;
     titleEl.textContent = item.title;
     bodyEl.innerHTML = item.body;
