@@ -126,12 +126,6 @@
     text-align: left;
     border-top: 3px solid #101010;
   }
-  .cutscene-caption .speaker {
-    font-size: 0.62rem; font-weight: 900; letter-spacing: 0.14em;
-    text-transform: uppercase; color: #8c1515;
-    margin-bottom: 0.25rem;
-    font-family: Arial, "Segoe UI", sans-serif;
-  }
   .cutscene-text {
     font-size: clamp(0.92rem, 2.1vw, 1.08rem);
     line-height: 1.5; color: #101010;
@@ -1143,7 +1137,6 @@
     <div class="cutscene-stage" id="cutsceneStage">
       <div class="cutscene-frame on" id="cutsceneFrame"></div>
       <div class="cutscene-caption">
-        <div class="speaker" id="cutsceneSpeaker"></div>
         <div class="cutscene-text" id="cutsceneText"></div>
       </div>
       <div class="cutscene-tap" id="cutsceneTap">tap to continue &rarr;</div>
@@ -1603,8 +1596,8 @@
 
   <div class="verdict-box">
     <h3>Verdict</h3>
-    <p><strong>Mostly yes&mdash;research has tracked reality, and in places it led public attention.</strong> But the rise in poverty and inequality scholarship is not only about alignment with rising inequality and public concern. Richer administrative data, sharper causal methods, and a growing network of dedicated research labs have made the field more empirically productive&mdash;and that infrastructure helps explain why cited work climbed even where real-world trends and discourse moved more slowly.</p>
-    <p>The honest qualification is that the lag isn&rsquo;t zero. Inequality measured in tax records started rising in the early 1980s, but the publication wave and the broad public-discourse wave both arrived ~20 years later. The field also remains heavily English-language and U.S./Western-European in focus, which the OpenAlex topic mix makes visible.</p>
+    <p><strong>Mostly yes&mdash;research has tracked reality, and in places it led public attention.</strong> But this is not a one-way story. Real-world levels of poverty and inequality, public discourse, and academic research inform and affect one another: rising inequality drew more scholars in, but new data and methods also opened questions that reshaped the conversation, and landmark books like Piketty&rsquo;s fed back into both research priorities and public debate.</p>
+    <p>The rise in cited work is therefore not only about alignment with reality. Richer administrative data, sharper causal methods, and a growing network of dedicated research labs have made the field more empirically productive&mdash;and that infrastructure helps explain why publication climbed even where real-world trends and discourse moved more slowly. The honest qualification is that the lag isn&rsquo;t zero, and the field remains heavily English-language and U.S./Western-European in focus, which the OpenAlex topic mix makes visible.</p>
   </div>
 </section>
 
@@ -1612,32 +1605,42 @@
 <section id="reading">
   <div class="section-label">Sources</div>
   <h2>Papers, projects &amp; data behind this page</h2>
-  <p class="intro">The highlights reel above and the charts below draw on these saved papers and public datasets. Links go to the live versions, not local files.</p>
+  <p class="intro">Papers and projects from the highlights reel, poverty-research centers on the map, and the public datasets behind the charts. Links go to live versions, not local files.</p>
 
   <ul class="reading-list">
     <li><a href="https://doi.org/10.1257/0022051026976" target="_blank" rel="noreferrer">Acemoglu &mdash; &ldquo;Technical Change, Inequality, and the Labor Market&rdquo; (JEL, 2002)</a></li>
     <li><a href="https://doi.org/10.1093/qje/qjae023" target="_blank" rel="noreferrer">Althoff &amp; Reichardt &mdash; &ldquo;Jim Crow and Black Economic Progress After Slavery&rdquo; (QJE)</a></li>
     <li><a href="https://inequality.stanford.edu/data/american-voices-project-data" target="_blank" rel="noreferrer">American Voices Project Data</a></li>
-    <li><a href="https://doi.org/10.1111/ecin.12475" target="_blank" rel="noreferrer">Benos &amp; Karagiannis &mdash; &ldquo;Inequality and Growth in the United States: Why Physical and Human Capital Matter&rdquo; (Economic Inquiry, 2018)</a></li>
-    <li><a href="https://doi.org/10.1257/jel.20241718" target="_blank" rel="noreferrer">Bowles &amp; Fochesato &mdash; &ldquo;The Origins of Enduring Economic Inequality&rdquo; (JEL, 2024)</a></li>
-    <li><a href="https://doi.org/10.1016/j.inteco.2019.11.005" target="_blank" rel="noreferrer">Breunig &amp; Majeed &mdash; &ldquo;Inequality, Poverty and Economic Growth&rdquo; (International Economics, 2020)</a></li>
-    <li><a href="https://inequality.stanford.edu/dashboard" target="_blank" rel="noreferrer">California Data Dashboard</a></li>
+    <li><a href="https://doi.org/10.1016/S0276-5624(04)22001-7" target="_blank" rel="noreferrer">Weeden &amp; Grusky &mdash; &ldquo;Are There Any Big Classes At All?&rdquo; (2005)</a></li>
+    <li><a href="https://doi.org/10.7758/RSF.2019.5.2.02" target="_blank" rel="noreferrer">Grusky, Hout, Smeeding &amp; Snipp &mdash; &ldquo;The American Opportunity Study&rdquo; (RSF, 2019)</a></li>
     <li><a href="https://inequality.stanford.edu/publications/reports-briefs/california-poverty-measure-reports" target="_blank" rel="noreferrer">California Poverty Measure Reports</a></li>
+    <li><a href="https://inequality.stanford.edu/dashboard" target="_blank" rel="noreferrer">California Data Dashboard</a></li>
     <li><a href="https://opportunityinsights.org/paper/changingopportunity/" target="_blank" rel="noreferrer">Chetty, Dobbie, Goldman, Porter &amp; Yang &mdash; &ldquo;Changing Opportunity&rdquo; (2024)</a></li>
     <li><a href="https://opportunityinsights.org/paper/kindergarten/" target="_blank" rel="noreferrer">Chetty, Friedman, Hilger, Saez &amp; Yagan &mdash; &ldquo;How Does Your Kindergarten Classroom Affect Your Earnings?&rdquo; (QJE, 2011)</a></li>
-    <li><a href="https://www.nber.org/digest/202505/long-term-impacts-residential-racial-desegregation-programs" target="_blank" rel="noreferrer">Chyn, Collinson &amp; Sandler &mdash; &ldquo;Long-Term Impacts of Residential Racial Desegregation Programs&rdquo; (NBER Digest, 2025)</a></li>
-    <li><a href="https://doi.org/10.3982/ECTA8121" target="_blank" rel="noreferrer">Dell &mdash; &ldquo;The Persistent Effects of Peru&rsquo;s Mining Mita&rdquo; (Econometrica, 2010)</a></li>
-    <li><a href="https://tracktherecovery.org/" target="_blank" rel="noreferrer">The Economic Tracker (2020)</a></li>
-    <li><a href="https://doi.org/10.1086/713101" target="_blank" rel="noreferrer">Heblich, Trew &amp; Zylberberg &mdash; &ldquo;East-Side Story: Historical Pollution and Persistent Neighborhood Sorting&rdquo; (JPE, 2021)</a></li>
-    <li><a href="https://doi.org/10.7758/RSF.2019.5.2.02" target="_blank" rel="noreferrer">Grusky, Hout, Smeeding &amp; Snipp &mdash; &ldquo;The American Opportunity Study&rdquo; (RSF, 2019)</a></li>
-    <li><a href="https://doi.org/10.1086/718372" target="_blank" rel="noreferrer">Mayshar, Moav &amp; Pascali &mdash; &ldquo;The Origin of the State: Land Productivity or Appropriability?&rdquo; (JPE, 2022)</a></li>
-    <li><a href="https://www.hup.harvard.edu/catalog.php?isbn=9780674430006" target="_blank" rel="noreferrer">Piketty &mdash; <em>Capital in the Twenty-First Century</em> (2014)</a></li>
-    <li><a href="https://doi.org/10.1162/00335530360535135" target="_blank" rel="noreferrer">Piketty &amp; Saez &mdash; &ldquo;Income Inequality in the United States, 1913&ndash;1998&rdquo; (QJE, 2003)</a></li>
-    <li><a href="https://doi.org/10.1177/1536504211408794" target="_blank" rel="noreferrer">Rank &mdash; &ldquo;Rethinking American Poverty&rdquo; (Contexts, 2011)</a></li>
-    <li><a href="https://doi.org/10.1093/qje/qjw004" target="_blank" rel="noreferrer">Saez &amp; Zucman &mdash; &ldquo;Wealth Inequality in the United States since 1913&rdquo; (QJE, 2016)</a></li>
-    <li><a href="https://doi.org/10.1016/S0276-5624(04)22001-7" target="_blank" rel="noreferrer">Weeden &amp; Grusky &mdash; &ldquo;Are There Any Big Classes At All?&rdquo; (2005)</a></li>
     <li><a href="https://opportunityinsights.org/paper/cis/" target="_blank" rel="noreferrer">When Resources Meet Relationships</a></li>
-    <li><a href="https://books.google.com/ngrams/graph?content=inequality,poverty,innovation,tech,progress&amp;year_start=1800&amp;year_end=2022&amp;corpus=en&amp;smoothing=3" target="_blank" rel="noreferrer">Google Books Ngram Viewer</a></li>
+    <li><a href="https://tracktherecovery.org/" target="_blank" rel="noreferrer">The Economic Tracker (2020)</a></li>
+    <li><a href="https://doi.org/10.1162/00335530360535135" target="_blank" rel="noreferrer">Piketty &amp; Saez &mdash; &ldquo;Income Inequality in the United States, 1913&ndash;1998&rdquo; (QJE, 2003)</a></li>
+    <li><a href="https://www.hup.harvard.edu/catalog.php?isbn=9780674430006" target="_blank" rel="noreferrer">Piketty &mdash; <em>Capital in the Twenty-First Century</em> (2014)</a></li>
+    <li><a href="https://doi.org/10.1093/qje/qjw004" target="_blank" rel="noreferrer">Saez &amp; Zucman &mdash; &ldquo;Wealth Inequality in the United States since 1913&rdquo; (QJE, 2016)</a></li>
+    <li><a href="https://doi.org/10.1257/jel.20241718" target="_blank" rel="noreferrer">Bowles &amp; Fochesato &mdash; &ldquo;The Origins of Enduring Economic Inequality&rdquo; (JEL, 2024)</a></li>
+    <li><a href="https://doi.org/10.3982/ECTA8121" target="_blank" rel="noreferrer">Dell &mdash; &ldquo;The Persistent Effects of Peru&rsquo;s Mining Mita&rdquo; (Econometrica, 2010)</a></li>
+    <li><a href="https://doi.org/10.1086/718372" target="_blank" rel="noreferrer">Mayshar, Moav &amp; Pascali &mdash; &ldquo;The Origin of the State: Land Productivity or Appropriability?&rdquo; (JPE, 2022)</a></li>
+    <li><a href="https://doi.org/10.1086/713101" target="_blank" rel="noreferrer">Heblich, Trew &amp; Zylberberg &mdash; &ldquo;East-Side Story: Historical Pollution and Persistent Neighborhood Sorting&rdquo; (JPE, 2021)</a></li>
+    <li><a href="https://www.nber.org/digest/202505/long-term-impacts-residential-racial-desegregation-programs" target="_blank" rel="noreferrer">Chyn, Collinson &amp; Sandler &mdash; &ldquo;Long-Term Impacts of Residential Racial Desegregation Programs&rdquo; (NBER Digest, 2025)</a></li>
+    <li><a href="https://doi.org/10.1111/ecin.12475" target="_blank" rel="noreferrer">Benos &amp; Karagiannis &mdash; &ldquo;Inequality and Growth in the United States: Why Physical and Human Capital Matter&rdquo; (Economic Inquiry, 2018)</a></li>
+    <li><a href="https://doi.org/10.1016/j.inteco.2019.11.005" target="_blank" rel="noreferrer">Breunig &amp; Majeed &mdash; &ldquo;Inequality, Poverty and Economic Growth&rdquo; (International Economics, 2020)</a></li>
+    <li><a href="https://doi.org/10.1177/1536504211408794" target="_blank" rel="noreferrer">Rank &mdash; &ldquo;Rethinking American Poverty&rdquo; (Contexts, 2011)</a></li>
+    <li><a href="https://www.irp.wisc.edu" target="_blank" rel="noreferrer">Institute for Research on Poverty (UW&ndash;Madison)</a></li>
+    <li><a href="https://inequality.stanford.edu" target="_blank" rel="noreferrer">Stanford Center on Poverty &amp; Inequality</a></li>
+    <li><a href="https://opportunityinsights.org" target="_blank" rel="noreferrer">Opportunity Insights (Harvard)</a></li>
+    <li><a href="https://www.georgetownpoverty.org" target="_blank" rel="noreferrer">Georgetown Center on Poverty &amp; Inequality</a></li>
+    <li><a href="https://poverty.ucdavis.edu" target="_blank" rel="noreferrer">UC Davis Center for Poverty &amp; Inequality Research</a></li>
+    <li><a href="https://coascenters.howard.edu/research-centers/center-race-and-wealth" target="_blank" rel="noreferrer">Howard University Center on Race and Wealth</a></li>
+    <li><a href="https://ukcpr.org" target="_blank" rel="noreferrer">UK Center for Poverty Research</a></li>
+    <li><a href="https://leo.nd.edu" target="_blank" rel="noreferrer">Wilson Sheehan Lab for Economic Opportunities (Notre Dame)</a></li>
+    <li><a href="https://depts.washington.edu/wcpc" target="_blank" rel="noreferrer">West Coast Poverty Center (UW)</a></li>
+    <li><a href="https://cpip.uci.edu" target="_blank" rel="noreferrer">Center for Population, Inequality, and Policy (UC Irvine)</a></li>
+    <li><a href="https://books.google.com/ngrams/graph?content=economic+inequality%2Cinequality%2Cpoverty%2Cinnovation%2Ctech%2Cprogress&amp;year_start=1800&amp;year_end=2022&amp;corpus=en&amp;smoothing=3" target="_blank" rel="noreferrer">Google Books Ngram Viewer</a></li>
     <li><a href="https://openalex.org" target="_blank" rel="noreferrer">OpenAlex API</a></li>
     <li><a href="https://www.research.gov/common/webapi/awardapisearch-v1.htm" target="_blank" rel="noreferrer">NSF Awards API</a></li>
     <li><a href="https://www.census.gov/topics/income-poverty/data/tables.html" target="_blank" rel="noreferrer">U.S. Census Bureau &mdash; Income &amp; Poverty Historical Tables</a></li>
@@ -1707,7 +1710,6 @@ let cutsceneTyping = null;
 const cutsceneEl = document.getElementById("cutscene");
 const cutsceneText = document.getElementById("cutsceneText");
 const cutsceneFrame = document.getElementById("cutsceneFrame");
-const cutsceneSpeaker = document.getElementById("cutsceneSpeaker");
 const cutsceneStage = document.getElementById("cutsceneStage");
 const cutsceneTap = document.getElementById("cutsceneTap");
 const cutsceneNext = document.getElementById("cutsceneNext");
@@ -1746,7 +1748,6 @@ function renderCutscene(i) {
   cutsceneFrame.innerHTML = `<img src="${CUTSCENE_IMAGES[step.scene]}" alt="">`;
   cutsceneFrame.classList.add("on");
 
-  cutsceneSpeaker.textContent = step.speaker;
   typeText(cutsceneText, step.text);
 
   cutsceneDots.querySelectorAll("span").forEach((d, j) => d.classList.toggle("on", j === i));
