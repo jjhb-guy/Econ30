@@ -338,36 +338,44 @@
   }
   #themeChart { display: block; font-family: inherit; }
   #themeChart text { fill: var(--muted); font-size: 10px; }
-  .theme-legend {
-    display: flex; flex-wrap: wrap; gap: 0.4rem 0.8rem;
-    margin-top: 0.8rem; font-size: 0.75rem; color: var(--muted);
+  .theme-scale {
+    display: flex; align-items: center; gap: 0.5rem;
+    margin-top: 0.75rem; font-size: 0.72rem; color: var(--muted);
   }
-  .theme-legend span { display: inline-flex; align-items: center; gap: 0.3rem; }
-  .theme-legend i {
-    width: 10px; height: 10px; border-radius: 2px; display: inline-block;
+  .theme-scale-bar {
+    flex: 1; max-width: 180px; height: 8px; border-radius: 4px;
+    background: linear-gradient(90deg, #151820, #3656a8, #6c9bff, #a07cff);
   }
-  .theme-table-wrap {
-    overflow-x: auto;
-    margin-top: 1.2rem;
-    border: 1px solid var(--border);
-    border-radius: 10px;
+
+  /* ─── SCOPE CHART (US vs GLOBAL) ─── */
+  .scope-panel {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
   }
-  .theme-table {
-    width: 100%; border-collapse: collapse;
-    font-size: 0.8rem;
+  .scope-panel h3 {
+    font-size: 1.05rem;
+    margin-bottom: 0.45rem;
+    color: var(--text);
   }
-  .theme-table th, .theme-table td {
-    padding: 0.45rem 0.65rem;
-    border-bottom: 1px solid var(--border);
-    text-align: left;
-  }
-  .theme-table th {
+  .scope-chart {
     background: var(--surface);
-    font-size: 0.68rem; text-transform: uppercase;
-    letter-spacing: 0.06em; color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    margin: 1rem 0;
+    overflow-x: auto;
   }
-  .theme-table tr:last-child td { border-bottom: none; }
-  .theme-table .share { font-variant-numeric: tabular-nums; color: var(--accent3); }
+  #scopeChart { display: block; font-family: inherit; }
+  #scopeChart text { fill: var(--muted); font-size: 10px; }
+  .scope-legend {
+    display: flex; flex-wrap: wrap; gap: 0.5rem 1rem;
+    font-size: 0.75rem; color: var(--muted);
+  }
+  .scope-legend span { display: inline-flex; align-items: center; gap: 0.35rem; }
+  .scope-legend i {
+    width: 14px; height: 3px; border-radius: 2px; display: inline-block;
+  }
   .theme-insights {
     margin-top: 1rem;
     background: var(--card);
@@ -855,25 +863,6 @@
     font-size: 0.92rem;
   }
   .reading-list li:last-child { border-bottom: none; }
-  .reading-list .tag {
-    font-size: 0.68rem; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.04em;
-    background: rgba(108,155,255,0.1);
-    color: var(--accent);
-    padding: 0.1rem 0.35rem; border-radius: 3px;
-    margin-left: 0.5rem; vertical-align: middle;
-  }
-  .reading-list .reading-group {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 2px solid var(--border);
-    border-bottom: none;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--warm);
-  }
 
   /* ─── TRENDS (LIVE OPENALEX QUERY) ─── */
   .trend-controls {
@@ -1247,6 +1236,19 @@
 
   <div class="trend-summary" id="trendSummary"></div>
 
+  <div class="scope-panel">
+    <h3>How much of the growth is U.S.-focused vs. global?</h3>
+    <p class="intro">OpenAlex lets you split the same poverty/inequality sample by affiliation, abstract language, and development-economics co-tags. Buckets overlap (a paper can be both U.S.-affiliated and globally framed), but the trends show whether volume growth tracks domestic or international poverty work.</p>
+    <div class="method-box" id="scopeMethodBox">
+      <strong>Source:</strong> <code>data/scope.js</code> via <code>python build_scope.py</code> &mdash; same base filter as above, min 25 citations, counted per 5-year era.
+    </div>
+    <div class="scope-chart">
+      <svg id="scopeChart" viewBox="0 0 900 340" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+    <div class="scope-legend" id="scopeLegend"></div>
+    <div class="theme-insights" id="scopeInsights"></div>
+  </div>
+
   <div class="trend-credit">
     Data: <a href="https://docs.openalex.org" target="_blank" rel="noreferrer">OpenAlex API</a> &middot; counts include works with citations above threshold &middot; concept tagging by OpenAlex
   </div>
@@ -1290,7 +1292,7 @@
 <section id="themes">
   <div class="section-label">Quantitative themes</div>
   <h2>What Subjects Co-Occur with Poverty &amp; Inequality Research?</h2>
-  <p class="intro">OpenAlex assigns each paper a set of topics. We query cited econ/sociology works tagged Poverty or Economic inequality, then <code>group_by=topics.id</code> to find which <em>other</em> topics appear most often in each 5-year era. Bars show each topic&rsquo;s share of tagged papers in that era (excluding the poverty/inequality topics themselves).</p>
+  <p class="intro">OpenAlex assigns each paper a set of topics. For cited econ/sociology poverty/inequality works, the heatmap shows what <em>other</em> topics appear alongside them in each era&mdash;share of papers in that 5-year window (poverty/inequality topics themselves excluded).</p>
 
   <div class="method-box" id="themeMethodBox">
     <strong>Source:</strong> <code>data/topics.js</code> via <code>python build_topics.py</code> &mdash; OpenAlex Works API, same concept filters as the trends chart, min 25 citations.
@@ -1298,13 +1300,11 @@
 
   <div class="theme-chart">
     <svg id="themeChart"></svg>
-  </div>
-  <div class="theme-legend" id="themeLegend"></div>
-  <div class="theme-table-wrap">
-    <table class="theme-table" id="themeTable">
-      <thead><tr><th>Era</th><th># Papers</th><th>Top co-occurring topics (OpenAlex)</th></tr></thead>
-      <tbody id="themeTableBody"></tbody>
-    </table>
+    <div class="theme-scale">
+      <span>Low share</span>
+      <div class="theme-scale-bar"></div>
+      <span>High share</span>
+    </div>
   </div>
   <div class="theme-insights" id="themeInsights"></div>
 </section>
@@ -1622,43 +1622,38 @@
   <p class="intro">The highlights reel above and the charts below draw on these saved papers and public datasets. Links go to the live versions, not local files.</p>
 
   <ul class="reading-list">
-    <li class="reading-group">Stanford CPI &amp; Opportunity Insights</li>
-    <li><a href="https://doi.org/10.1016/S0276-5624(04)22001-7" target="_blank" rel="noreferrer">Weeden &amp; Grusky &mdash; &ldquo;Are There Any Big Classes At All?&rdquo; (2005)</a></li>
-    <li><a href="https://doi.org/10.7758/RSF.2019.5.2.02" target="_blank" rel="noreferrer">Grusky, Hout, Smeeding &amp; Snipp &mdash; &ldquo;The American Opportunity Study&rdquo; (RSF, 2019)</a></li>
-    <li><a href="https://inequality.stanford.edu/publications/reports-briefs/california-poverty-measure-reports" target="_blank" rel="noreferrer">Stanford CPI &mdash; California Poverty Measure Reports</a></li>
-    <li><a href="https://inequality.stanford.edu/dashboard" target="_blank" rel="noreferrer">Stanford CPI &mdash; California Data Dashboard</a></li>
-    <li><a href="https://inequality.stanford.edu/data/american-voices-project-data" target="_blank" rel="noreferrer">Stanford CPI &mdash; American Voices Project Data</a></li>
+    <li><a href="https://doi.org/10.1257/0022051026976" target="_blank" rel="noreferrer">Acemoglu &mdash; &ldquo;Technical Change, Inequality, and the Labor Market&rdquo; (JEL, 2002)</a></li>
+    <li><a href="https://doi.org/10.1093/qje/qjae023" target="_blank" rel="noreferrer">Althoff &amp; Reichardt &mdash; &ldquo;Jim Crow and Black Economic Progress After Slavery&rdquo; (QJE)</a></li>
+    <li><a href="https://inequality.stanford.edu/data/american-voices-project-data" target="_blank" rel="noreferrer">American Voices Project Data</a></li>
+    <li><a href="https://doi.org/10.1111/ecin.12475" target="_blank" rel="noreferrer">Benos &amp; Karagiannis &mdash; &ldquo;Inequality and Growth in the United States: Why Physical and Human Capital Matter&rdquo; (Economic Inquiry, 2018)</a></li>
+    <li><a href="https://doi.org/10.1257/jel.20241718" target="_blank" rel="noreferrer">Bowles &amp; Fochesato &mdash; &ldquo;The Origins of Enduring Economic Inequality&rdquo; (JEL, 2024)</a></li>
+    <li><a href="https://doi.org/10.1016/j.inteco.2019.11.005" target="_blank" rel="noreferrer">Breunig &amp; Majeed &mdash; &ldquo;Inequality, Poverty and Economic Growth&rdquo; (International Economics, 2020)</a></li>
+    <li><a href="https://inequality.stanford.edu/dashboard" target="_blank" rel="noreferrer">California Data Dashboard</a></li>
+    <li><a href="https://inequality.stanford.edu/publications/reports-briefs/california-poverty-measure-reports" target="_blank" rel="noreferrer">California Poverty Measure Reports</a></li>
     <li><a href="https://opportunityinsights.org/paper/changingopportunity/" target="_blank" rel="noreferrer">Chetty, Dobbie, Goldman, Porter &amp; Yang &mdash; &ldquo;Changing Opportunity&rdquo; (2024)</a></li>
     <li><a href="https://opportunityinsights.org/paper/kindergarten/" target="_blank" rel="noreferrer">Chetty, Friedman, Hilger, Saez &amp; Yagan &mdash; &ldquo;How Does Your Kindergarten Classroom Affect Your Earnings?&rdquo; (QJE, 2011)</a></li>
-    <li><a href="https://opportunityinsights.org/paper/cis/" target="_blank" rel="noreferrer">Opportunity Insights &mdash; &ldquo;When Resources Meet Relationships&rdquo;</a></li>
-    <li><a href="https://tracktherecovery.org/" target="_blank" rel="noreferrer">Opportunity Insights &mdash; The Economic Tracker (2020)</a></li>
-
-    <li class="reading-group">Econ 30 papers</li>
-    <li><a href="https://doi.org/10.1162/00335530360535135" target="_blank" rel="noreferrer">Piketty &amp; Saez &mdash; &ldquo;Income Inequality in the United States, 1913&ndash;1998&rdquo; (QJE, 2003)</a></li>
-    <li><a href="https://www.hup.harvard.edu/catalog.php?isbn=9780674430006" target="_blank" rel="noreferrer">Piketty &mdash; <em>Capital in the Twenty-First Century</em> (2014)</a></li>
-    <li><a href="https://doi.org/10.1093/qje/qjw004" target="_blank" rel="noreferrer">Saez &amp; Zucman &mdash; &ldquo;Wealth Inequality in the United States since 1913&rdquo; (QJE, 2016)</a></li>
-    <li><a href="https://doi.org/10.1257/0022051026976" target="_blank" rel="noreferrer">Acemoglu &mdash; &ldquo;Technical Change, Inequality, and the Labor Market&rdquo; (JEL, 2002)</a></li>
-    <li><a href="https://doi.org/10.1257/jel.20241718" target="_blank" rel="noreferrer">Bowles &amp; Fochesato &mdash; &ldquo;The Origins of Enduring Economic Inequality&rdquo; (JEL, 2024)</a></li>
-    <li><a href="https://doi.org/10.1111/j.1467-937X.2010.00612.x" target="_blank" rel="noreferrer">Dell &mdash; &ldquo;The Persistent Effects of Peru&rsquo;s Mining Mita&rdquo; (REStud, 2010)</a></li>
-    <li><a href="https://doi.org/10.1086/718372" target="_blank" rel="noreferrer">Mayshar, Moav &amp; Pascali &mdash; &ldquo;The Origin of the State: Land Productivity or Appropriability?&rdquo; (JPE, 2022)</a></li>
-    <li><a href="https://doi.org/10.1093/qje/qjae023" target="_blank" rel="noreferrer">Althoff &amp; Reichardt &mdash; &ldquo;Jim Crow and Black Economic Progress After Slavery&rdquo; (QJE)</a></li>
-    <li><a href="https://doi.org/10.1086/713101" target="_blank" rel="noreferrer">Heblich, Trew &amp; Zylberberg &mdash; &ldquo;East-Side Story: Historical Pollution and Persistent Neighborhood Sorting&rdquo; (JPE, 2021)</a></li>
     <li><a href="https://www.nber.org/digest/202505/long-term-impacts-residential-racial-desegregation-programs" target="_blank" rel="noreferrer">Chyn, Collinson &amp; Sandler &mdash; &ldquo;Long-Term Impacts of Residential Racial Desegregation Programs&rdquo; (NBER Digest, 2025)</a></li>
-    <li><a href="https://doi.org/10.1111/ecin.12475" target="_blank" rel="noreferrer">Benos &amp; Karagiannis &mdash; &ldquo;Inequality and Growth in the United States: Why Physical and Human Capital Matter&rdquo; (Economic Inquiry, 2018)</a></li>
-    <li><a href="https://doi.org/10.1016/j.inteco.2019.11.005" target="_blank" rel="noreferrer">Breunig &amp; Majeed &mdash; &ldquo;Inequality, Poverty and Economic Growth&rdquo; (International Economics, 2020)</a></li>
+    <li><a href="https://doi.org/10.1111/j.1467-937X.2010.00612.x" target="_blank" rel="noreferrer">Dell &mdash; &ldquo;The Persistent Effects of Peru&rsquo;s Mining Mita&rdquo; (REStud, 2010)</a></li>
+    <li><a href="https://tracktherecovery.org/" target="_blank" rel="noreferrer">The Economic Tracker (2020)</a></li>
+    <li><a href="https://doi.org/10.1086/713101" target="_blank" rel="noreferrer">Heblich, Trew &amp; Zylberberg &mdash; &ldquo;East-Side Story: Historical Pollution and Persistent Neighborhood Sorting&rdquo; (JPE, 2021)</a></li>
+    <li><a href="https://doi.org/10.7758/RSF.2019.5.2.02" target="_blank" rel="noreferrer">Grusky, Hout, Smeeding &amp; Snipp &mdash; &ldquo;The American Opportunity Study&rdquo; (RSF, 2019)</a></li>
+    <li><a href="https://doi.org/10.1086/718372" target="_blank" rel="noreferrer">Mayshar, Moav &amp; Pascali &mdash; &ldquo;The Origin of the State: Land Productivity or Appropriability?&rdquo; (JPE, 2022)</a></li>
+    <li><a href="https://www.hup.harvard.edu/catalog.php?isbn=9780674430006" target="_blank" rel="noreferrer">Piketty &mdash; <em>Capital in the Twenty-First Century</em> (2014)</a></li>
+    <li><a href="https://doi.org/10.1162/00335530360535135" target="_blank" rel="noreferrer">Piketty &amp; Saez &mdash; &ldquo;Income Inequality in the United States, 1913&ndash;1998&rdquo; (QJE, 2003)</a></li>
     <li><a href="https://doi.org/10.1177/1536504211408794" target="_blank" rel="noreferrer">Rank &mdash; &ldquo;Rethinking American Poverty&rdquo; (Contexts, 2011)</a></li>
-
-    <li class="reading-group">Charts &amp; data on this page</li>
-    <li><a href="https://openalex.org" target="_blank" rel="noreferrer">OpenAlex API</a> <span class="tag">trends, topics, methods</span></li>
-    <li><a href="https://books.google.com/ngrams/graph?content=inequality,poverty,innovation,tech,progress&amp;year_start=1800&amp;year_end=2022&amp;corpus=en&amp;smoothing=3" target="_blank" rel="noreferrer">Google Books Ngram Viewer</a> <span class="tag">discourse chart</span></li>
-    <li><a href="https://wid.world" target="_blank" rel="noreferrer">World Inequality Database / Piketty&ndash;Saez</a> <span class="tag">top 1% share</span></li>
-    <li><a href="https://www.census.gov/topics/income-poverty/data/tables.html" target="_blank" rel="noreferrer">U.S. Census Bureau &mdash; Income &amp; Poverty Historical Tables</a> <span class="tag">poverty &amp; Gini</span></li>
-    <li><a href="https://www.research.gov/common/webapi/awardapisearch-v1.htm" target="_blank" rel="noreferrer">NSF Awards API</a> <span class="tag">funding overlay</span></li>
+    <li><a href="https://doi.org/10.1093/qje/qjw004" target="_blank" rel="noreferrer">Saez &amp; Zucman &mdash; &ldquo;Wealth Inequality in the United States since 1913&rdquo; (QJE, 2016)</a></li>
+    <li><a href="https://doi.org/10.1016/S0276-5624(04)22001-7" target="_blank" rel="noreferrer">Weeden &amp; Grusky &mdash; &ldquo;Are There Any Big Classes At All?&rdquo; (2005)</a></li>
+    <li><a href="https://opportunityinsights.org/paper/cis/" target="_blank" rel="noreferrer">When Resources Meet Relationships</a></li>
+    <li><a href="https://books.google.com/ngrams/graph?content=inequality,poverty,innovation,tech,progress&amp;year_start=1800&amp;year_end=2022&amp;corpus=en&amp;smoothing=3" target="_blank" rel="noreferrer">Google Books Ngram Viewer</a></li>
+    <li><a href="https://openalex.org" target="_blank" rel="noreferrer">OpenAlex API</a></li>
+    <li><a href="https://www.research.gov/common/webapi/awardapisearch-v1.htm" target="_blank" rel="noreferrer">NSF Awards API</a></li>
+    <li><a href="https://www.census.gov/topics/income-poverty/data/tables.html" target="_blank" rel="noreferrer">U.S. Census Bureau &mdash; Income &amp; Poverty Historical Tables</a></li>
+    <li><a href="https://wid.world" target="_blank" rel="noreferrer">World Inequality Database / Piketty&ndash;Saez</a></li>
   </ul>
 </section>
 
 <footer>
-  Econ 136 capstone · Refresh data: <code>python build_ngrams_from_saved.py</code> · <code>python build_topics.py</code> · <code>python build_methods.py</code> · <code>python build_top_works.py</code> · <code>python build_funding.py</code>
+  Econ 136 capstone · Refresh data: <code>python build_ngrams_from_saved.py</code> · <code>python build_topics.py</code> · <code>python build_scope.py</code> · <code>python build_methods.py</code> · <code>python build_top_works.py</code> · <code>python build_funding.py</code>
 </footer>
 
 <!-- ═══════ JS: MAP + PINS + DETAIL PANEL ═══════ -->
@@ -1667,6 +1662,7 @@
 <script src="data/funding.js"></script>
 <script src="data/ngrams.js"></script>
 <script src="data/topics.js"></script>
+<script src="data/scope.js"></script>
 <script src="data/methods.js"></script>
 <script src="data/top_works.js"></script>
 <script>
@@ -2248,14 +2244,10 @@ function escapeHtml(s) {
 initTopWorksPanel();
 
 /* ═══════ OPENALEX TOPIC THEMES (from topics.js) ═══════ */
-const THEME_COLORS = ["#6c9bff", "#a07cff", "#5cf0b0", "#ffa96c", "#ff6c8a", "#ff9e3d", "#e879f9", "#94a3b8"];
-
 function drawThemeChart() {
   const data = window.TOPIC_DATA;
   const svg = d3.select("#themeChart");
-  const legendEl = document.getElementById("themeLegend");
   svg.selectAll("*").remove();
-  legendEl.innerHTML = "";
 
   if (!data || !data.eras || data.eras.length === 0) {
     document.getElementById("themeMethodBox").innerHTML +=
@@ -2269,69 +2261,211 @@ function drawThemeChart() {
     `${data.eras.length} eras · generated ${meta.generated || "—"}. ` +
     `Refresh: <code>python build_topics.py</code>`;
 
-  const topTopics = (data.allTopics || []).slice(0, 8).map(t => t[0]);
-  const colorMap = new Map(topTopics.map((n, i) => [n, THEME_COLORS[i % THEME_COLORS.length]]));
-  topTopics.forEach(name => {
-    const c = colorMap.get(name);
-    legendEl.innerHTML += `<span><i style="background:${c}"></i>${name}</span>`;
-  });
-
   const eras = data.eras;
-  const rowH = 22, gap = 8, leftPad = 100, topPad = 16;
-  const W = Math.max(700, eras.length * 72 + leftPad + 40);
-  const H = topPad + eras.length * (rowH + gap) + 24;
+  const topics = (data.allTopics || []).slice(0, 8).map(t => t[0]);
+  const matrix = topics.map(name =>
+    eras.map(era => {
+      const hit = (era.topics || []).find(t => t.name === name);
+      return {
+        era: era.label,
+        share: hit ? hit.share : 0,
+        count: hit ? hit.count : 0,
+        total: era.paperCount,
+      };
+    })
+  );
+
+  const cellW = 68, cellH = 24, leftPad = 250, topPad = 40, bottomPad = 8;
+  const W = leftPad + cellW * eras.length + 16;
+  const H = topPad + cellH * topics.length + bottomPad;
   svg.attr("viewBox", `0 0 ${W} ${H}`).attr("width", "100%").attr("height", H);
 
-  const maxShare = d3.max(eras, e => d3.max(e.topics, t => t.share)) || 5;
-  const barMaxW = W - leftPad - 30;
+  const allShares = matrix.flat().map(c => c.share);
+  const maxShare = Math.max(0.5, d3.max(allShares) || 1);
+  const color = d3.scaleSequential()
+    .domain([0, maxShare])
+    .interpolator(d3.interpolateRgbBasis(["#151820", "#1f2a4a", "#3656a8", "#6c9bff", "#a07cff"]));
 
-  eras.forEach((era, i) => {
-    const y = topPad + i * (rowH + gap);
-    svg.append("text").attr("x", leftPad - 8).attr("y", y + rowH * 0.65)
-      .attr("text-anchor", "end").attr("fill", "#7e879e").attr("font-size", 10)
+  eras.forEach((era, j) => {
+    svg.append("text")
+      .attr("x", leftPad + j * cellW + cellW / 2)
+      .attr("y", topPad - 18)
+      .attr("text-anchor", "middle")
+      .attr("font-size", 10)
       .text(era.label);
-
-    let x0 = leftPad;
-    era.topics.slice(0, 6).forEach(t => {
-      const segW = (t.share / maxShare) * barMaxW;
-      if (segW < 1) return;
-      svg.append("rect")
-        .attr("x", x0).attr("y", y).attr("width", segW).attr("height", rowH)
-        .attr("fill", colorMap.get(t.name) || "#555")
-        .attr("opacity", topTopics.includes(t.name) ? 0.9 : 0.35)
-        .append("title")
-        .text(`${t.name}: ${t.share}% (${t.count} papers)`);
-      x0 += segW;
-    });
+    svg.append("text")
+      .attr("x", leftPad + j * cellW + cellW / 2)
+      .attr("y", topPad - 6)
+      .attr("text-anchor", "middle")
+      .attr("font-size", 8.5)
+      .attr("fill", "#5cf0b0")
+      .text("n=" + era.paperCount.toLocaleString());
   });
 
-  const x = d3.scaleLinear().domain([0, maxShare * 1.1]).range([leftPad, W - 20]);
+  topics.forEach((name, i) => {
+    const y = topPad + i * cellH;
+    svg.append("text")
+      .attr("x", leftPad - 10)
+      .attr("y", y + cellH * 0.62)
+      .attr("text-anchor", "end")
+      .attr("font-size", 10)
+      .attr("fill", "#dce0ed")
+      .text(name.length > 34 ? name.slice(0, 32) + "…" : name)
+      .append("title")
+      .text(name);
 
-  svg.append("g").attr("transform", `translate(0,${H - 18})`)
-    .call(d3.axisBottom(x).ticks(5).tickFormat(d => d + "%"))
-    .selectAll("text").attr("fill", "#7e879e").attr("font-size", 10);
-
-  const tbody = document.getElementById("themeTableBody");
-  tbody.innerHTML = eras.map(era => {
-    const tops = era.topics.slice(0, 4).map(t =>
-      `<span class="share">${t.share}%</span> ${t.name}`
-    ).join(" · ");
-    return `<tr><td>${era.label}</td><td>${era.paperCount.toLocaleString()}</td><td>${tops}</td></tr>`;
-  }).join("");
+    matrix[i].forEach((cell, j) => {
+      const x = leftPad + j * cellW;
+      svg.append("rect")
+        .attr("x", x + 1).attr("y", y + 1)
+        .attr("width", cellW - 2).attr("height", cellH - 2)
+        .attr("fill", color(cell.share))
+        .attr("rx", 3)
+        .append("title")
+        .text(`${name}\n${cell.era}: ${cell.share}% of papers (${cell.count.toLocaleString()} of ${cell.total.toLocaleString()})`);
+      if (cell.share >= maxShare * 0.18) {
+        svg.append("text")
+          .attr("x", x + cellW / 2).attr("y", y + cellH * 0.65)
+          .attr("text-anchor", "middle")
+          .attr("font-size", 9)
+          .attr("fill", cell.share > maxShare * 0.45 ? "#fff" : "#dce0ed")
+          .text(cell.share.toFixed(1) + "%");
+      }
+    });
+  });
 
   const insightsEl = document.getElementById("themeInsights");
   const first = eras[0], last = eras[eras.length - 1];
   const urban = (data.allTopics || []).find(t => t[0].includes("Urban, Neighborhood"));
   const covid = last.topics.find(t => t.name.includes("COVID"));
-  insightsEl.innerHTML = `<strong>What the OpenAlex topic mix shows</strong><ul>` +
-    `<li>Cited poverty/inequality papers in econ+sociology rose from <strong>${first.paperCount.toLocaleString()}</strong> (${first.label}) to <strong>${last.paperCount.toLocaleString()}</strong> (${last.label}).</li>` +
-    `<li>Early era (${first.label}) co-tags emphasize <strong>${first.topics[0].name}</strong>; latest era (${last.label}) is dominated by <strong>${last.topics[0].name}</strong>${covid ? " and pandemic-related topics" : ""}.</li>` +
-    (urban ? `<li><strong>${urban[0]}</strong> appears in the aggregate top topics (${urban[1]} tagged papers across all eras) — place and segregation stay linked to poverty/inequality scholarship.</li>` : "") +
-    `<li>These are co-occurring OpenAlex topics, not author keywords — global health/agriculture tags reflect interdisciplinary papers in the sample.</li>` +
+  insightsEl.innerHTML = `<strong>Reading the heatmap</strong><ul>` +
+    `<li>Rows are the most common co-occurring OpenAlex topics across all eras; columns are 5-year windows. Darker cells = a larger share of papers in that era also carry that topic tag.</li>` +
+    `<li>Sample size rose from <strong>${first.paperCount.toLocaleString()}</strong> (${first.label}) to <strong>${last.paperCount.toLocaleString()}</strong> (${last.label}). Early eras emphasize <strong>${first.topics[0].name}</strong>; recent eras lean toward <strong>${last.topics[0].name}</strong>${covid ? " and pandemic-related topics" : ""}.</li>` +
+    (urban ? `<li><strong>${urban[0]}</strong> remains a steady co-tag (${urban[1].toLocaleString()} papers aggregate) — place and segregation stay linked to poverty/inequality scholarship.</li>` : "") +
     `</ul>`;
 }
 
 drawThemeChart();
+
+/* ═══════ GEOGRAPHIC SCOPE (from scope.js) ═══════ */
+const SCOPE_COLORS = {
+  usAffiliation: "#6c9bff",
+  usText: "#5cf0b0",
+  developmentEcon: "#ffa96c",
+  globalKeywords: "#ff6c8a",
+};
+
+function drawScopeChart() {
+  const data = window.SCOPE_DATA;
+  const svg = d3.select("#scopeChart");
+  const legendEl = document.getElementById("scopeLegend");
+  const insightsEl = document.getElementById("scopeInsights");
+  svg.selectAll("*").remove();
+  legendEl.innerHTML = "";
+
+  if (!data || !data.eras || data.eras.length === 0) {
+    document.getElementById("scopeMethodBox").innerHTML +=
+      " <em>Run <code>python build_scope.py</code> to generate.</em>";
+    return;
+  }
+
+  const meta = data.meta;
+  document.getElementById("scopeMethodBox").innerHTML =
+    `<strong>Source:</strong> OpenAlex Works API · ${meta.filter || ""} · ` +
+    `generated ${meta.generated || "—"}. Refresh: <code>python build_scope.py</code>`;
+
+  const eras = data.eras;
+  const series = meta.scopes || [];
+  series.forEach(s => {
+    legendEl.innerHTML += `<span><i style="background:${SCOPE_COLORS[s.key] || "#888"}"></i>${s.label}</span>`;
+  });
+
+  const W = 900, H = 340;
+  const margin = { top: 24, right: 24, bottom: 40, left: 48 };
+  const innerW = W - margin.left - margin.right;
+  const innerH = H - margin.top - margin.bottom;
+  const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+  const x = d3.scalePoint()
+    .domain(eras.map(e => e.label))
+    .range([0, innerW])
+    .padding(0.35);
+
+  const maxShare = d3.max(eras, e =>
+    d3.max(series, s => e.scopes[s.key]?.share || 0)
+  ) || 10;
+
+  const y = d3.scaleLinear()
+    .domain([0, Math.ceil(maxShare / 5) * 5 + 5])
+    .range([innerH, 0]);
+
+  g.append("g")
+    .attr("transform", `translate(0,${innerH})`)
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .attr("fill", "#7e879e")
+    .attr("font-size", 10);
+
+  g.append("g")
+    .call(d3.axisLeft(y).ticks(6).tickFormat(d => d + "%"))
+    .selectAll("text")
+    .attr("fill", "#7e879e")
+    .attr("font-size", 10);
+
+  g.append("text")
+    .attr("x", -innerH / 2).attr("y", -34)
+    .attr("transform", "rotate(-90)")
+    .attr("text-anchor", "middle")
+    .attr("fill", "#7e879e")
+    .attr("font-size", 10)
+    .text("Share of poverty/inequality papers in era");
+
+  series.forEach(s => {
+    const line = d3.line()
+      .x(d => x(d.label))
+      .y(d => y(d.scopes[s.key]?.share || 0))
+      .curve(d3.curveMonotoneX);
+
+    g.append("path")
+      .datum(eras)
+      .attr("fill", "none")
+      .attr("stroke", SCOPE_COLORS[s.key] || "#888")
+      .attr("stroke-width", 2.2)
+      .attr("d", line);
+
+    g.selectAll(`.scope-dot-${s.key}`)
+      .data(eras)
+      .join("circle")
+      .attr("class", `scope-dot-${s.key}`)
+      .attr("cx", d => x(d.label))
+      .attr("cy", d => y(d.scopes[s.key]?.share || 0))
+      .attr("r", 3.5)
+      .attr("fill", SCOPE_COLORS[s.key] || "#888")
+      .append("title")
+      .text(d => {
+        const sc = d.scopes[s.key];
+        return `${s.label} · ${d.label}\n${sc?.share || 0}% (${(sc?.count || 0).toLocaleString()} of ${d.total.toLocaleString()})`;
+      });
+  });
+
+  const first = eras[0], last = eras[eras.length - 1];
+  const peakGlobal = eras.reduce((best, e) =>
+    (e.scopes.globalKeywords?.share || 0) > (best.scopes.globalKeywords?.share || 0) ? e : best
+  , eras[0]);
+  const usAffFirst = first.scopes.usAffiliation?.share || 0;
+  const usAffLast = last.scopes.usAffiliation?.share || 0;
+  const devFirst = first.scopes.developmentEcon?.share || 0;
+  const devLast = last.scopes.developmentEcon?.share || 0;
+
+  insightsEl.innerHTML = `<strong>What the scope split suggests</strong><ul>` +
+    `<li><strong>US affiliation</strong> (any author at a U.S. institution) runs ~${usAffFirst.toFixed(0)}% in ${first.label} and ~${usAffLast.toFixed(0)}% in ${last.label} — a large minority, not a majority, of cited poverty/inequality work in econ+sociology.</li>` +
+    `<li><strong>Development economics co-tags</strong> were ~${devFirst.toFixed(0)}% early vs ~${devLast.toFixed(0)}% recently — a substantial share of the literature has always overlapped with development economics, not only U.S. domestic poverty.</li>` +
+    `<li><strong>Global keywords</strong> in abstracts peak around <strong>${peakGlobal.label}</strong> at ${(peakGlobal.scopes.globalKeywords?.share || 0).toFixed(1)}% — so part of the volume growth tracks cross-country and developing-country framing, not just U.S. inequality.</li>` +
+    `<li>Buckets overlap; OpenAlex cannot perfectly separate &ldquo;U.S. poverty&rdquo; from &ldquo;global poverty,&rdquo; but affiliation + abstract language + development co-tags are a workable proxy.</li>` +
+    `</ul>`;
+}
+
+drawScopeChart();
 
 /* ═══════ METHODS / DATA FINGERPRINT (from methods.js) ═══════ */
 let methodActiveCat = "Methods";
