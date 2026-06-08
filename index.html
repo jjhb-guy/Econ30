@@ -782,7 +782,33 @@
     border-radius: 14px;
     overflow: hidden;
   }
-  #usMap { display: block; width: 100%; }
+  .map-toolbar {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--card);
+  }
+  .map-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 0.45rem 0.85rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+  }
+  .map-btn:hover:not(:disabled) { color: var(--text); border-color: var(--accent); }
+  .map-btn.on {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .map-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  #usMap { display: block; width: 100%; touch-action: none; }
+  #usMap.zoom-mode { cursor: crosshair; }
   #usMap .state { fill: var(--card); stroke: var(--border); stroke-width: 0.5; }
 
   @keyframes pulse {
@@ -1541,11 +1567,15 @@
 <section id="map" class="map-section">
   <div class="section-label">Present Day</div>
   <h2>Poverty Research Centers Across the U.S.</h2>
-  <p class="intro">Click any pin to see full details about the institution, its focus areas, key people, and links.</p>
+  <p class="intro">Click any pin to see full details about the institution, its focus areas, key people, and links. Turn on <strong>Zoom mode</strong> to click anywhere on the map and zoom in&mdash;useful for dense clusters like DC and NYC.</p>
 
   <div class="map-container">
+    <div class="map-toolbar">
+      <button type="button" class="map-btn" id="mapZoomToggle">Zoom mode</button>
+      <button type="button" class="map-btn" id="mapZoomReset" disabled>Reset view</button>
+    </div>
     <svg id="usMap" viewBox="0 0 960 600"></svg>
-    <div class="map-hint">Click a pin on the map to explore each center</div>
+    <div class="map-hint" id="mapHint">Click a pin on the map to explore each center</div>
   </div>
 </section>
 
@@ -2625,7 +2655,7 @@ const CENTERS = [
     id: "georgetown",
     name: "Georgetown Center on Poverty & Inequality",
     abbr: "GCPI",
-    lat: 38.883, lon: -77.140,
+    lat: 38.887, lon: -77.012,
     color: "#ffa96c",
     badge: "Policy-Focused",
     badgeColor: "#ffa96c",
@@ -2715,7 +2745,7 @@ const CENTERS = [
     id: "urban",
     name: "Urban Institute",
     abbr: "Urban",
-    lat: 38.893, lon: -77.005,
+    lat: 38.898, lon: -77.017,
     color: "#6c9bff",
     badge: "Think Tank",
     badgeColor: "#6c9bff",
@@ -2730,7 +2760,7 @@ const CENTERS = [
     id: "brookings",
     name: "Brookings Institution",
     abbr: "Brookings",
-    lat: 38.918, lon: -77.078,
+    lat: 38.916, lon: -77.064,
     color: "#a07cff",
     badge: "Think Tank",
     badgeColor: "#a07cff",
@@ -2745,7 +2775,7 @@ const CENTERS = [
     id: "crw",
     name: "Center on Race and Wealth",
     abbr: "CRW",
-    lat: 38.928, lon: -77.012,
+    lat: 38.921, lon: -77.020,
     color: "#ff9e3d",
     badge: "Race & Wealth Focus",
     badgeColor: "#ff9e3d",
@@ -2835,25 +2865,86 @@ const CENTERS = [
 
 const width = 960, height = 600;
 const svg = d3.select("#usMap");
+const mapLayer = svg.append("g").attr("id", "mapZoomLayer");
 const projection = d3.geoAlbersUsa().scale(1280).translate([width / 2, height / 2]);
 const path = d3.geoPath().projection(projection);
 
+const mapZoomToggle = document.getElementById("mapZoomToggle");
+const mapZoomReset = document.getElementById("mapZoomReset");
+const mapHint = document.getElementById("mapHint");
+let mapZoomMode = false;
+
+const mapZoom = d3.zoom()
+  .scaleExtent([1, 14])
+  .filter((event) => {
+    if (!mapZoomMode) return false;
+    if (event.type === "wheel") return true;
+    if (event.type === "mousedown" || event.type === "touchstart") {
+      return event.target.closest(".map-pin") == null;
+    }
+    return false;
+  })
+  .on("zoom", (event) => {
+    mapLayer.attr("transform", event.transform);
+    updateMapZoomUi(event.transform);
+  });
+
+function updateMapZoomUi(transform) {
+  const zoomed = transform.k > 1.01 || Math.abs(transform.x) > 1 || Math.abs(transform.y) > 1;
+  mapZoomReset.disabled = !zoomed;
+}
+
+function setMapZoomMode(on) {
+  mapZoomMode = on;
+  mapZoomToggle.classList.toggle("on", on);
+  svg.classList.toggle("zoom-mode", on);
+  mapHint.textContent = on
+    ? "Zoom mode on: click anywhere to zoom in, drag to pan, scroll to zoom. Pins still open details. Reset view to return."
+    : "Click a pin on the map to explore each center";
+  if (on) {
+    svg.call(mapZoom);
+  } else {
+    svg.on(".zoom", null);
+    resetMapView();
+  }
+}
+
+function resetMapView() {
+  svg.transition().duration(350).call(mapZoom.transform, d3.zoomIdentity);
+  updateMapZoomUi(d3.zoomIdentity);
+}
+
+function zoomMapToPoint(event) {
+  if (!mapZoomMode) return;
+  if (event.target.closest(".map-pin")) return;
+  const [mx, my] = d3.pointer(event, svg.node());
+  const t = d3.zoomTransform(svg.node());
+  const newK = Math.min(t.k * 2.4, 14);
+  const newX = mx - (mx - t.x) * (newK / t.k);
+  const newY = my - (my - t.y) * (newK / t.k);
+  const next = d3.zoomIdentity.translate(newX, newY).scale(newK);
+  svg.transition().duration(350).call(mapZoom.transform, next);
+}
+
+mapZoomToggle.addEventListener("click", () => setMapZoomMode(!mapZoomMode));
+mapZoomReset.addEventListener("click", resetMapView);
+
 d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us => {
-  svg.append("g")
+  mapLayer.append("g")
     .selectAll("path")
     .data(topojson.feature(us, us.objects.states).features)
     .join("path")
     .attr("class", "state")
     .attr("d", path);
 
-  svg.append("path")
+  mapLayer.append("path")
     .datum(topojson.mesh(us, us.objects.states, (a, b) => a !== b))
     .attr("fill", "none")
     .attr("stroke", "var(--border)")
     .attr("stroke-width", 0.6)
     .attr("d", path);
 
-  const pins = svg.selectAll(".map-pin")
+  const pins = mapLayer.selectAll(".map-pin")
     .data(CENTERS)
     .join("g")
     .attr("class", "map-pin")
@@ -2861,7 +2952,10 @@ d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us => {
       const p = projection([d.lon, d.lat]);
       return p ? `translate(${p[0]},${p[1]})` : "translate(-100,-100)";
     })
-    .on("click", (e, d) => openDetail(d));
+    .on("click", (e, d) => {
+      e.stopPropagation();
+      openDetail(d);
+    });
 
   pins.append("circle")
     .attr("class", "pulse-ring")
@@ -2883,6 +2977,8 @@ d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us => {
   pins.append("circle")
     .attr("r", 2.5)
     .attr("fill", "var(--bg)");
+
+  svg.on("click", zoomMapToPoint);
 });
 
 const overlay = document.getElementById("detailOverlay");
