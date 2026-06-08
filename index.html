@@ -808,21 +808,20 @@
   }
   .map-btn:disabled { opacity: 0.45; cursor: not-allowed; }
   #usMap { display: block; width: 100%; touch-action: none; }
-  #usMap.zoom-mode { cursor: crosshair; }
+  #usMap.zoom-mode { cursor: grab; }
+  #usMap.zoom-mode.is-panning { cursor: grabbing; }
   #usMap .state { fill: var(--card); stroke: var(--border); stroke-width: 0.5; }
 
   @keyframes pulse {
-    0%, 100% { r: 6; opacity: 0.85; }
-    50% { r: 9; opacity: 0.5; }
+    0%, 100% { r: 4; opacity: 0.85; }
+    50% { r: 6; opacity: 0.5; }
   }
   .map-pin { cursor: pointer; }
   .map-pin .ring {
-    fill: none; stroke-width: 2; opacity: 0;
+    fill: none; stroke-width: 1.5; opacity: 0;
     transition: opacity 0.2s;
   }
   .map-pin:hover .ring { opacity: 0.6; }
-  .map-pin .dot { transition: r 0.15s; }
-  .map-pin:hover .dot { r: 8; }
   .map-pin.active .pulse-ring { animation: pulse 2s ease-in-out infinite; }
 
   .map-hint {
@@ -2873,6 +2872,20 @@ const mapZoomToggle = document.getElementById("mapZoomToggle");
 const mapZoomReset = document.getElementById("mapZoomReset");
 const mapHint = document.getElementById("mapHint");
 let mapZoomMode = false;
+let mapPins = null;
+let mapPointerStart = null;
+let mapDidDrag = false;
+
+function pinTransform(d, k = 1) {
+  const p = projection([d.lon, d.lat]);
+  if (!p) return "translate(-100,-100)";
+  return `translate(${p[0]},${p[1]}) scale(${1 / k})`;
+}
+
+function updatePinScale(k) {
+  if (!mapPins) return;
+  mapPins.attr("transform", d => pinTransform(d, k));
+}
 
 const mapZoom = d3.zoom()
   .scaleExtent([1, 14])
@@ -2884,8 +2897,11 @@ const mapZoom = d3.zoom()
     }
     return false;
   })
+  .on("start", () => svg.classList.add("is-panning"))
+  .on("end", () => svg.classList.remove("is-panning"))
   .on("zoom", (event) => {
     mapLayer.attr("transform", event.transform);
+    updatePinScale(event.transform.k);
     updateMapZoomUi(event.transform);
   });
 
@@ -2899,7 +2915,7 @@ function setMapZoomMode(on) {
   mapZoomToggle.classList.toggle("on", on);
   svg.classList.toggle("zoom-mode", on);
   mapHint.textContent = on
-    ? "Zoom mode on: click anywhere to zoom in, drag to pan, scroll to zoom. Pins still open details. Reset view to return."
+    ? "Zoom mode on: drag the map to move focus, click empty space to zoom in, scroll to zoom. Pins stay fixed size. Reset view to return."
     : "Click a pin on the map to explore each center";
   if (on) {
     svg.call(mapZoom);
@@ -2915,7 +2931,10 @@ function resetMapView() {
 }
 
 function zoomMapToPoint(event) {
-  if (!mapZoomMode) return;
+  if (!mapZoomMode || mapDidDrag) {
+    mapDidDrag = false;
+    return;
+  }
   if (event.target.closest(".map-pin")) return;
   const [mx, my] = d3.pointer(event, svg.node());
   const t = d3.zoomTransform(svg.node());
@@ -2928,6 +2947,20 @@ function zoomMapToPoint(event) {
 
 mapZoomToggle.addEventListener("click", () => setMapZoomMode(!mapZoomMode));
 mapZoomReset.addEventListener("click", resetMapView);
+
+svg.on("pointerdown", (event) => {
+  if (!mapZoomMode || event.target.closest(".map-pin")) return;
+  mapPointerStart = d3.pointer(event, svg.node());
+  mapDidDrag = false;
+});
+
+svg.on("pointermove", (event) => {
+  if (!mapPointerStart || !mapZoomMode) return;
+  const [x, y] = d3.pointer(event, svg.node());
+  if (Math.hypot(x - mapPointerStart[0], y - mapPointerStart[1]) > 5) mapDidDrag = true;
+});
+
+svg.on("pointerup pointercancel", () => { mapPointerStart = null; });
 
 d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us => {
   mapLayer.append("g")
@@ -2944,38 +2977,35 @@ d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us => {
     .attr("stroke-width", 0.6)
     .attr("d", path);
 
-  const pins = mapLayer.selectAll(".map-pin")
+  mapPins = mapLayer.selectAll(".map-pin")
     .data(CENTERS)
     .join("g")
     .attr("class", "map-pin")
-    .attr("transform", d => {
-      const p = projection([d.lon, d.lat]);
-      return p ? `translate(${p[0]},${p[1]})` : "translate(-100,-100)";
-    })
+    .attr("transform", d => pinTransform(d, 1))
     .on("click", (e, d) => {
       e.stopPropagation();
       openDetail(d);
     });
 
-  pins.append("circle")
+  mapPins.append("circle")
     .attr("class", "pulse-ring")
-    .attr("r", 6)
+    .attr("r", 4)
     .attr("fill", d => d.color)
     .attr("opacity", 0.25);
 
-  pins.append("circle")
+  mapPins.append("circle")
     .attr("class", "ring")
-    .attr("r", 14)
+    .attr("r", 9)
     .attr("stroke", d => d.color);
 
-  pins.append("circle")
+  mapPins.append("circle")
     .attr("class", "dot")
-    .attr("r", 6)
+    .attr("r", 4)
     .attr("fill", d => d.color)
     .attr("opacity", 0.9);
 
-  pins.append("circle")
-    .attr("r", 2.5)
+  mapPins.append("circle")
+    .attr("r", 1.5)
     .attr("fill", "var(--bg)");
 
   svg.on("click", zoomMapToPoint);
