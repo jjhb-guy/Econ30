@@ -17,6 +17,26 @@
     --accent3: #5cf0b0;
     --warm: #ffa96c;
     --danger: #ff6c8a;
+    --nav-bg: rgba(12,14,20,0.88);
+    --theme-btn-bg: #1a1e2a;
+    --theme-btn-border: #262c3d;
+  }
+
+  html.light-mode {
+    --bg: #f4f5f9;
+    --surface: #ffffff;
+    --card: #eef0f7;
+    --border: #d0d4e2;
+    --text: #1a1e2a;
+    --muted: #5a6278;
+    --accent: #3b6fd4;
+    --accent2: #7c4fff;
+    --accent3: #0a7c5c;
+    --warm: #b45309;
+    --danger: #c0392b;
+    --nav-bg: rgba(244,245,249,0.92);
+    --theme-btn-bg: #eef0f7;
+    --theme-btn-border: #d0d4e2;
   }
 
   * { box-sizing: border-box; margin: 0; }
@@ -35,7 +55,7 @@
   /* ─── NAV ─── */
   nav {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(12,14,20,0.85);
+    background: var(--nav-bg);
     backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--border);
     padding: 0.6rem 1.5rem;
@@ -45,6 +65,20 @@
   nav .logo { font-weight: 700; font-size: 1rem; color: var(--accent); white-space: nowrap; }
   nav a { color: var(--muted); }
   nav a:hover { color: var(--text); text-decoration: none; }
+  nav .nav-spacer { flex: 1; }
+  .theme-toggle {
+    display: flex; align-items: center; justify-content: center;
+    width: 2rem; height: 2rem;
+    background: var(--theme-btn-bg);
+    border: 1px solid var(--theme-btn-border);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--muted);
+    transition: color 0.2s, border-color 0.2s;
+    flex-shrink: 0;
+  }
+  .theme-toggle:hover { color: var(--text); border-color: var(--accent); }
 
   /* ─── COMIC CUTSCENE ─── */
   body.cutscene-lock { overflow: hidden; }
@@ -1118,6 +1152,8 @@
   <a href="#map">Centers</a>
   <a href="#takeaways">Takeaways</a>
   <a href="#reading">Sources</a>
+  <span class="nav-spacer"></span>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode" title="Toggle light/dark mode">&#9788;</button>
 </nav>
 
 <!-- ═══════ COMIC CUTSCENE ═══════ -->
@@ -1238,9 +1274,14 @@
 
   <div class="scope-panel">
     <h3>How much of the growth is U.S.-focused vs. global?</h3>
-    <p class="intro">OpenAlex lets you split the same poverty/inequality sample by affiliation, abstract language, and development-economics co-tags. Buckets overlap (a paper can be both U.S.-affiliated and globally framed), but the trends show whether volume growth tracks domestic or international poverty work.</p>
+    <p class="intro">OpenAlex lets you split the same sample by affiliation, abstract language, and development-economics co-tags. Buckets overlap, but the trends show whether volume growth tracks domestic or international research. Toggle to compare across the poverty and inequality samples separately.</p>
     <div class="method-box" id="scopeMethodBox">
       <strong>Source:</strong> <code>data/scope.js</code> via <code>python build_scope.py</code> &mdash; same base filter as above, min 25 citations, counted per 5-year era.
+    </div>
+    <div style="display:flex;gap:0.5rem;margin:0.75rem 0;flex-wrap:wrap;" id="scopeVariantBtns">
+      <button class="method-tab on" data-variant="combined">Poverty + Inequality</button>
+      <button class="method-tab" data-variant="poverty">Poverty only</button>
+      <button class="method-tab" data-variant="inequality">Inequality only</button>
     </div>
     <div class="scope-chart">
       <svg id="scopeChart" viewBox="0 0 900 340" preserveAspectRatio="xMidYMid meet"></svg>
@@ -2348,6 +2389,23 @@ function drawThemeChart() {
 drawThemeChart();
 
 /* ═══════ GEOGRAPHIC SCOPE (from scope.js) ═══════ */
+/* ═══════ LIGHT / DARK MODE TOGGLE ═══════ */
+(function() {
+  const btn = document.getElementById("themeToggle");
+  const PREF_KEY = "econ30-theme";
+  const saved = localStorage.getItem(PREF_KEY);
+  if (saved === "light") {
+    document.documentElement.classList.add("light-mode");
+    btn.textContent = "☽";
+  }
+  btn.addEventListener("click", () => {
+    const isLight = document.documentElement.classList.toggle("light-mode");
+    btn.textContent = isLight ? "☽" : "☀";
+    localStorage.setItem(PREF_KEY, isLight ? "light" : "dark");
+  });
+})();
+
+/* ═══════ SCOPE CHART (US vs GLOBAL) ═══════ */
 const SCOPE_COLORS = {
   usAffiliation: "#6c9bff",
   usText: "#5cf0b0",
@@ -2355,7 +2413,10 @@ const SCOPE_COLORS = {
   globalKeywords: "#ff6c8a",
 };
 
-function drawScopeChart() {
+let scopeActiveVariant = "combined";
+
+function drawScopeChart(variantKey) {
+  variantKey = variantKey || scopeActiveVariant;
   const data = window.SCOPE_DATA;
   const svg = d3.select("#scopeChart");
   const legendEl = document.getElementById("scopeLegend");
@@ -2363,18 +2424,25 @@ function drawScopeChart() {
   svg.selectAll("*").remove();
   legendEl.innerHTML = "";
 
-  if (!data || !data.eras || data.eras.length === 0) {
+  if (!data) {
     document.getElementById("scopeMethodBox").innerHTML +=
       " <em>Run <code>python build_scope.py</code> to generate.</em>";
     return;
   }
 
+  // Support both old format (data.eras) and new (data.variants)
+  const eras = data.variants
+    ? (data.variants[variantKey] || data.variants.combined || [])
+    : (data.eras || []);
+
+  if (eras.length === 0) return;
+
   const meta = data.meta;
+  const variantLabel = (meta.variants && meta.variants[variantKey]) || variantKey;
   document.getElementById("scopeMethodBox").innerHTML =
-    `<strong>Source:</strong> OpenAlex Works API · ${meta.filter || ""} · ` +
+    `<strong>Source:</strong> OpenAlex Works API · ${variantLabel} · ` +
     `generated ${meta.generated || "—"}. Refresh: <code>python build_scope.py</code>`;
 
-  const eras = data.eras;
   const series = meta.scopes || [];
   series.forEach(s => {
     legendEl.innerHTML += `<span><i style="background:${SCOPE_COLORS[s.key] || "#888"}"></i>${s.label}</span>`;
@@ -2418,7 +2486,7 @@ function drawScopeChart() {
     .attr("text-anchor", "middle")
     .attr("fill", "#7e879e")
     .attr("font-size", 10)
-    .text("Share of poverty/inequality papers in era");
+    .text("Share of papers in era");
 
   series.forEach(s => {
     const line = d3.line()
@@ -2457,13 +2525,24 @@ function drawScopeChart() {
   const devFirst = first.scopes.developmentEcon?.share || 0;
   const devLast = last.scopes.developmentEcon?.share || 0;
 
-  insightsEl.innerHTML = `<strong>What the scope split suggests</strong><ul>` +
-    `<li><strong>US affiliation</strong> (any author at a U.S. institution) runs ~${usAffFirst.toFixed(0)}% in ${first.label} and ~${usAffLast.toFixed(0)}% in ${last.label} — a large minority, not a majority, of cited poverty/inequality work in econ+sociology.</li>` +
-    `<li><strong>Development economics co-tags</strong> were ~${devFirst.toFixed(0)}% early vs ~${devLast.toFixed(0)}% recently — a substantial share of the literature has always overlapped with development economics, not only U.S. domestic poverty.</li>` +
-    `<li><strong>Global keywords</strong> in abstracts peak around <strong>${peakGlobal.label}</strong> at ${(peakGlobal.scopes.globalKeywords?.share || 0).toFixed(1)}% — so part of the volume growth tracks cross-country and developing-country framing, not just U.S. inequality.</li>` +
-    `<li>Buckets overlap; OpenAlex cannot perfectly separate &ldquo;U.S. poverty&rdquo; from &ldquo;global poverty,&rdquo; but affiliation + abstract language + development co-tags are a workable proxy.</li>` +
+  insightsEl.innerHTML = `<strong>What the scope split suggests (${variantLabel.split("(")[0].trim()})</strong><ul>` +
+    `<li><strong>US affiliation</strong> runs ~${usAffFirst.toFixed(0)}% in ${first.label} and ~${usAffLast.toFixed(0)}% in ${last.label} — a large minority, not a majority, of cited work in econ+sociology.</li>` +
+    `<li><strong>Development economics co-tags</strong> were ~${devFirst.toFixed(0)}% early vs ~${devLast.toFixed(0)}% recently.</li>` +
+    `<li><strong>Global keywords</strong> in abstracts peak around <strong>${peakGlobal.label}</strong> at ${(peakGlobal.scopes.globalKeywords?.share || 0).toFixed(1)}% — part of the volume growth tracks cross-country and developing-country framing.</li>` +
+    `<li>Buckets overlap; affiliation + abstract language + development co-tags are a workable proxy, not a clean partition.</li>` +
     `</ul>`;
 }
+
+// Wire scope variant toggle buttons
+document.getElementById("scopeVariantBtns").addEventListener("click", e => {
+  const btn = e.target.closest("[data-variant]");
+  if (!btn) return;
+  scopeActiveVariant = btn.dataset.variant;
+  document.querySelectorAll("#scopeVariantBtns .method-tab").forEach(b =>
+    b.classList.toggle("on", b === btn)
+  );
+  drawScopeChart(scopeActiveVariant);
+});
 
 drawScopeChart();
 

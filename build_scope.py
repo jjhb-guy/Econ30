@@ -1,12 +1,8 @@
 #!/usr/bin/env python3
 """Estimate US-focused vs global/development poverty research by era (OpenAlex).
 
-For each 5-year window, counts cited econ+sociology poverty/inequality papers and
-the share that are:
-  * US-affiliated (any author at a US institution)
-  * US-named in abstract ("United States")
-  * Development economics (also tagged OpenAlex concept C47768531)
-  * Global keywords in abstract (developing countries, cross-country, etc.)
+Generates three variants of scope data (combined, poverty-only, inequality-only)
+so the site can toggle between them client-side.
 
 Usage:
     python build_scope.py
@@ -27,9 +23,14 @@ from pathlib import Path
 API = "https://api.openalex.org/works"
 POLITE = "mailto=econ30-knowledge-base@example.com"
 
-POVERTY_CONCEPTS = "C189326681|C513380476"
-FIELD_CONCEPTS = "C162324750|C144024400"
+FIELD_CONCEPTS = "C162324750|C144024400"  # economics | sociology
 DEV_ECON = "C47768531"
+
+CONCEPT_VARIANTS = {
+    "combined":   "C189326681|C513380476",  # poverty + inequality
+    "poverty":    "C189326681",             # poverty only
+    "inequality": "C513380476",             # economic inequality only
+}
 
 ERAS = [
     (1970, 1974), (1975, 1979), (1980, 1984), (1985, 1989),
@@ -64,9 +65,9 @@ def fetch_count(filter_str: str) -> int:
     raise RuntimeError(f"failed: {filter_str}")
 
 
-def era_base(start: int, end: int, min_cites: int) -> str:
+def era_base(start: int, end: int, concept_ids: str, min_cites: int) -> str:
     return ",".join([
-        f"concepts.id:{POVERTY_CONCEPTS}",
+        f"concepts.id:{concept_ids}",
         f"concepts.id:{FIELD_CONCEPTS}",
         f"cited_by_count:>{min_cites}",
         f"from_publication_date:{start}-01-01",
@@ -74,29 +75,22 @@ def era_base(start: int, end: int, min_cites: int) -> str:
     ])
 
 
-def main() -> int:
-    ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--min-cites", type=int, default=25)
-    ap.add_argument("--quick", action="store_true")
-    ap.add_argument("--output", default="data/scope.js")
-    ap.add_argument("--cache-dir", default="data/_cache/scope")
-    args = ap.parse_args()
-
-    eras = [e for e in ERAS if e[0] >= 2000] if args.quick else ERAS
-    cache_dir = Path(args.cache_dir)
-    cache_dir.mkdir(parents=True, exist_ok=True)
-
+def build_variant(variant_key: str, concept_ids: str, eras: list, min_cites: int,
+                  cache_dir: Path) -> list[dict]:
     rows = []
+    vdir = cache_dir / variant_key
+    vdir.mkdir(parents=True, exist_ok=True)
+
     for start, end in eras:
         label = f"{start}\u2013{end % 100:02d}" if end >= 2000 else f"{start}\u2013{end}"
-        base = era_base(start, end, args.min_cites)
-        cache_fp = cache_dir / f"{start}_{end}.json"
+        cache_fp = vdir / f"{start}_{end}.json"
 
         if cache_fp.exists():
             row = json.loads(cache_fp.read_text(encoding="utf-8"))
-            print(f"  {label} (cache)", file=sys.stderr)
+            print(f"  [{variant_key}] {label} (cache)", file=sys.stderr)
         else:
-            print(f"  fetch {label} ...", file=sys.stderr)
+            print(f"  [{variant_key}] fetch {label} ...", file=sys.stderr)
+            base = era_base(start, end, concept_ids, min_cites)
             total = fetch_count(base)
             scopes = {}
             for key, extra, _label in SCOPES:
@@ -111,18 +105,37 @@ def main() -> int:
             time.sleep(0.12)
 
         rows.append(row)
+    return rows
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--min-cites", type=int, default=25)
+    ap.add_argument("--quick", action="store_true")
+    ap.add_argument("--output", default="data/scope.js")
+    ap.add_argument("--cache-dir", default="data/_cache/scope")
+    args = ap.parse_args()
+
+    eras = [e for e in ERAS if e[0] >= 2000] if args.quick else ERAS
+    cache_dir = Path(args.cache_dir)
+
+    variants = {}
+    for key, concept_ids in CONCEPT_VARIANTS.items():
+        variants[key] = build_variant(key, concept_ids, eras, args.min_cites, cache_dir)
 
     payload = {
         "meta": {
             "source": "OpenAlex",
-            "filter": (
-                f"poverty/inequality in econ+sociology, >{args.min_cites} cites; "
-                "scope buckets are overlapping, not mutually exclusive"
-            ),
+            "filter": f"econ+sociology, >{args.min_cites} cites; scope buckets overlap",
             "generated": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "scopes": [{"key": k, "label": lbl} for k, _, lbl in SCOPES],
+            "variants": {
+                "combined":   "Poverty + Inequality (C189326681|C513380476)",
+                "poverty":    "Poverty only (C189326681)",
+                "inequality": "Inequality only (C513380476)",
+            },
         },
-        "eras": rows,
+        "variants": variants,
     }
 
     out = Path(args.output)
