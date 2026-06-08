@@ -22,7 +22,7 @@ from datetime import datetime
 from pathlib import Path
 
 DEFAULT_SAVED = (
-    "Raw/Google Ngram Viewer_ inequality,poverty,innovation,tech,progress.html"
+    "Raw/Google Ngram Viewer_ economic inequality,inequality,poverty,innovation,tech,progress.html"
 )
 DEFAULT_OUTPUT = "data/ngrams.js"
 

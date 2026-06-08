@@ -1182,7 +1182,7 @@
 
   <h1>Why I got interested in poverty research</h1>
   <p class="intro-lead">Sophomore year I took <span class="name-em">America: Unequal</span> with <span class="name-em">Professor David Grusky</span> and loved it. I met with him, started researching at the <span class="name-em">Stanford Center on Poverty and Inequality</span>, and have been there ever since&mdash;most recently updating his original <em>microclass</em> framework while learning about CPI&rsquo;s California Poverty Measure, American Opportunity Study, and trend-data infrastructure.</p>
-  <p class="intro-sub">That work opened up a much bigger question: how has poverty and inequality research developed over the decades&mdash;and is it keeping up with reality? Below, some of the papers and projects that made the field feel so alive to me, before the data sections take over.</p>
+  <p class="intro-sub">That work opened up a specific question: how has poverty and inequality research developed over the decades&mdash;and how does it align, or not, with real-world trends and occurrences? Below, some of the papers and projects that made the field feel so alive to me, before the data sections take over.</p>
 
   <div class="highlight-label">Key highlights of cool research right now</div>
   <div class="highlight-head">Papers and projects I saved from Econ 30 and CPI&mdash;titles and links matched to those sources</div>
@@ -1210,9 +1210,9 @@
 <section id="question" class="question-block">
   <div class="section-label">Central question</div>
   <blockquote>
-    How has research on <em>inequality and poverty</em> developed over time in the U.S.&mdash;and is it aligned with public sentiment and/or actual levels of inequality?
+    How has research on <em>poverty and inequality</em> developed over time in the U.S.&mdash;and how does it align, or diverge, from real-world trends, public discourse, and actual levels of poverty and inequality?
   </blockquote>
-  <p class="question-bridge">The rest of the site answers that quantitatively: live OpenAlex publication trends, a per-era fingerprint of the data and methods inside those papers, the Google Books discourse, and finally an overlay against Census/Piketty&ndash;Saez inequality measures and NSF funding.</p>
+  <p class="question-bridge">The rest of the site traces that quantitatively: live OpenAlex publication trends, a per-era fingerprint of the methods and data inside those papers, how the language of poverty and inequality spread through published books, and finally an overlay against Census/Piketty&ndash;Saez measures and NSF funding.</p>
 </section>
 
 <!-- ═══════ TRENDS (LIVE OPENALEX QUERY) — moved up ═══════ -->
@@ -1279,9 +1279,9 @@
       <strong>Source:</strong> <code>data/scope.js</code> via <code>python build_scope.py</code> &mdash; same base filter as above, min 25 citations, counted per 5-year era.
     </div>
     <div style="display:flex;gap:0.5rem;margin:0.75rem 0;flex-wrap:wrap;" id="scopeVariantBtns">
-      <button class="method-tab on" data-variant="combined">Poverty + Inequality</button>
+      <button class="method-tab on" data-variant="combined">Poverty + Economic inequality</button>
       <button class="method-tab" data-variant="poverty">Poverty only</button>
-      <button class="method-tab" data-variant="inequality">Inequality only</button>
+      <button class="method-tab" data-variant="inequality">Economic inequality only</button>
     </div>
     <div class="scope-chart">
       <svg id="scopeChart" viewBox="0 0 900 340" preserveAspectRatio="xMidYMid meet"></svg>
@@ -1303,7 +1303,7 @@
 
   <div class="method-box">
     <strong>Ngrams method:</strong> term frequency = share of all tokens in the corpus that year. Toggle terms below.<br>
-    <strong>Source:</strong> data extracted directly from the user&rsquo;s saved <a href="https://books.google.com/ngrams/graph?content=inequality,poverty,innovation,tech,progress&amp;year_start=1800&amp;year_end=2022&amp;corpus=en&amp;smoothing=3" target="_blank" rel="noreferrer">Google Ngram Viewer page</a> (English corpus, 1800&ndash;2022, smoothing&nbsp;=&nbsp;3). Refresh: <code>python build_ngrams_from_saved.py</code>
+    <strong>Source:</strong> data extracted directly from the user&rsquo;s saved <a href="https://books.google.com/ngrams/graph?content=economic+inequality%2C+inequality%2Cpoverty%2Cinnovation%2Ctech%2Cprogress&amp;year_start=1800&amp;year_end=2022&amp;corpus=en&amp;smoothing=3" target="_blank" rel="noreferrer">Google Ngram Viewer page</a> (English corpus, 1800&ndash;2022, smoothing&nbsp;=&nbsp;3). Refresh: <code>python build_ngrams_from_saved.py</code>
   </div>
 
   <div class="ngram-toggles" id="ngramToggles"></div>
@@ -1617,7 +1617,7 @@
 <section id="takeaways">
   <div class="verdict-tag">So: is research aligned?</div>
   <h2>Takeaways &mdash; what the data on this page actually says</h2>
-  <p class="verdict-lead">Going back to the central question: <em>has poverty &amp; inequality research kept pace with actual inequality and with how Americans talk about it?</em> Pulling together the OpenAlex trends, the methods/data fingerprint, the Google Books series, and the alignment overlay, four things hold up.</p>
+  <p class="verdict-lead">Going back to the central question: <em>how has poverty &amp; inequality research developed, and where does it align&mdash;or diverge&mdash;from real-world trends and public discourse?</em> Pulling together the OpenAlex trends, the methods/data fingerprint, the Google Books series, and the alignment overlay, four things hold up.</p>
 
   <div class="takeaway-grid">
     <div class="takeaway-card">
@@ -1747,7 +1747,7 @@ const CUTSCENE_STEPS = [
   {
     scene: "landscape",
     speaker: "The bigger question",
-    text: "All of it led me to wonder: how has poverty and inequality research developed over the years — and is the field keeping up? That's what this site explores.",
+    text: "All of it led me to wonder: how has poverty and inequality research developed over the years — and how does it align with what's actually happening? That's what this site explores.",
   },
 ];
 
@@ -2078,13 +2078,14 @@ const RESEARCH_REEL = [
 
 /* ═══════ NGRAMS ═══════ */
 const NGRAM_SERIES = {
-  poverty:    { label: "poverty",    color: "#ff9e3d", group: "pi" },
-  inequality: { label: "inequality", color: "#ff6c8a", group: "pi" },
-  progress:   { label: "progress",   color: "#6c9bff", group: "tp" },
-  technology: { label: "tech",       color: "#a07cff", group: "tp" },
-  innovation: { label: "innovation", color: "#5cf0b0", group: "tp" },
+  poverty:               { label: "poverty",              color: "#ff9e3d", group: "pi" },
+  inequality:            { label: "inequality",           color: "#ff6c8a", group: "pi" },
+  "economic inequality": { label: "economic inequality",  color: "#c0275d", group: "pi" },
+  progress:              { label: "progress",             color: "#6c9bff", group: "tp" },
+  technology:            { label: "tech",                 color: "#a07cff", group: "tp" },
+  innovation:            { label: "innovation",           color: "#5cf0b0", group: "tp" },
 };
-const ngramVisible = new Set(["poverty", "inequality", "progress", "technology", "innovation"]);
+const ngramVisible = new Set(["poverty", "inequality", "economic inequality", "progress", "technology", "innovation"]);
 
 const ngramTogglesEl = document.getElementById("ngramToggles");
 Object.entries(NGRAM_SERIES).forEach(([key, s]) => {
@@ -2152,8 +2153,14 @@ function drawNgramChart() {
     .call(d3.axisLeft(y).ticks(5).tickFormat(d => (d * 100).toFixed(3) + "%"));
 
   const legend = g.append("g").attr("class", "legend").attr("transform", `translate(0,-8)`);
+  const legendOffsets = [];
+  let legendX = 0;
+  activeKeys.forEach((key) => {
+    legendOffsets.push(legendX);
+    legendX += NGRAM_SERIES[key].label.length * 7 + 28;
+  });
   activeKeys.forEach((key, i) => {
-    const lg = legend.append("g").attr("transform", `translate(${i * 110},0)`);
+    const lg = legend.append("g").attr("transform", `translate(${legendOffsets[i]},0)`);
     lg.append("line").attr("x1", 0).attr("x2", 16).attr("y1", 0).attr("y2", 0)
       .attr("stroke", NGRAM_SERIES[key].color).attr("stroke-width", 2.5);
     lg.append("text").attr("x", 20).attr("y", 4).text(NGRAM_SERIES[key].label);
@@ -2165,10 +2172,11 @@ function drawNgramChart() {
   if (validRows.length >= 2) {
     const peakPi = validRows.reduce((a, b) =>
       ((b.poverty + b.inequality) > (a.poverty + a.inequality) ? b : a));
-    const withIneq = validRows.filter(r => r.inequality > 0);
-    const peakIneq = withIneq.length ? withIneq.reduce((a, b) => (b.inequality > a.inequality ? b : a)) : null;
-    creditExtra = `Among years with data: combined poverty+inequality peaks ${peakPi.year}` +
-      (peakIneq ? `; "inequality" peaks ${peakIneq.year}.` : ".");
+    const withEi = validRows.filter(r => (r["economic inequality"] || 0) > 0);
+    const peakEi = withEi.length ? withEi.reduce((a, b) =>
+      ((b["economic inequality"] || 0) > (a["economic inequality"] || 0) ? b : a)) : null;
+    creditExtra = `Combined poverty+inequality peaks ${peakPi.year}` +
+      (peakEi ? `; "economic inequality" peaks ${peakEi.year}.` : ".");
   }
   document.getElementById("ngramCredit").innerHTML =
     `Source: <a href="https://books.google.com/ngrams" target="_blank" rel="noreferrer">Google Books Ngrams</a> ` +
